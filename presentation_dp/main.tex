@@ -1,0 +1,123 @@
+\documentclass[aspectratio=1610]{beamer}
+
+\usepackage{graphicx}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{csquotes, xcolor, xspace, changepage, setspace, listings, multirow}
+\usepackage{roboto}
+\usepackage{fontawesome5}
+\usepackage[scale = 0.75]{plex-mono}
+\usepackage{tikz, pgfplots, subcaption}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{fit, shapes.geometric, positioning, shapes.misc, calc, arrows.meta, patterns, backgrounds, decorations.markings, decorations.pathreplacing}
+
+\usefonttheme[onlymath]{serif}
+
+\usepackage[backend=bibtex,style=authoryear]{biblatex}
+\addbibresource{biblio.bib}
+
+\title{Extracting Syntactic Patterns \\from Databases}
+\author{Roland Bernard}
+\date{December 2025}
+
+\input{tikzfigures/defs.tex}
+
+\setbeamercolor{outerbox}{fg=black,bg=unibzblue2}
+\setbeamercolor{innerbox}{fg=white,bg=unibzblue}
+
+\setbeamertemplate{title page}{
+  \scriptsize 
+  \begin{tabular}{ll}
+    \vspace*{23mm} \\
+    \multicolumn{2}{l}{\raggedright Seminar Presentation} \\
+    \\
+    \multicolumn{2}{p{\linewidth}}{\raggedright \huge \bf \inserttitle} \\
+    \vspace*{5mm} \\
+    \\
+    & \insertauthor \\
+    \\
+    & \insertdate \\
+    \vspace*{5mm} \\
+    & \multicolumn{1}{p{0.7\linewidth}}{\raggedright \tiny \fullcite{ilyas2018extracting}}
+  \end{tabular}
+}
+
+\setbeamertemplate{frametitle}{
+  \vspace*{6mm}
+  \Large \bf \color{black} \insertframetitle
+}
+
+\setbeamertemplate{itemize items}{\scriptsize\raisebox{0.6mm}{\color{unibzblue} $\blacktriangleright$}}
+
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{footline}{
+  \begin{beamercolorbox}[wd=\paperwidth,right]{section in head/foot}
+    \usebeamerfont{date in head/foot}\hspace*{2em}
+    \insertframenumber{}\hspace*{2mm} 
+    \vspace*{2mm}
+  \end{beamercolorbox}
+}
+
+\newcommand{\litem}{{\scriptsize\raisebox{0.6mm}{\color{unibzblue} $\blacktriangleright$}}}
+\newcommand{\sitem}{{\scriptsize\raisebox{0.2mm}{\color{unibzblue} $\rightarrow$}}\enspace}
+\newcommand{\icon}[1]{\textcolor{unibzblue}{\faIcon[solid]{#1}}}
+
+\newlength{\offsetpage}
+\newenvironment{narrowpage}[1][3mm]{
+  \setlength{\offsetpage}{#1}
+  \begin{adjustwidth}{\offsetpage}{\offsetpage}
+}{
+  \end{adjustwidth}
+}
+\newenvironment{widepage}{
+  \begin{adjustwidth}{-10mm}{-10mm}
+}{
+  \end{adjustwidth}
+}
+
+\newenvironment{items}{
+  \begin{narrowpage}
+}{
+  \end{narrowpage}
+}
+\newenvironment{oitem}[2][3mm]{
+  \vspace*{2mm}
+  \begin{beamercolorbox}[rounded=false,colsep=#1]{outerbox}
+    \parbox[t]{2mm}{\centering#2}\parbox[t]{2mm}{\ }%
+    \begin{minipage}[t]{\linewidth}
+}{
+    \end{minipage}
+  \end{beamercolorbox}
+  \vfill
+}
+
+\renewcommand{\arraystretch}{1.2}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+{
+\setbeamercolor{background canvas}{bg=black}
+\begin{frame}[plain]{}
+\end{frame}
+}
+
+\begin{frame}
+\frametitle{Quiz}
+  \vspace*{-5mm}
+  \begin{narrowpage}
+    \centering
+    \large
+    Visit \textbf{gosocrative.com} and enter room \\name \textbf{BERNARD6902}
+  \end{narrowpage}
+  \vspace*{5mm}
+  \begin{narrowpage}
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/questions.png}
+  \end{narrowpage}
+\end{frame}
+
+\end{document}
