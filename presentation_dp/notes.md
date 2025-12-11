@@ -1,4 +1,4 @@
-* Title
+* Title: Extracting Syntactic Patterns from Databases
 * Introduction
     * Goal: Given a column of string in a database table, automatically infer its syntactic structure.
     * This is strictly single-column analysis, no relational context needed.

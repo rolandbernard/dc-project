@@ -84,7 +84,7 @@
   \vspace*{2mm}
   \begin{beamercolorbox}[rounded=false,colsep=#1]{outerbox}
     \parbox[t]{2mm}{\centering#2}\parbox[t]{2mm}{\ }%
-    \begin{minipage}[t]{\linewidth}
+    \begin{minipage}[t]{0.9\linewidth}
 }{
     \end{minipage}
   \end{beamercolorbox}
@@ -97,6 +97,354 @@
 
 \begin{frame}[plain]
   \titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Introduction}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Goal: Given a database column of string, infer its syntactic structure.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      This is strictly single-column analysis, no relational context needed.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Problem formulation: \\
+      \sitem {\footnotesize Given a set of example strings $S$,} \\
+      \sitem {\footnotesize produce a compact description $D$ of a language that contains them. $S \subseteq \mathcal{L}(D)$} \\
+      \sitem {\footnotesize This description should generalize beyond the examples.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivation}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Structured summaries of columns are: \\
+      \sitem {\footnotesize More compact than full datasets.} \\
+      \sitem {\footnotesize Easier to compare, search, and interpret.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Syntactic patterns can reveal semantic types. \\
+      \sitem {\footnotesize Example: \texttt{(0|1|2|3)D/(0|1)D/(1|2)DDD} is likely a date attribute.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivating Applications}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Automatic label assignment: \\
+      \sitem {\footnotesize Match a column's pattern to a library of known regex-semantic-label pairs.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Attribute similarity comparison: \\
+      \sitem {\footnotesize Identify columns with compatible syntactic formats (e.g., potential join keys).}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Syntax-based outlier detection: \\
+      \sitem {\footnotesize Detect malformed or unusual tuples based on poor structural fit.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Why is this a Difficult Problem?}
+  \begin{items}
+    \begin{oitem}{\litem}
+      We only have positive examples. \\
+      \sitem {\footnotesize i.e., no information about what is not allowed.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Naively OR-ing all strings gives a valid syntactic description. \\
+      \sitem {\footnotesize However, it is completely useless, i.e., non-generalized.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Syntactic description should be: \\
+      \sitem {\footnotesize Compact,} \\
+      \sitem {\footnotesize Human-interpretable,} \\
+      \sitem {\footnotesize Fast to learn, and} \\
+      \sitem {\footnotesize Directly comparable across attributes.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Why not use Regular Expressions?}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Learning minimal regular expressions is NP-hard. \\
+      \sitem {\footnotesize Existing algorithms are too slow.} \\
+      \sitem {\footnotesize Regular expressions are more expressive than needed.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Real database columns often have: \\
+      \sitem {\footnotesize Low variety of lengths.} \\
+      \sitem {\footnotesize Few structural variations.} \\
+      \sitem {\footnotesize Mostly finite languages.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{\textsc{Xtructure} Architecture}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Less expressive than regular expressions. \\
+      \sitem {\footnotesize Represents a finite subset of regular expressions.} \\
+      \sitem {\footnotesize Sufficient for most database attributes.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Three levels of representation: \\
+      \sitem {\footnotesize Branch layer: alternative structural formats.} \\
+      \sitem {\footnotesize Token layer: sequences split by delimiters.} \\
+      \sitem {\footnotesize Symbol layer: distributions over characters.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{\textsc{Xtructure} Architecture -- Symbol Layer}
+  \begin{items}
+    \begin{oitem}{\litem}
+      The lowest layer, modeling each character position.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Stores distribution over characters. \\
+      \sitem {\footnotesize Encodes which characters appear.} \\
+      \sitem {\footnotesize Encodes frequencies for statistical generalization.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{\textsc{Xtructure} Architecture -- Token Layer}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Represents a fixed-length sequence of symbol layers.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Tokens separated by delimiters (e.g., \texttt{/}, \texttt{.}, \texttt{-}).
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Example: \texttt{10/12/2018} tokenizes into \texttt{10}, \texttt{12}, \texttt{2018}.
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{\textsc{Xtructure} Architecture -- Branch Layer}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Top layer representing alternative syntactic formats. \\
+      \sitem {\footnotesize Example: dates with 2-digit vs.\ 4-digit years.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Each branch is a sequence of tokens plus delimiters.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Only layer where variability in length is possible.
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Learning Process}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Iterative, adding one tuple at a time: \\
+      \sitem {\footnotesize Compute fit of new tuple with existing branches.} \\
+      \sitem {\footnotesize If fit above threshold, merge into best branch.} \\
+      \sitem {\footnotesize Otherwise, create a new branch.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Repeat for all tuples in the column.
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Learning Process -- Branch and Merge}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Issue: branching threshold is unintuitive. \\
+      \sitem {\footnotesize User instead specifies a maximum number of branches.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Learning strategy: \\
+      \sitem {\footnotesize Start with a low threshold.} \\
+      \sitem {\footnotesize If branch count exceeds maximum:} \\
+      {\scriptsize\raisebox{0.2mm}{\quad \color{unibzblue} $\rightarrow$}}\enspace {\footnotesize Merge two most similar branches.} \\
+      {\scriptsize\raisebox{0.2mm}{\quad \color{unibzblue} $\rightarrow$}}\enspace {\footnotesize Update threshold to the distance between them.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Enables parallel learning: \\
+      \sitem {\footnotesize Independently learned branches can be merged later.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Fit Scoring Explained}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Fit score measures how well a string matches a \textsc{Xtructure}.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Defined at three levels: \\
+      \sitem {\footnotesize Symbol-level: exact match or character class membership.
+      \begin{align*}
+        d(s_i, l_i) = \begin{cases}
+          0 & \mathrm{if} \quad s_i \in l_i \\
+          \alpha & \mathrm{if} \quad \mathrm{class}(s_i) = \mathrm{class}(l_i) \\
+          1 & \mathrm{otherwise}
+        \end{cases}
+      \end{align*}
+      } \\
+      \sitem {\footnotesize Token-level: sum of symbol scores + length mismatch penalty.
+      \begin{align*}
+        d(t_i, k_i) = \sum_{s_i \in t_i, l_i \in k_i} d(s_i, l_i) + |len(t_i) - len(k)|
+      \end{align*}
+      }
+      \sitem {\footnotesize Branch-level: minimum distance across branches.
+      \begin{align*}
+        d(t, X) = \min_{b \in B} \sum_{t_i \in t, k_i \in b} d(t_i, k_i)
+      \end{align*}
+      }
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Representation and Character Classes}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Symbol layers must be serialized for human readability.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Use a $\chi^2$ test to decide representation: \\
+      \sitem {\footnotesize Single character (e.g., \texttt{1})}, \\
+      \sitem {\footnotesize Standard character class (e.g., digit \texttt{[0-9]}),} \\
+      \sitem {\footnotesize OR-list of characters (e.g., \texttt{(0|1|2)}).}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Comparing \textsc{Xtructure}s}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Needed for label assignment and attribute comparison.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Comparison yields two asymmetric scores: \\
+      \sitem {\footnotesize Fit of samples from $A$ to $B$.} \\
+      \sitem {\footnotesize Fit of samples from $B$ to $A$.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Estimation based on random sampling.
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{LSH for Approximate Similarity Search}
+  \begin{items}
+    \begin{oitem}{\litem}
+      All-pairs comparisons are too expensive for large datasets.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Generate triples $\langle \mathrm{character}, \mathrm{hinge}, \mathrm{position} \rangle$ from \textsc{Xtructure}s. \\
+      \sitem {\footnotesize Example: \texttt{10/12} $\rightarrow$ $\langle\mathtt{1},0,0\rangle, \langle\mathtt{0},0,1\rangle, \langle\mathtt{1},1,0\rangle, \langle\mathtt{2},1,1\rangle$.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Use MinHash to approximate Jaccard similarity across triple sets.
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Evaluation -- Automatic Label Assignment}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Match \textsc{Xtructure}s to library of regex--label pairs.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Compare assignments to manually curated ground truth.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Achieves 94\% accuracy on three datasets.
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Evaluation -- Attribute Similarity Search}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Task: find similar columns in datasets.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Compared against manually labeled ground truth.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Both all-pairs and LSH-based methods reach $\sim$80\% F1-score at best.
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Evaluation -- Syntax-Based Outlier Detection}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Fit \textsc{Xtructure} on subsets of data.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Evaluate fit of new samples. \\
+      \sitem {\footnotesize Outliers fit poorly into the learned structure.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Achieves very high precision and recall in experiments.
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Strengths}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Fast learning, even on large datasets.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Human-readable outputs (regex-like).
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Supports probabilistic generation.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Works with only positive examples.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Parallelizable.
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Limitations}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Cannot represent cyclic languages.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Cannot handle highly unstructured text.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Sensitive to rare branching structures.
+    \end{oitem}
+  \end{items}
 \end{frame}
 
 {
