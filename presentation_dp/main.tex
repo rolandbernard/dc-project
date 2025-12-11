@@ -114,6 +114,9 @@
       \sitem {\footnotesize produce a compact description $D$ of a language that contains them. $S \subseteq \mathcal{L}(D)$} \\
       \sitem {\footnotesize This description should generalize beyond the examples.}
     \end{oitem}
+    \begin{center}
+      \includegraphics[width=0.9\linewidth]{figures/into.png}
+    \end{center}
   \end{items}
 \end{frame}
 
@@ -185,6 +188,10 @@
       \sitem {\footnotesize Few structural variations.} \\
       \sitem {\footnotesize Mostly finite languages.}
     \end{oitem}
+    \begin{center}
+      \includegraphics[width=0.45\linewidth]{figures/regexvx.png}
+      \includegraphics[width=0.45\linewidth]{figures/numbranches.png}
+    \end{center}
   \end{items}
 \end{frame}
 
@@ -202,6 +209,11 @@
       \sitem {\footnotesize Token layer: sequences split by delimiters.} \\
       \sitem {\footnotesize Symbol layer: distributions over characters.}
     \end{oitem}
+    \begin{center}
+      \vspace*{-8em}
+      \hspace*{18.5em}
+      \includegraphics[width=0.5\linewidth]{figures/model.png}
+    \end{center}
   \end{items}
 \end{frame}
 
@@ -216,6 +228,9 @@
       \sitem {\footnotesize Encodes which characters appear.} \\
       \sitem {\footnotesize Encodes frequencies for statistical generalization.}
     \end{oitem}
+    \begin{center}
+      \includegraphics[width=0.9\linewidth]{figures/model-symbol.png}
+    \end{center}
   \end{items}
 \end{frame}
 
@@ -231,6 +246,9 @@
     \begin{oitem}{\litem}
       Example: \texttt{10/12/2018} tokenizes into \texttt{10}, \texttt{12}, \texttt{2018}.
     \end{oitem}
+    \begin{center}
+      \includegraphics[width=0.9\linewidth]{figures/model-token.png}
+    \end{center}
   \end{items}
 \end{frame}
 
@@ -247,6 +265,9 @@
     \begin{oitem}{\litem}
       Only layer where variability in length is possible.
     \end{oitem}
+    \begin{center}
+      \includegraphics[width=0.9\linewidth]{figures/model-branch.png}
+    \end{center}
   \end{items}
 \end{frame}
 
@@ -329,6 +350,9 @@
       \sitem {\footnotesize Standard character class (e.g., digit \texttt{[0-9]}),} \\
       \sitem {\footnotesize OR-list of characters (e.g., \texttt{(0|1|2)}).}
     \end{oitem}
+    \begin{center}
+      \includegraphics[width=0.7\linewidth]{figures/repdist.png}
+    \end{center}
   \end{items}
 \end{frame}
 
@@ -362,6 +386,9 @@
     \begin{oitem}{\litem}
       Use MinHash to approximate Jaccard similarity across triple sets.
     \end{oitem}
+    \begin{center}
+      \includegraphics[width=0.6\linewidth]{figures/lsh.png}
+    \end{center}
   \end{items}
 \end{frame}
 
@@ -403,6 +430,9 @@
     \begin{oitem}{\litem}
       Both all-pairs and LSH-based methods reach $\sim$80\% F1-score at best.
     \end{oitem}
+    \begin{center}
+      \includegraphics[width=0.6\linewidth]{figures/pr-similar.png}
+    \end{center}
   \end{items}
 \end{frame}
 
@@ -419,6 +449,9 @@
     \begin{oitem}{\litem}
       Achieves very high precision and recall in experiments.
     \end{oitem}
+    \begin{center}
+      \includegraphics[width=0.6\linewidth]{figures/pr-outlier.png}
+    \end{center}
   \end{items}
 \end{frame}
 
@@ -447,13 +480,19 @@
 \frametitle{Limitations}
   \begin{items}
     \begin{oitem}{\litem}
+      Assumes delimiter-based structure.
+    \end{oitem}
+    \begin{oitem}{\litem}
       Cannot represent cyclic languages.
     \end{oitem}
     \begin{oitem}{\litem}
       Cannot handle highly unstructured text.
     \end{oitem}
     \begin{oitem}{\litem}
-      Sensitive to rare branching structures.
+      Hard to distinguish meaningful rare patterns from noise.
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Limited long-range dependencies and context-sensitive patterns.
     \end{oitem}
   \end{items}
 \end{frame}
