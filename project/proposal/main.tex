@@ -65,7 +65,7 @@
 
 \title{Assessing Infrastructure Vulnerability to \\Natural Hazards in South Tyrol}
 \author{Roland Bernard, 19598, \inlinecode{rolbernard@unibz.it}}
-\date{December 2025}
+\date{February 2026}
 
 \def\maketitle{
 \begin{strip}
@@ -113,8 +113,8 @@ The idea of the project is to focus on the intersection of exposed assets and na
 
 The project will integrate five datasets from the Bolzano Province GeoKatalog. The integration will involve the following provided data sources:
 \begin{itemize}
-  \item \textbf{Infrastructure:} \inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node} for providing information about critical infrastructure.
-  \item \textbf{Hazards:} \inlinecode{bz_hazard_landslide} and \inlinecode{bz_hazard_avalanche} provide information about know hazard zones.
+  \item \textbf{Infrastructure:} \inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node} will be utilized to provide information regarding critical infrastructure.
+  \item \textbf{Hazards:} Information regarding known risk areas will be derived from \inlinecode{bz_hazard_landslide} and \inlinecode{bz_hazard_avalanche}.
   \item \textbf{Administrative:} \inlinecode{bz_admin_municipality} to provide spatial context and assign risk to specific municipalities.
 \end{itemize}
 
@@ -130,6 +130,6 @@ By integrating infrastructure assets with hazard inventories and administrative 
 
 \section{Initial Ontology} \label{technology}
 
-An OWL 2 QL ontology with will be created that contains relevant classes (e.g., Infrastructure, HazardZone, Municipality, PowerLine) and properties (e.g., isLocatedIn, intersectsHazard). A preliminary design for the ontology is shown in \cref{fig:ontology}.
+An OWL 2 QL ontology with will be created that contains relevant classes (e.g., Infrastructure, EnergyInfrastructure, HazardZone, Municipality) and properties (e.g., isExposedTo, infrastructureIn). A preliminary design for the ontology is shown in \cref{fig:ontology}.
 
 \end{document}
