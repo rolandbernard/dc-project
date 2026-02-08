@@ -1,4 +1,4 @@
-\documentclass[10pt,a4paper,twocolumn]{article}
+\documentclass[11pt,a4paper,twocolumn]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{anysize, longtable}
@@ -94,21 +94,24 @@
 
 \makeatother
 
-\input{texfigures/defs.tex}
-
 \begin{document}
 
 \maketitle
 
-\input{texfigures/ontology.tex}
+\begin{figure*}[b!]
+  \centering
+  \includegraphics[width=\linewidth]{figures/ontology.pdf}
+  \caption{Proposed ontology for the project.}
+  \label{fig:ontology}
+\end{figure*}
 
 \section{Domain of Interest} \label{domain}
 
-The idea of the project is to focus on the intersection of exposed assets and natural hazards. The aim is to identify and analyze critical infrastructure that are geographically located within known hazard zones to assess potential vulnerabilities.
+The idea of the project is to focus on the intersection of exposed assets and natural hazards. The aim is to identify and analyze critical infrastructure (water, electricity, and communications) that are geographically located within known hazard zones (landslides and avalanches) to assess potential vulnerabilities.
 
 \section{Data Sources} \label{datasources}
 
-The project will integrate data from the Bolzano Province GeoKatalog. The integration will involve the following provided data sources:
+The project will integrate five datasets from the Bolzano Province GeoKatalog. The integration will involve the following provided data sources:
 \begin{itemize}
   \item \textbf{Infrastructure:} \inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node} for providing information about critical infrastructure.
   \item \textbf{Hazards:} \inlinecode{bz_hazard_landslide} and \inlinecode{bz_hazard_avalanche} provide information about know hazard zones.
@@ -119,7 +122,7 @@ The project will integrate data from the Bolzano Province GeoKatalog. The integr
 
 By integrating infrastructure assets with hazard inventories and administrative data, the system will be able to answer the following types of queries:
 \begin{itemize}
-  \item Which specific infrastructure nodes are located within landslide zones?
+  \item Which water-related infrastructure nodes are located within high risk landslide zones?
   \item What are the infrastructure lines that intersect with avalanche-prone areas?
   \item In a given Municipality, how many electricity lines are currently situated in a hazard zone.
   \item Which municipalities have the highest count of infrastructure elements exposed to natural hazards?
@@ -128,6 +131,5 @@ By integrating infrastructure assets with hazard inventories and administrative 
 \section{Initial Ontology} \label{technology}
 
 An OWL 2 QL ontology with will be created that contains relevant classes (e.g., Infrastructure, HazardZone, Municipality, PowerLine) and properties (e.g., isLocatedIn, intersectsHazard). A preliminary design for the ontology is shown in \cref{fig:ontology}.
-
 
 \end{document}
