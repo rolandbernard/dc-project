@@ -1,10 +1,64 @@
 
 \subsection{Single Column Analysis} \label{single}
 
-
+Single column analysis has been performed for this project using both the YData Profiling Python library and the SCDP algorithm implementation for Metanome. The goal of this analysis is primarily to understand the type and distribution of data contained within the individual columns. As such it will influence for example the data type chosen for the corresponding attributes in the relational schema and ontology developed in \cref{relational} and \cref{ontology}. Below I include, in addition to some commentary about the results, also tables that include the most relevant information for each column of the various tables.
 
 \subsubsection{\texorpdfstring{\inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node}}{bz\_infrastructure\_line and bz\_infrastructure\_node}}
 
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{|l|r|r|r|r|r|r|r|}
+    \hline
+        Column & Data Type & \% NULLs & \# distinct & Min & Max & Avg & Std. \\ \hline \hline
+        ogc\_fid & INT & 0 & 47551 & 1 & 47551 & 23776 & 13726.94 \\ \hline
+        gml\_id & VARCHAR[48] & 0 & 47551 & - & - & - & - \\ \hline
+        objectid & REAL & 0 & 47551 & 94188705 & 94462179 & 94295324.76 & 102812.43 \\ \hline
+        code & REAL & 0 & 11 & 1021101 & 1021111 & 1021103.63 & 2.42 \\ \hline
+        codealt & NA & 100 & 0 & - & - & - & - \\ \hline
+        bez\_i & VARCHAR[48] & 0 & 11 & - & - & - & - \\ \hline
+        bez\_d & VARCHAR[48] & 0 & 11 & - & - & - & - \\ \hline
+        istat\_code & REAL & 0 & 115 & 21001 & 21118 & 21044.08 & 34.64 \\ \hline
+        nda\_link\_de & VARCHAR[64] & 0 & 115 & - & - & - & - \\ \hline
+        nda\_link\_it & VARCHAR[64] & 0 & 115 & - & - & - & - \\ \hline
+        nda\_text\_de & VARCHAR[16] & 0 & 1 & - & - & - & - \\ \hline
+        nda\_text\_it & VARCHAR[16] & 0 & 1 & - & - & - & - \\ \hline
+        gem\_text\_d & VARCHAR[32] & 0 & 115 & - & - & - & - \\ \hline
+        gem\_text\_i & VARCHAR[32] & 0 & 115 & - & - & - & - \\ \hline
+        blp & NA & 100 & 0 & - & - & - & - \\ \hline
+        shape\_len & REAL & 0 & 45404 & 0.004 & 23001.3641 & 223.08 & 503.35 \\ \hline
+        geom & TEXT & 0 & 47115 & - & - & - & - \\ \hline
+    \end{tabular}
+    \caption{Single column analysis results for the different columns of the \inlinecode{bz_infrastructure_line} table extracted using the Metanome SCDP algorithm.}
+  \label{tab:bz_infrastructure_line}
+\end{table}
+
+\Cref{tab:bz_infrastructure_line} shows the most important single column analysis results for each column of the \inlinecode{bz_infrastructure_line} table. The table contains a total of 47551 rows. We can operate that the table contains three columns that individually for a unique key, \inlinecode{ogc_fid}, \inlinecode{glm_id}, and \inlinecode{objectid}. \inlinecode{ogc_fid} is a sequentially increasing integer, going from 0 to 47551. Interestingly, \inlinecode{objectid} is stored as a real data type, with values such as "94188705.0", "94188707.0", or "94188708.0". However, all values are whole integers. The values of \inlinecode{glm_id} all follow the pattern \inlinecode{UrbanPlan-InfrastructurePlan-Network.<objectid>} where \inlinecode{<objectid>} is the integer value stored in the \inlinecode{objectid} column of the same tuple.
+
+\inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d}, and \inlinecode{gem_text_i} all have 115 distinct values, indicating that they might contain related values. Manually inspecting \inlinecode{gem_text_d} reveals that it contains the names of municipalities, presumably the one the infrastructure line belongs to. \inlinecode{gem_text_i} contains the Italian name and \inlinecode{istat_code} some kind of identifier. \inlinecode{nda_link_de} and \inlinecode{nda_link_it} contain links that when followed lead to the Implementing rules to the land-use plan of the given municipality.
+
+\inlinecode{code}, \inlinecode{bez_i}, and \inlinecode{bez_d} all have 11 distinct values. These values seem to indicate the type of infrastructure that is represented by this tuple, with the values in \inlinecode{bez_d} being the German name, those in \inlinecode{bez_i} the Italian name, and the values in \inlinecode{code} being an integer identifier of the type. Note that like with \inlinecode{objectid}, the values in \inlinecode{code} are represented as real numbers ending with ".0", meaning they all have integer values. The following are all possible values of \inlinecode{bez_d}: "Trinkwasserleitung", "Druckrohrleitung", "Abwasserleitung", "Schlammleitung", "Methangasleitung", "Hochspannungsleitung", "Mittelspannungsleitung", "Fernwärmeleitung", "Hochspannungsleitung - Bannstreifen", "Sonstige Leitungen", "Methangasleitung - Bannstreifen".
+
+Finally, \inlinecode{geom} contains the geometry of the infrastructure line. Manual analysis reveals that the values are in the Well-Known Text format.  \inlinecode{shape_len} contains \inlinecode{codealt} and \inlinecode{blp} only contain missing values 
+
+\begin{figure*}[ht!]
+  \centering
+  \hfill
+  \begin{subfigure}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/bz_infrastructure_line_corr.png}
+    \caption{Correlation matrix for \inlinecode{bz_infrastructure_line}.}
+    \label{fig:bz_infrastructure_line_corr}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\linewidth}
+    \centering
+    \caption{Correlation matrix for \inlinecode{bz_infrastructure_node}.}
+    \label{fig:bz_infrastructure_node_corr}
+  \end{subfigure}
+  \hfill
+  \caption{Column correlation matrix showing the correlation between all pairs of columns for the \inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node} tables. Spearman correlation is used for comparing numerical variables and Cramer's V association coefficient for categorical variables.}
+  \label{fig:bz_infrastructure_corr}
+\end{figure*}
 
 \subsubsection{\texorpdfstring{\inlinecode{bz_hazard_landslide} and \inlinecode{bz_hazard_avalanche}}{bz\_hazard\_landslide and bz\_hazard\_avalanche}}
 

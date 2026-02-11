@@ -4,6 +4,7 @@
 /data
 /nets/*.net
 __pycache__
+venv
 
 # Build results
 submission*
