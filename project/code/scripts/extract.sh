@@ -4,6 +4,6 @@
 # compressed using gzip compression. This script simply un-gzips them.
 
 for file in ./data/*.csv.gz ; do
-    gunzip -dk $file
+    gunzip -dkf $file
 done
 
