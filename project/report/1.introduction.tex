@@ -1,2 +1,19 @@
 
 \section{Introduction} \label{into}
+
+TODO
+
+The idea of the project is to focus on the intersection of exposed assets and natural hazards. The aim is to identify and analyze critical infrastructure (water, electricity, and communications) that are geographically located within known hazard zones (landslides and avalanches) to assess potential vulnerabilities.
+
+By integrating infrastructure assets with hazard inventories and administrative data, the system will be able to answer the following types of queries:
+\begin{itemize}
+  \item Which water-related infrastructure nodes are located within high risk landslide zones?
+  \item What are the infrastructure lines that intersect with avalanche-prone areas?
+  \item In a given Municipality, how many electricity lines are currently situated in a hazard zone?
+  \item Which municipalities have the highest count of infrastructure elements exposed to natural hazards?
+\end{itemize}
+
+The remainder of this report is structured as follows:
+\Cref{data} gives an overview of the chosen data sources. \Cref{profiling} covers the data profiling part of the project, including single column analysis in \cref{single}, \cref{ucc} covering unique column combinations, \cref{fd} containing analysis of functional dependencies, and \cref{inc} analyses inclusion dependencies. \cref{relational} describes the design and implementation of the relational database schema based on the preceding data profiling results.
+\Cref{integration} covers the data integration part of the project, describing the developed ontology in \cref{ontology}, the virtual knowledge graph mappings in \cref{mappings}, and a description of the implemented application in \cref{application}.
+Finally, \cref{conclusion} concludes the report with a summary of the performed tasks.
