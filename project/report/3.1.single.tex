@@ -16,7 +16,7 @@ Single column analysis has been performed for this project using both the YData 
       \inlinecode{gml_id} & VARCHAR[48] & 0 & 47551 & - & - & - & - \\ \hline
       \inlinecode{objectid} & REAL & 0 & 47551 & 94188705 & 94462179 & 94295324.76 & 102812.43 \\ \hline
       \inlinecode{code} & REAL & 0 & 11 & 1021101 & 1021111 & 1021103.63 & 2.42 \\ \hline
-      \inlinecode{codealt} & NA & 47551 & 0 & - & - & - & - \\ \hline
+      \inlinecode{codealt} & - & 47551 & 0 & - & - & - & - \\ \hline
       \inlinecode{bez_i} & VARCHAR[48] & 0 & 11 & - & - & - & - \\ \hline
       \inlinecode{bez_d} & VARCHAR[48] & 0 & 11 & - & - & - & - \\ \hline
       \inlinecode{istat_code} & REAL & 0 & 115 & 21001 & 21118 & 21044.08 & 34.64 \\ \hline
@@ -26,7 +26,7 @@ Single column analysis has been performed for this project using both the YData 
       \inlinecode{nda_text_it} & VARCHAR[16] & 0 & 1 & - & - & - & - \\ \hline
       \inlinecode{gem_text_d} & VARCHAR[32] & 0 & 115 & - & - & - & - \\ \hline
       \inlinecode{gem_text_i} & VARCHAR[32] & 0 & 115 & - & - & - & - \\ \hline
-      \inlinecode{blp} & NA & 47551 & 0 & - & - & - & - \\ \hline
+      \inlinecode{blp} & - & 47551 & 0 & - & - & - & - \\ \hline
       \inlinecode{shape_len} & REAL & 0 & 45404 & 0.004 & 23001.3641 & 223.08 & 503.35 \\ \hline
       \inlinecode{geom} & TEXT & 0 & 47115 & - & - & - & - \\ \hline
     \end{tabular}
@@ -71,7 +71,7 @@ Finally, \inlinecode{geom} contains the geometry of the infrastructure line. Man
       \inlinecode{gml_id} & VARCHAR[48] & 0 & 4223 & - & - & - & - \\ \hline
       \inlinecode{objectid} & REAL & 0 & 4223 & 19130422 & 19222933 & 19163811.41 & 37377.07 \\ \hline
       \inlinecode{code} & REAL & 0 & 10 & 1021201 & 1021211 & 1021203.73 & 3.58 \\ \hline
-      \inlinecode{codealt} & NA & 4223 & 0 & - & - & - & - \\ \hline
+      \inlinecode{codealt} & - & 4223 & 0 & - & - & - & - \\ \hline
       \inlinecode{bez_i} & VARCHAR[48] & 0 & 10 & - & - & - & - \\ \hline
       \inlinecode{bez_d} & VARCHAR[32] & 0 & 10 & - & - & - & - \\ \hline
       \inlinecode{istat_code} & REAL & 0 & 115 & 21001 & 21118 & 21056.76 & 35.26 \\ \hline
@@ -81,7 +81,7 @@ Finally, \inlinecode{geom} contains the geometry of the infrastructure line. Man
       \inlinecode{nda_text_it} & VARCHAR[16] & 0 & 1 & - & - & - & - \\ \hline
       \inlinecode{gem_text_d} & VARCHAR[32] & 0 & 115 & - & - & - & - \\ \hline
       \inlinecode{gem_text_i} & VARCHAR[32] & 0 & 115 & - & - & - & - \\ \hline
-      \inlinecode{blp} & NA & 4223 & 0 & - & - & - & - \\ \hline
+      \inlinecode{blp} & - & 4223 & 0 & - & - & - & - \\ \hline
       \inlinecode{geom} & VARCHAR[48] & 0 & 4214 & - & - & - & - \\ \hline
     \end{tabular}
   \end{widepage}
@@ -143,7 +143,7 @@ The variables \inlinecode{code}, \inlinecode{bez_d}, and \inlinecode{bez_i} now 
   \hfill
   \begin{subfigure}[t]{0.48\linewidth}
     \centering
-    \includegraphics[width=\linewidth]{figures/bz_infrastructure_node_corr.png}
+    \includegraphics[width=\linewidth]{figures/bz_hazard_avalanche_corr.png}
     \caption{Correlation matrix for \inlinecode{bz_hazard_avalanche}.}
     \label{fig:bz_hazard_avalanche_corr}
   \end{subfigure}
@@ -160,6 +160,48 @@ There are also three variables, \inlinecode{id_process}, \inlinecode{processo}, 
 Next, the table also contains information about the depth of the investigation performed in \inlinecode{id_gs}, \inlinecode{gradodistudio}, and \inlinecode{bearbeitungstiefe}, where all the distinct values for \inlinecode{bearbeitungstiefe} are "Mittlere (BT10)" and "Hoch (BT05)".
 The \inlinecode{geom} variable, like in all the other tables contains the geometry in Well-Known Text Format. All the geometries in this table are of type \inlinecode{POLYGON}.
 Finally, there are the columns \inlinecode{x_label} and \inlinecode{y_label} that contain real numbers. It is unclear what these value mean exactly, and they are uncorrelated to all other columns in the table.
+
+\begin{table}[ht!]
+  \begin{widepage}
+    \centering
+    \begin{tabular}{|l|r|r|r|r|r|r|r|}
+    \hline
+        Column & Data Type & \# NULLs & \# Distinct & Min & Max & Avg. & Std. \\ \hline \hline
+        \inlinecode{ogc_fid} & SMALLINT & 0 & 13071 & 1 & 13071 & 6536 & 3773.42 \\ \hline
+        \inlinecode{gml_id} & VARCHAR[48] & 0 & 13071 & - & - & - & - \\ \hline
+        \inlinecode{objectid} & REAL & 0 & 13071 & 13254987 & 13278119 & 13261982.19 & 4763.84 \\ \hline
+        \inlinecode{istat_code} & REAL & 0 & 104 & 21001 & 21118 & 21057.48 & 34.20 \\ \hline
+        \inlinecode{gem_id} & REAL & 0 & 89 & 0 & 99 & 42.46 & 30.14 \\ \hline
+        \inlinecode{name_i} & VARCHAR[32] & 0 & 104 & - & - & - & - \\ \hline
+        \inlinecode{name_d} & VARCHAR[32] & 0 & 104 & - & - & - & - \\ \hline
+        \inlinecode{status_gzp} & SMALLINT & 0 & 1 & 1 & 1 & 1 & 0 \\ \hline
+        \inlinecode{desc_i} & VARCHAR[16] & 0 & 1 & - & - & - & - \\ \hline
+        \inlinecode{desc_d} & VARCHAR[16] & 0 & 1 & - & - & - & - \\ \hline
+        \inlinecode{code} & REAL & 0 & 4 & 1040301 & 1040304 & 1040301.90 & 1.26 \\ \hline
+        \inlinecode{pericolo} & VARCHAR[64] & 0 & 4 & - & - & - & - \\ \hline
+        \inlinecode{gefahr} & VARCHAR[48] & 0 & 4 & - & - & - & - \\ \hline
+        \inlinecode{id_process} & VARCHAR[16] & 0 & 5 & - & - & - & - \\ \hline
+        \inlinecode{processo} & VARCHAR[32] & 0 & 5 & - & - & - & - \\ \hline
+        \inlinecode{prozess} & VARCHAR[16] & 0 & 5 & - & - & - & - \\ \hline
+        \inlinecode{id_gp} & VARCHAR[16] & 0 & 11 & - & - & - & - \\ \hline
+        \inlinecode{id_gs} & VARCHAR[16] & 0 & 3 & - & - & - & - \\ \hline
+        \inlinecode{id_phen} & - & 13071 & 0 & - & - & - & - \\ \hline
+        \inlinecode{gradodistudio} & VARCHAR[16] & 1 & 2 & - & - & - & - \\ \hline
+        \inlinecode{bearbeitungstiefe} & VARCHAR[16] & 1 & 2 & - & - & - & - \\ \hline
+        \inlinecode{x_label} & REAL & 0 & 13039 & 607410.84 & 762672.42 & 682427.64 & 35643.06038 \\ \hline
+        \inlinecode{y_label} & REAL & 0 & 13035 & 5121372.99 & 5219039.48 & 5173225.75 & 18780.81 \\ \hline
+        \inlinecode{geom} & TEXT & 0 & 13050 & - & - & - & - \\ \hline
+    \end{tabular}
+  \end{widepage}
+  \caption{Single column analysis results for the different columns of the \inlinecode{bz_hazard_avalanche} table extracted using the Metanome SCDP algorithm.}
+  \label{tab:bz_hazard_avalanche}
+\end{table}
+
+The table \inlinecode{bz_hazard_avalanche} contains 13071 rows and has a very similar structure to that of \inlinecode{bz_hazard_landslide}, as can bee seen in \cref{tab:bz_hazard_avalanche}. Most of the columns, including those related to the municipality, investigation depth, and geometry, are identical to those in \inlinecode{bz_hazard_landslide}. The identifiers have the same format, except for \inlinecode{gml_id} which here follows the pattern \inlinecode{UrbanPlan-HazardZonePlan-Avalanches.<objectid>}.
+While the overall danger classifications are similar, they have slight different naming, with the 4 distinct values in \inlinecode{gefahr} of this table being "Lawine - Untersucht und nicht gefährlich", "Lawine - Mittlere Gefahrenstufe (H2)", "Lawine - Hohe Gefahrenstufe (H3)", and "Lawine - Sehr hohe Gefahrenstufe (H4)".
+Like \inlinecode{bz_hazard_landslide}, this table also contains information about the different types of avalanches and the five distinct values in \inlinecode{prozess} are "Lawine", 'Massenbewegung", "Fließlawine", "Staublawine", and "Gleitschnee".
+All other columns are exactly as described for \inlinecode{bz_hazard_landslide} above.
+
 
 \subsubsection{\texorpdfstring{\inlinecode{bz_admin_municipality}}{bz\_admin\_municipality}}
 
