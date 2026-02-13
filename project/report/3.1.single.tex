@@ -148,7 +148,7 @@ The variables \inlinecode{code}, \inlinecode{bez_d}, and \inlinecode{bez_i} now 
     \label{fig:bz_hazard_avalanche_corr}
   \end{subfigure}
   \hfill
-  \caption{Column correlation matrix showing the correlation between all pairs of columns for the \inlinecode{bz_hazard_landslide} and \inlinecode{bz_hazard_avalanche} tables. Correlation is computed as explained in \cref{fig:bz_infrastructure_corr}}
+  \caption{Column correlation matrix showing the correlation between all pairs of columns for the \inlinecode{bz_hazard_landslide} and \inlinecode{bz_hazard_avalanche} tables. Correlation is computed as explained for \cref{fig:bz_infrastructure_corr}}
   \label{fig:bz_hazard_corr}
 \end{figure*}
 
@@ -166,31 +166,31 @@ Finally, there are the columns \inlinecode{x_label} and \inlinecode{y_label} tha
     \centering
     \begin{tabular}{|l|r|r|r|r|r|r|r|}
     \hline
-        Column & Data Type & \# NULLs & \# Distinct & Min & Max & Avg. & Std. \\ \hline \hline
-        \inlinecode{ogc_fid} & SMALLINT & 0 & 13071 & 1 & 13071 & 6536 & 3773.42 \\ \hline
-        \inlinecode{gml_id} & VARCHAR[48] & 0 & 13071 & - & - & - & - \\ \hline
-        \inlinecode{objectid} & REAL & 0 & 13071 & 13254987 & 13278119 & 13261982.19 & 4763.84 \\ \hline
-        \inlinecode{istat_code} & REAL & 0 & 104 & 21001 & 21118 & 21057.48 & 34.20 \\ \hline
-        \inlinecode{gem_id} & REAL & 0 & 89 & 0 & 99 & 42.46 & 30.14 \\ \hline
-        \inlinecode{name_i} & VARCHAR[32] & 0 & 104 & - & - & - & - \\ \hline
-        \inlinecode{name_d} & VARCHAR[32] & 0 & 104 & - & - & - & - \\ \hline
-        \inlinecode{status_gzp} & SMALLINT & 0 & 1 & 1 & 1 & 1 & 0 \\ \hline
-        \inlinecode{desc_i} & VARCHAR[16] & 0 & 1 & - & - & - & - \\ \hline
-        \inlinecode{desc_d} & VARCHAR[16] & 0 & 1 & - & - & - & - \\ \hline
-        \inlinecode{code} & REAL & 0 & 4 & 1040301 & 1040304 & 1040301.90 & 1.26 \\ \hline
-        \inlinecode{pericolo} & VARCHAR[64] & 0 & 4 & - & - & - & - \\ \hline
-        \inlinecode{gefahr} & VARCHAR[48] & 0 & 4 & - & - & - & - \\ \hline
-        \inlinecode{id_process} & VARCHAR[16] & 0 & 5 & - & - & - & - \\ \hline
-        \inlinecode{processo} & VARCHAR[32] & 0 & 5 & - & - & - & - \\ \hline
-        \inlinecode{prozess} & VARCHAR[16] & 0 & 5 & - & - & - & - \\ \hline
-        \inlinecode{id_gp} & VARCHAR[16] & 0 & 11 & - & - & - & - \\ \hline
-        \inlinecode{id_gs} & VARCHAR[16] & 0 & 3 & - & - & - & - \\ \hline
-        \inlinecode{id_phen} & - & 13071 & 0 & - & - & - & - \\ \hline
-        \inlinecode{gradodistudio} & VARCHAR[16] & 1 & 2 & - & - & - & - \\ \hline
-        \inlinecode{bearbeitungstiefe} & VARCHAR[16] & 1 & 2 & - & - & - & - \\ \hline
-        \inlinecode{x_label} & REAL & 0 & 13039 & 607410.84 & 762672.42 & 682427.64 & 35643.06038 \\ \hline
-        \inlinecode{y_label} & REAL & 0 & 13035 & 5121372.99 & 5219039.48 & 5173225.75 & 18780.81 \\ \hline
-        \inlinecode{geom} & TEXT & 0 & 13050 & - & - & - & - \\ \hline
+      Column & Data Type & \# NULLs & \# Distinct & Min & Max & Avg. & Std. \\ \hline \hline
+      \inlinecode{ogc_fid} & SMALLINT & 0 & 13071 & 1 & 13071 & 6536 & 3773.42 \\ \hline
+      \inlinecode{gml_id} & VARCHAR[48] & 0 & 13071 & - & - & - & - \\ \hline
+      \inlinecode{objectid} & REAL & 0 & 13071 & 13254987 & 13278119 & 13261982.19 & 4763.84 \\ \hline
+      \inlinecode{istat_code} & REAL & 0 & 104 & 21001 & 21118 & 21057.48 & 34.20 \\ \hline
+      \inlinecode{gem_id} & REAL & 0 & 89 & 0 & 99 & 42.46 & 30.14 \\ \hline
+      \inlinecode{name_i} & VARCHAR[32] & 0 & 104 & - & - & - & - \\ \hline
+      \inlinecode{name_d} & VARCHAR[32] & 0 & 104 & - & - & - & - \\ \hline
+      \inlinecode{status_gzp} & SMALLINT & 0 & 1 & 1 & 1 & 1 & 0 \\ \hline
+      \inlinecode{desc_i} & VARCHAR[16] & 0 & 1 & - & - & - & - \\ \hline
+      \inlinecode{desc_d} & VARCHAR[16] & 0 & 1 & - & - & - & - \\ \hline
+      \inlinecode{code} & REAL & 0 & 4 & 1040301 & 1040304 & 1040301.90 & 1.26 \\ \hline
+      \inlinecode{pericolo} & VARCHAR[64] & 0 & 4 & - & - & - & - \\ \hline
+      \inlinecode{gefahr} & VARCHAR[48] & 0 & 4 & - & - & - & - \\ \hline
+      \inlinecode{id_process} & VARCHAR[16] & 0 & 5 & - & - & - & - \\ \hline
+      \inlinecode{processo} & VARCHAR[32] & 0 & 5 & - & - & - & - \\ \hline
+      \inlinecode{prozess} & VARCHAR[16] & 0 & 5 & - & - & - & - \\ \hline
+      \inlinecode{id_gp} & VARCHAR[16] & 0 & 11 & - & - & - & - \\ \hline
+      \inlinecode{id_gs} & VARCHAR[16] & 0 & 3 & - & - & - & - \\ \hline
+      \inlinecode{id_phen} & - & 13071 & 0 & - & - & - & - \\ \hline
+      \inlinecode{gradodistudio} & VARCHAR[16] & 1 & 2 & - & - & - & - \\ \hline
+      \inlinecode{bearbeitungstiefe} & VARCHAR[16] & 1 & 2 & - & - & - & - \\ \hline
+      \inlinecode{x_label} & REAL & 0 & 13039 & 607410.84 & 762672.42 & 682427.64 & 35643.06038 \\ \hline
+      \inlinecode{y_label} & REAL & 0 & 13035 & 5121372.99 & 5219039.48 & 5173225.75 & 18780.81 \\ \hline
+      \inlinecode{geom} & TEXT & 0 & 13050 & - & - & - & - \\ \hline
     \end{tabular}
   \end{widepage}
   \caption{Single column analysis results for the different columns of the \inlinecode{bz_hazard_avalanche} table extracted using the Metanome SCDP algorithm.}
@@ -205,5 +205,52 @@ All other columns are exactly as described for \inlinecode{bz_hazard_landslide} 
 
 \subsubsection{\texorpdfstring{\inlinecode{bz_admin_municipality}}{bz\_admin\_municipality}}
 
+\begin{table}[!ht]
+  \begin{widepage}
+    \centering
+    \begin{tabular}{|l|r|r|r|r|r|r|r|}
+    \hline
+      Column & Data Type & \# NULLs & \# Distinct & Min & Max & Avg. & Std. \\ \hline \hline
+      \inlinecode{ogc_fid} & SMALLINT & 0 & 116 & 1 & 116 & 58.5 & 33.63 \\ \hline
+      \inlinecode{gml_id} & VARCHAR[32] & 0 & 116 & - & - & - & - \\ \hline
+      \inlinecode{id} & REAL & 0 & 116 & 1 & 116 & 58.5 & 33.63 \\ \hline
+      \inlinecode{code} & REAL & 0 & 116 & 1 & 118 & 59.08 & 34.34 \\ \hline
+      \inlinecode{istat_code} & REAL & 0 & 116 & 21001 & 21118 & 21059.08 & 34.34 \\ \hline
+      \inlinecode{zip_code} & REAL & 0 & 50 & 39010 & 39100 & 39032.48 & 14.64 \\ \hline
+      \inlinecode{belfiore_code} & VARCHAR[16] & 0 & 116 & - & - & - & - \\ \hline
+      \inlinecode{name_it} & VARCHAR[32] & 0 & 116 & - & - & - & - \\ \hline
+      \inlinecode{name_de} & VARCHAR[32] & 0 & 116 & - & - & - & - \\ \hline
+      \inlinecode{name_ld} & VARCHAR[16] & 107 & 9 & - & - & - & - \\ \hline
+      \inlinecode{distr_code} & REAL & 0 & 8 & 1 & 8 & 4.45 & 2.55 \\ \hline
+      \inlinecode{distr_de} & VARCHAR[32] & 0 & 8 & - & - & - & - \\ \hline
+      \inlinecode{distr_it} & VARCHAR[32] & 0 & 8 & - & - & - & - \\ \hline
+      \inlinecode{area} & REAL & 0 & 116 & 1660704.679 & 302498146.7 & 63786681 & 57613893.65 \\ \hline
+      \inlinecode{health_region} & REAL & 0 & 4 & 1 & 4 & 2.32 & 1.11 \\ \hline
+      \inlinecode{health_district} & REAL & 0 & 20 & 11 & 44 & 26.39 & 10.51 \\ \hline
+      \inlinecode{map_label} & VARCHAR[64] & 0 & 116 & - & - & - & - \\ \hline
+      \inlinecode{geom} & TEXT & 0 & 116 & - & - & - & - \\ \hline
+    \end{tabular}
+  \end{widepage}
+  \caption{Single column analysis results for the different columns of the \inlinecode{bz_admin_municipality} table extracted using the Metanome SCDP algorithm.}
+  \label{tab:bz_admin_municipality}
+\end{table}
 
+\begin{figure*}[ht!]
+  \centering
+  \begin{subfigure}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/bz_admin_municipality_corr.png}
+  \end{subfigure}
+  \caption{Column correlation matrix showing the correlation between all pairs of columns for the \inlinecode{bz_admin_municipality} table. Correlation is computed as explained for \cref{fig:bz_infrastructure_corr}}
+  \label{fig:bz_admin_municipality_corr}
+\end{figure*}
+
+The \inlinecode{bz_admin_municipality} table contains 116 rows of data and its single column analysis results are shown in \cref{tab:bz_admin_municipality}. This table contains numerous individually unique columns. The column \inlinecode{ogc_fid}, like the columns of the same name in the other tables, is a dense integer valued identifier. \inlinecode{id} also contains the exact same identifier as \inlinecode{ogc_fid}, however, it is formatted as a real value. \inlinecode{gml_id} is formatted as \inlinecode{Municipalities.<id>}, where \inlinecode{<id>} is the integer value of \inlinecode{id} for the respective row.
+The columns \inlinecode{code} and \inlinecode{istat_code} are also closely related, as can also be seen in the correlation matrix in \cref{fig:bz_admin_municipality_corr}. Both of these, while they are formatted as real values, contain only integer values. Further, executed tests show that \inlinecode{code} is always equal to the last three digits of the integer value stored in \inlinecode{istat_code}.
+Another type of identifier, formed by one letter followed by three digits, is stored in \inlinecode{belfiore_code}.
+The name of the municipality is stored in three different languages in \inlinecode{name_it}, \inlinecode{name_de}, and  \inlinecode{name_ld}. Note that while all rows contain values for the first two, the latter has many missing values is present only in 9 rows. Related to the name of the municipality, \inlinecode{map_label} contains a combination of the names in the different languages.
+The ZIP code of the municipality is stored in the \inlinecode{zip_code} columns. Again, while this is formatted as a real number, all of them contain a trailing ".0" meaning they represent integer values.
+Next, the district to which the municipality belongs is also stored in the columns \inlinecode{distr_code}, \inlinecode{distr_de}, \inlinecode{distr_it}. The eight distinct values for \inlinecode{distr_code} are the integers from 1 to 8, while the corresponding names for the district in \inlinecode{distr_de} are "Burggrafenamt", "Salten-Schlern", "Überetsch-Südt.Unterland", "Pustertal", "Wipptal", "Eisacktal", "Vinschgau", and "Bozen".
+The health region and district are also available respectively in \inlinecode{health_region} and \inlinecode{health_district}. The columns only contain integer values, again formatted as real values, and no information about the names of these is available in the used data sources.
+Finally, \inlinecode{area} contains the area of the covered by the municipality and \inlinecode{geom} contains a geometry of type \inlinecode{POLYGON}.
 
