@@ -14,9 +14,13 @@ All three of these are candidates for being a primary key in the relational sche
 \subsubsection{\texorpdfstring{\inlinecode{bz_hazard_landslide} and \inlinecode{bz_hazard_avalanche}}{bz\_hazard\_landslide and bz\_hazard\_avalanche}}
 
 The results for the tables \inlinecode{bz_hazard_landslide} and \inlinecode{bz_hazard_avalanche} are very similar to those for the infrastructure data explained in \cref{ucc-infra}.
-For both of these tables, the set of minimal unique column combination contains only the following single column combinations: {\inlinecode{ogc_fid}}, {\inlinecode{gml_id}}, and {\inlinecode{objectid}}.
+For both of these tables, the set of minimal unique column combination contains only the following single column combinations: \{\inlinecode{ogc_fid}\}, \{\inlinecode{gml_id}\}, and \{\inlinecode{objectid}\}.
 Again, all three of these are possible candidates for the primary key, however, following the same rational as in \cref{ucc-infra}, the \inlinecode{objectid} column is likely the most appropriate choice for the primarily keys of these two tables. \inlinecode{objectid} would be a more appropriate choice if we needed to use it as a foreign key in a different table, which is however not the case for this project.
 
 \subsubsection{\texorpdfstring{\inlinecode{bz_admin_municipality}}{bz\_admin\_municipality}}
 
-TODO
+Finally, the last table has a slightly different set of minimal unique column combinations compared to the other four. Still, all the minimal unique column combinations contain only a single column. Set full set of these minimal unique column combinations for the \inlinecode{bz_admin_municipality} table are \{\inlinecode{ogc_fid}\}, \{\inlinecode{gml_id}\}, \{\inlinecode{id}\}, \{\inlinecode{code}\}, \{\inlinecode{istat_code}\}, \{\inlinecode{belfiore_code}\}, \{\inlinecode{name_it}\}, \{\inlinecode{name_de}\}, \{\inlinecode{area}\},  \{\inlinecode{map_label}\}, and \{\inlinecode{geom}\}.
+From these, many are possible candidates for use as a primary key. However, \inlinecode{geom} and especially \inlinecode{area} do not make sense as primary keys. The latter is not necessary guaranteed to be unique in general outside this dataset. On the other hand, the former might technically be guaranteed to be unique in all cases, but even in that scenario it makes little practical sense to identify municipalities by their geometry.
+\inlinecode{name_it}, \inlinecode{name_de}, and \inlinecode{map_label} could technically be primary keys, but because there is no real way to choose a canonical language for the name, it is preferable to choose one of the identifiers as the primary key.
+From the remaining unique columns, which are all valid candidates for primary keys, \inlinecode{istat_code} is likely the best candidate for the primary key, because it is present also in the other tables as a foreign key.
+
