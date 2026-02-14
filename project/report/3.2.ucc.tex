@@ -1,22 +1,21 @@
 
 \subsection{Unique Column Combination Discovery} \label{ucc}
 
-Unique column combination discovery has been performed on all tables for ths project using the Metanome HyUCC algorithm. This algorithm implements a version of the hybrid unique column discovery algorithm described in \cite{papenbrock2017hybrid}. The primary goal of this analysis is to identify possible keys in the dataset that can later be used as primary keys or regular unique constraints in the relational schema for \cref{relational}.
+Unique column combination discovery has been performed on all tables for ths project using the Metanome HyUCC algorithm. This algorithm implements a version of the hybrid unique column discovery algorithm described in \cite{papenbrock2017hybrid}. The primary goal of this analysis is to identify possible keys in the dataset that can later be used as primary keys or regular unique constraints in the relational schema for \cref{relational}. Note that all discovered minimal unique column families are single columns, so they have largely already been discussed in \cref{single}.
 
 
-\subsubsection{\texorpdfstring{\inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node}}{bz\_infrastructure\_line and bz\_infrastructure\_node}}
+\subsubsection{\texorpdfstring{\inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node}}{bz\_infrastructure\_line and bz\_infrastructure\_node}} \label{ucc-infra}
 
-In both \inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node} there are only three minimal unique column combinations, and all of them consist of only single columns. As such, these have already been identified in \cref{single}.
+In both \inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node} there are only three minimal unique column combinations, and all of them consist of only single columns. As such, these have already been identified in \cref{single-infra}.
 The minimal unique column combinations are \{\inlinecode{ogc_fid}\}, \{\inlinecode{gml_id}\}, and \{\inlinecode{objectid}\} for both of these tables.
-All three of these are candidates for being a primary key in the relational schema. However, \inlinecode{gml_id} is a string that can be generated easily from \inlinecode{objectid}, which is an integer formatted as a real value, as explained in \cref{single}. \inlinecode{objectid} might be used elsewhere in data sets not used for this project as a foreign key, however, for this project \inlinecode{ogc_fid} seems like the best candidate for the primary key, as it is a dense integer identifier.
+All three of these are candidates for being a primary key in the relational schema. However, \inlinecode{gml_id} is a string that can be generated easily from \inlinecode{objectid}, which is an integer formatted as a real value, as explained in \cref{single-infra}. \inlinecode{objectid} might be used elsewhere in data sets not used for this project as a foreign key, however, for this project \inlinecode{ogc_fid} seems like the best candidate for the primary key, as it is a dense integer identifier.
 
 
 \subsubsection{\texorpdfstring{\inlinecode{bz_hazard_landslide} and \inlinecode{bz_hazard_avalanche}}{bz\_hazard\_landslide and bz\_hazard\_avalanche}}
 
-TODO
-
-TODO
-
+The results for the tables \inlinecode{bz_hazard_landslide} and \inlinecode{bz_hazard_avalanche} are very similar to those for the infrastructure data explained in \cref{ucc-infra}.
+For both of these tables, the set of minimal unique column combination contains only the following single column combinations: {\inlinecode{ogc_fid}}, {\inlinecode{gml_id}}, and {\inlinecode{objectid}}.
+Again, all three of these are possible candidates for the primary key, however, following the same rational as in \cref{ucc-infra}, the \inlinecode{objectid} column is likely the most appropriate choice for the primarily keys of these two tables. \inlinecode{objectid} would be a more appropriate choice if we needed to use it as a foreign key in a different table, which is however not the case for this project.
 
 \subsubsection{\texorpdfstring{\inlinecode{bz_admin_municipality}}{bz\_admin\_municipality}}
 
