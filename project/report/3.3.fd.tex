@@ -1,12 +1,68 @@
 
 \subsection{Functional Dependency Discovery} \label{fd}
 
-TODO
+Metanome using the HyFD algorithm implementation has been used for the discovery of Functional dependencies in this project. This implementation is based on the hybrid approach introduced in \cite{papenbrock2016hybrid}. The results of this analysis can be used to identify parts of the tables that can possible be extracted into separate relations in the design of the relational schema for \cref{relational}.
 
 
 \subsubsection{\texorpdfstring{\inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node}}{bz\_infrastructure\_line and bz\_infrastructure\_node}}
 
+\begin{table}[ht!]
+  \begin{widepage}
+    \centering
+    \begin{tabular}{|l|r|}
+    \hline
+      Determinant & Dependents \\ \hline \hline
+      \{\} & \inlinecode{codealt}, \inlinecode{blp} \\ \hline
+      \{\inlinecode{ogc_fid}\} & \ast \\ \hline
+      \{\inlinecode{gml_id}\} & \ast \\ \hline
+      \{\inlinecode{objectid}\} & \ast \\ \hline
+      \{\inlinecode{geom}\} & \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{nda_link_it} \inlinecode{gem_text_d}, \inlinecode{gem_text_i}, \inlinecode{nda_text_de} \\ \hline
+      \{\inlinecode{shape_len}\} & \inlinecode{nda_text_de}, \inlinecode{nda_text_it} \\ \hline
+      \{\inlinecode{istat_code}\} & \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d}, \inlinecode{gem_text_i}, \inlinecode{nda_text_de}, \inlinecode{csv.nda_text_it} \\ \hline
+      \{\inlinecode{nda_link_de}\} & \inlinecode{istat_code}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d}, \inlinecode{gem_text_i}, \inlinecode{nda_text_de}, \inlinecode{nda_text_it} \\ \hline
+      \{\inlinecode{csv.nda_link_it}\} & \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{gem_text_d}, \inlinecode{gem_text_i}, \inlinecode{nda_text_de}, \inlinecode{nda_text_it} \\ \hline
+      \{\inlinecode{gem_text_d}\} & \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_i}, \inlinecode{nda_text_de}, \inlinecode{nda_text_it} \\ \hline
+      \{\inlinecode{gem_text_i}\} & \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d}, \inlinecode{nda_text_de}, \inlinecode{nda_text_it} \\ \hline
+      \{\inlinecode{code}\} & \inlinecode{bez_i}, \inlinecode{bez_d} \\ \hline
+      \{\inlinecode{bez_i}\} & \inlinecode{code}, \inlinecode{bez_d} \\ \hline
+      \{\inlinecode{bez_d}\} & \inlinecode{code}, \inlinecode{bez_i} \\ \hline
+      \{\inlinecode{nda_text_de}\} & \inlinecode{nda_text_it} \\ \hline
+      \{\inlinecode{nda_text_it}\} & \inlinecode{nda_text_de} \\ \hline
+    \end{tabular}
+  \end{widepage}
+  \caption{Functional dependencies discovered in \inlinecode{bz_infrastructure_line} table using the Metanome HyFD algorithm. Multiple columns in the dependents means that all of them are functionally dependent on the determinant. Further, unique column combinations have been marked with \ast.}
+  \label{tab:bz_infrastructure_line_fd}
+\end{table}
+
 TODO
+
+\begin{table}[ht!]
+  \begin{widepage}
+    \centering
+    \begin{tabular}{|l|r|}
+    \hline
+      Determinant & Dependents \\ \hline \hline
+      \{\} & \inlinecode{codealt} \\ \hline
+      \{\} & \inlinecode{nda_text_de} \\ \hline
+      \{\} & \inlinecode{nda_text_it} \\ \hline
+      \{\} & \inlinecode{blp} \\ \hline
+      \{\inlinecode{ogc_fid}\} & \ast \\ \hline
+      \{\inlinecode{gml_id}\} & \ast \\ \hline
+      \{\inlinecode{objectid}\} & \ast \\ \hline
+      \{\inlinecode{geom}\} & \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d}, \inlinecode{gem_text_i}, \inlinecode{code}, \inlinecode{bez_i}, \inlinecode{bez_d} \\ \hline
+      \{\inlinecode{istat_code}\} & \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d}, \inlinecode{gem_text_i} \\ \hline
+      \{\inlinecode{nda_link_de}\} & \inlinecode{istat_code}, \inlinecode{gem_text_d}, \inlinecode{gem_text_i} \\ \hline
+      \{\inlinecode{nda_link_it}\} & \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{gem_text_d}, \inlinecode{gem_text_i} \\ \hline
+      \{\inlinecode{gem_text_d}\} & \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_i} \\ \hline
+      \{\inlinecode{gem_text_i}\} & \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d} \\ \hline
+      \{\inlinecode{code}\} & \inlinecode{bez_i}, \inlinecode{bez_d} \\ \hline
+      \{\inlinecode{bez_i}\} & \inlinecode{code}, \inlinecode{bez_d} \\ \hline
+      \{\inlinecode{bez_d}\} & \inlinecode{code}, \inlinecode{bez_i} \\ \hline
+    \end{tabular}
+  \end{widepage}
+  \caption{Functional dependencies discovered in \inlinecode{bz_infrastructure_node} table using the Metanome HyFD algorithm. Multiple columns in the dependents means that all of them are functionally dependent on the determinant. Unique column combinations have been marked with \ast as dependents for brevity.}
+  \label{tab:bz_infrastructure_node_fd}
+\end{table}
 
 TODO
 

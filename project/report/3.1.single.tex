@@ -19,13 +19,13 @@ Single column analysis has been performed for this project using both the YData 
       \inlinecode{codealt} & - & 47551 & 0 & - & - & - & - \\ \hline
       \inlinecode{bez_i} & VARCHAR[48] & 0 & 11 & - & - & - & - \\ \hline
       \inlinecode{bez_d} & VARCHAR[48] & 0 & 11 & - & - & - & - \\ \hline
-      \inlinecode{istat_code} & REAL & 0 & 115 & 21001 & 21118 & 21044.08 & 34.64 \\ \hline
-      \inlinecode{nda_link_de} & VARCHAR[64] & 0 & 115 & - & - & - & - \\ \hline
-      \inlinecode{nda_link_it} & VARCHAR[64] & 0 & 115 & - & - & - & - \\ \hline
-      \inlinecode{nda_text_de} & VARCHAR[16] & 0 & 1 & - & - & - & - \\ \hline
-      \inlinecode{nda_text_it} & VARCHAR[16] & 0 & 1 & - & - & - & - \\ \hline
-      \inlinecode{gem_text_d} & VARCHAR[32] & 0 & 115 & - & - & - & - \\ \hline
-      \inlinecode{gem_text_i} & VARCHAR[32] & 0 & 115 & - & - & - & - \\ \hline
+      \inlinecode{istat_code} & REAL & 6 & 115 & 21001 & 21118 & 21044.08 & 34.64 \\ \hline
+      \inlinecode{nda_link_de} & VARCHAR[64] & 6 & 115 & - & - & - & - \\ \hline
+      \inlinecode{nda_link_it} & VARCHAR[64] & 6 & 115 & - & - & - & - \\ \hline
+      \inlinecode{nda_text_de} & VARCHAR[16] & 6 & 1 & - & - & - & - \\ \hline
+      \inlinecode{nda_text_it} & VARCHAR[16] & 6 & 1 & - & - & - & - \\ \hline
+      \inlinecode{gem_text_d} & VARCHAR[32] & 6 & 115 & - & - & - & - \\ \hline
+      \inlinecode{gem_text_i} & VARCHAR[32] & 6 & 115 & - & - & - & - \\ \hline
       \inlinecode{blp} & - & 47551 & 0 & - & - & - & - \\ \hline
       \inlinecode{shape_len} & REAL & 0 & 45404 & 0.004 & 23001.3641 & 223.08 & 503.35 \\ \hline
       \inlinecode{geom} & TEXT & 0 & 47115 & - & - & - & - \\ \hline
@@ -57,7 +57,7 @@ Single column analysis has been performed for this project using both the YData 
 \end{figure*}
 
 \Cref{tab:bz_infrastructure_line} shows the most important single column analysis results for each column of the \inlinecode{bz_infrastructure_line} table. The table contains a total of 47551 rows. We can operate that the table contains three columns that individually for a unique key, \inlinecode{ogc_fid}, \inlinecode{glm_id}, and \inlinecode{objectid}. \inlinecode{ogc_fid} is a sequentially increasing integer, going from 0 to 47551. Interestingly, \inlinecode{objectid} is stored as a real data type, with values such as "94188705.0", "94188707.0", or "94188708.0". However, all values are whole integers. The values of \inlinecode{glm_id} all follow the pattern \inlinecode{UrbanPlan-InfrastructurePlan-Network.<objectid>} where \inlinecode{<objectid>} is the integer value stored in the \inlinecode{objectid} column of the same tuple.
-\inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d}, and \inlinecode{gem_text_i} all have 115 distinct values, indicating that they might contain related values. This relationship can also clearly be seen in the correlation matrix show in \cref{fig:bz_infrastructure_line_corr}. Manually inspecting \inlinecode{gem_text_d} reveals that it contains the names of municipalities, presumably the one the infrastructure line belongs to. \inlinecode{gem_text_i} contains the Italian name and \inlinecode{istat_code} some kind of identifier. \inlinecode{nda_link_de} and \inlinecode{nda_link_it} contain links that when followed lead to the Implementing rules to the land-use plan of the given municipality.
+\inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d}, and \inlinecode{gem_text_i} all have 115 distinct values, indicating that they might contain related values. This relationship can also clearly be seen in the correlation matrix show in \cref{fig:bz_infrastructure_line_corr}. Manually inspecting \inlinecode{gem_text_d} reveals that it contains the names of municipalities, presumably the one the infrastructure line belongs to. \inlinecode{gem_text_i} contains the Italian name and \inlinecode{istat_code} some kind of identifier. \inlinecode{nda_link_de} and \inlinecode{nda_link_it} contain links that when followed lead to the Implementing rules to the land-use plan of the given municipality. Note that these municipality related columns are each missing for six rows.
 \inlinecode{code}, \inlinecode{bez_i}, and \inlinecode{bez_d} all have 11 distinct values. These values seem to indicate the type of infrastructure that is represented by this tuple, with the values in \inlinecode{bez_d} being the German name, those in \inlinecode{bez_i} the Italian name, and the values in \inlinecode{code} being an integer identifier of the type. Note that like with \inlinecode{objectid}, the values in \inlinecode{code} are represented as real numbers ending with ".0", meaning they all have integer values. The following are all possible values of \inlinecode{bez_d}: "Trinkwasserleitung", "Druckrohrleitung", "Abwasserleitung", "Schlammleitung", "Methangasleitung", "Hochspannungsleitung", "Mittelspannungsleitung", "Fernwärmeleitung", "Hochspannungsleitung - Bannstreifen", "Sonstige Leitungen", "Methangasleitung - Bannstreifen".
 Finally, \inlinecode{geom} contains the geometry of the infrastructure line. Manual analysis reveals that the values are in the Well-Known Text format \cite{ISO_IEC_13249_3_2016} and all of them are of type \inlinecode{MULTILINESTRING}. \inlinecode{shape_len} seems to contain real values. Comparing them with the geometry in \inlinecode{geom} seems to indicate that \inlinecode{shape_len} might be the length of the infrastructure line.  \inlinecode{nda_text_de} and \inlinecode{nda_text_it} have a constant value of "Öffne" and "Apri" respectively. \inlinecode{codealt} and \inlinecode{blp} only contain missing values and are therefore not particularly interesting for this project.
 
