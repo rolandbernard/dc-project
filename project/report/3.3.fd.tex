@@ -18,9 +18,9 @@ Metanome using the HyFD algorithm implementation has been used for the discovery
       \{\inlinecode{objectid}\} & \ast \\ \hline
       \{\inlinecode{geom}\} & \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{nda_link_it} \inlinecode{gem_text_d}, \inlinecode{gem_text_i}, \inlinecode{nda_text_de} \\ \hline
       \{\inlinecode{shape_len}\} & \inlinecode{nda_text_de}, \inlinecode{nda_text_it} \\ \hline
-      \{\inlinecode{istat_code}\} & \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d}, \inlinecode{gem_text_i}, \inlinecode{nda_text_de}, \inlinecode{csv.nda_text_it} \\ \hline
+      \{\inlinecode{istat_code}\} & \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d}, \inlinecode{gem_text_i}, \inlinecode{nda_text_de}, \inlinecode{nda_text_it} \\ \hline
       \{\inlinecode{nda_link_de}\} & \inlinecode{istat_code}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d}, \inlinecode{gem_text_i}, \inlinecode{nda_text_de}, \inlinecode{nda_text_it} \\ \hline
-      \{\inlinecode{csv.nda_link_it}\} & \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{gem_text_d}, \inlinecode{gem_text_i}, \inlinecode{nda_text_de}, \inlinecode{nda_text_it} \\ \hline
+      \{\inlinecode{nda_link_it}\} & \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{gem_text_d}, \inlinecode{gem_text_i}, \inlinecode{nda_text_de}, \inlinecode{nda_text_it} \\ \hline
       \{\inlinecode{gem_text_d}\} & \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_i}, \inlinecode{nda_text_de}, \inlinecode{nda_text_it} \\ \hline
       \{\inlinecode{gem_text_i}\} & \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d}, \inlinecode{nda_text_de}, \inlinecode{nda_text_it} \\ \hline
       \{\inlinecode{code}\} & \inlinecode{bez_i}, \inlinecode{bez_d} \\ \hline
@@ -34,7 +34,11 @@ Metanome using the HyFD algorithm implementation has been used for the discovery
   \label{tab:bz_infrastructure_line_fd}
 \end{table}
 
-TODO
+\Cref{tab:bz_infrastructure_line_fd} shows all the minimal functional dependencies discovered by the applied algorithm in the table \inlinecode{bz_infrastructure_line}. Aside from the two columns, \inlinecode{codealt} and \inlinecode{blp}, that are always missing and the three columns, \inlinecode{ogc_fid}, \inlinecode{gml_id}, and \inlinecode{objectid}, that are unique, we can still observe additional interesting information from the other functional dependencies.
+First, it can be seen that \inlinecode{geom} functionally determines many other columns. This is quite intuitive because the geometry of two distinct infrastructure lines is likely not to be the same, unless they go along the same route. The functional dependency shows that all rows with the same geometry belong to the same municipality.
+The functional dependency from \inlinecode{shape_len} to \inlinecode{nda_text_de} and \inlinecode{nda_text_it}, as well as those between \inlinecode{nda_text_de} and \inlinecode{nda_text_it} in both directions, can be explained by the fact that these two columns are constant except for the fact that they are missing in some rare cases.
+Next, it can be observed that there are a number of functional dependencies related to individual municipalities. Municipalities can be identified by one of \inlinecode{istat_code}, \inlinecode{nda_link_de}, \inlinecode{nda_link_it}, \inlinecode{gem_text_d}, or \inlinecode{gem_text_i}. When a municipality is given, then in addition to these identifying columns also \inlinecode{nda_text_de} and \inlinecode{nda_text_it} are known to be present. This suggests a relational schema where these municipality related variables are extracted into a separate relation. This relation would most appropriately be use the \inlinecode{istat_code} as a primary key.
+Finally, like in the case of the municipality, there are also three columns, \inlinecode{code}, \inlinecode{bez_i}, and \inlinecode{bez_d}, that all identify the kind of infrastructure that is represented by a row. These could also be extracted into separate relation with \inlinecode{code} as the primary key.
 
 \begin{table}[ht!]
   \begin{widepage}
@@ -60,7 +64,7 @@ TODO
       \{\inlinecode{bez_d}\} & \inlinecode{code}, \inlinecode{bez_i} \\ \hline
     \end{tabular}
   \end{widepage}
-  \caption{Functional dependencies discovered in \inlinecode{bz_infrastructure_node} table using the Metanome HyFD algorithm. Multiple columns in the dependents means that all of them are functionally dependent on the determinant. Unique column combinations have been marked with \ast as dependents for brevity.}
+  \caption{Functional dependencies discovered in \inlinecode{bz_infrastructure_node} table using the Metanome HyFD algorithm. Multiple columns in the dependents means that all of them are functionally dependent on the determinant. Unique column combinations have been marked with \ast\  as dependents for brevity.}
   \label{tab:bz_infrastructure_node_fd}
 \end{table}
 
