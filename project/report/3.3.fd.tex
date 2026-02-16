@@ -76,7 +76,52 @@ Lastly, the functional dependencies related to municipalities and infrastructure
 
 \subsubsection{\texorpdfstring{\inlinecode{bz_hazard_landslide} and \inlinecode{bz_hazard_avalanche}}{bz\_hazard\_landslide and bz\_hazard\_avalanche}}
 
-TODO
+\begin{table}[ht!]
+  \begin{widepage}
+    \centering
+    \begin{tabular}{|l|r|}
+    \hline
+      Determinant & Dependents \\ \hline \hline
+      \{\} & \inlinecode{status_gzp} \\ \hline
+      \{\} & \inlinecode{desc_i} \\ \hline
+      \{\} & \inlinecode{desc_d} \\ \hline
+      \{\inlinecode{ogc_fid}\} & \ast \\ \hline
+      \{\inlinecode{gml_id}\} & \ast \\ \hline
+      \{\inlinecode{objectid}\} & \ast \\ \hline
+      \{\inlinecode{geom}\} & \inlinecode{y_label}, \inlinecode{x_label}, \inlinecode{istat_code}, \inlinecode{name_i}, \inlinecode{name_d}, \inlinecode{gem_id} \\ \hline
+      \{\inlinecode{geom}, \dots\} & \dots \\ \hline
+      \{\inlinecode{x_label}, \dots\} & \dots \\ \hline
+      \{\inlinecode{y_label}, \dots\} & \dots \\ \hline
+      \{\inlinecode{istat_code}, \inlinecode{processo}\} & \inlinecode{id_process} \\ \hline
+      \{\inlinecode{istat_code}, \inlinecode{prozess}\} & \inlinecode{id_process} \\ \hline
+      \{\inlinecode{name_i}, \inlinecode{processo}\} & \inlinecode{id_process} \\ \hline
+      \{\inlinecode{name_i}, \inlinecode{prozess}\} & \inlinecode{id_process} \\ \hline
+      \{\inlinecode{name_d}, \inlinecode{processo}\} & \inlinecode{id_process} \\ \hline
+      \{\inlinecode{name_d}, \inlinecode{prozess}\} & \inlinecode{id_process} \\ \hline
+      \{\inlinecode{gem_id}, \inlinecode{processo}\} & \inlinecode{id_process} \\ \hline
+      \{\inlinecode{gem_id}, \inlinecode{prozess}\} & \inlinecode{id_process} \\ \hline
+      \{\inlinecode{processo}\} & \inlinecode{prozess} \\ \hline
+      \{\inlinecode{prozess}\} & \inlinecode{processo} \\ \hline
+      \{\inlinecode{istat_code}\} & \inlinecode{name_i}, \inlinecode{name_d}, \inlinecode{gem_id} \\ \hline
+      \{\inlinecode{name_d}\} & \inlinecode{istat_code}, \inlinecode{name_i}, \inlinecode{gem_id} \\ \hline
+      \{\inlinecode{name_i}\} & \inlinecode{istat_code}, \inlinecode{name_d}, \inlinecode{gem_id} \\ \hline
+      \{\inlinecode{code}\} & \inlinecode{pericolo}, \inlinecode{gefahr} \\ \hline
+      \{\inlinecode{pericolo}\} & \inlinecode{code}, \inlinecode{gefahr} \\ \hline
+      \{\inlinecode{gefahr}\} & \inlinecode{code}, \inlinecode{pericolo} \\ \hline
+      \{\inlinecode{gradodistudio}\} & \inlinecode{bearbeitungstiefe}, \inlinecode{id_gs} \\ \hline
+      \{\inlinecode{bearbeitungstiefe}\} & \inlinecode{gradodistudio}, \inlinecode{id_gs} \\ \hline
+    \end{tabular}
+  \end{widepage}
+  \caption{Functional dependencies discovered in \inlinecode{bz_hazard_landslide} table using the Metanome HyFD algorithm. Multiple columns in the dependents means that all of them are functionally dependent on the determinant. Unique column combinations have been marked with \ast\  as dependents for brevity. Further, some functional dependencies that are not particularly insightful have been abbreviated using \dots.}
+  \label{tab:bz_hazard_landslide_fd}
+\end{table}
+
+For the table \inlinecode{bz_hazard_landslide} a very large number of 255 functional dependencies has been discovered. However, many of them are not particularly meaningfully, because they use one or more from \inlinecode{geom}, \inlinecode{x_label}, and \inlinecode{y_label}. These columns are related to the location of the hazard area, and as such are already nearly unique. This means that adding additional columns quickly indices functional dependencies. For this reason, these functional dependencies have been removed from \cref{tab:bz_hazard_landslide_fd}.
+In the remaining functional dependencies, aside from the unique or constant columns, a number of different interesting observations can be made. 
+First, like with the infrastructure tables, this table contains information about the municipalities that are made up of the columns \inlinecode{istat_code}, \inlinecode{name_i}, \inlinecode{name_d}, and \inlinecode{gem_id}. Note that all of these except \inlinecode{gem_id} could be used to identify the municipality.
+A similar relationship exists between the columns for the danger level, with the columns \inlinecode{code}, \inlinecode{pericolo}, and \inlinecode{gefahr} each being able to functionally determine the values of the others.
+Regarding the type of landslide, there is a similar relationship between \inlinecode{processo} and \inlinecode{prozess}. However, in this case there is some inconsistency with regard to the \inlinecode{id_process}. Interactive analysis the of these columns shows that the reason for why this ID does not functionally determine the other two columns is that the values for \inlinecode{processo} and \inlinecode{prozess} are missing in very few cases. In these case a value for \inlinecode{id_process} is still present and not always the same.
+A very similar situation is also present for the investigation depth, where \inlinecode{gradodistudio}, \inlinecode{bearbeitungstiefe}, and \inlinecode{id_gs} are related. However, because there are is one row with missing values for \inlinecode{gradodistudio} and \inlinecode{bearbeitungstiefe} but not \inlinecode{id_gs}, the latter does not functionally determine the former two.
 
 TODO
 
