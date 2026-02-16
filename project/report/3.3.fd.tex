@@ -1,7 +1,7 @@
 
 \subsection{Functional Dependency Discovery} \label{fd}
 
-Metanome using the HyFD algorithm implementation has been used for the discovery of Functional dependencies in this project. This implementation is based on the hybrid approach introduced in \cite{papenbrock2016hybrid}. The results of this analysis can be used to identify parts of the tables that can possible be extracted into separate relations in the design of the relational schema for \cref{relational}.
+Metanome using the HyFD algorithm implementation has been used for the discovery of Functional dependencies in this project. This implementation is based on the hybrid approach introduced in \cite{papenbrock2016hybrid}. As with the unique column combination discovery, also for this analysis NULL values have been configured to compare equal. The results of this analysis can be used to identify parts of the tables that can possible be extracted into separate relations in the design of the relational schema for \cref{relational}.
 
 
 \subsubsection{\texorpdfstring{\inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node}}{bz\_infrastructure\_line and bz\_infrastructure\_node}}
@@ -123,7 +123,47 @@ A similar relationship exists between the columns for the danger level, with the
 Regarding the type of landslide, there is a similar relationship between \inlinecode{processo} and \inlinecode{prozess}. However, in this case there is some inconsistency with regard to the \inlinecode{id_process}. Interactive analysis the of these columns shows that the reason for why this ID does not functionally determine the other two columns is that the values for \inlinecode{processo} and \inlinecode{prozess} are missing in very few cases. In these case a value for \inlinecode{id_process} is still present and not always the same.
 A very similar situation is also present for the investigation depth, where \inlinecode{gradodistudio}, \inlinecode{bearbeitungstiefe}, and \inlinecode{id_gs} are related. However, because there are is one row with missing values for \inlinecode{gradodistudio} and \inlinecode{bearbeitungstiefe} but not \inlinecode{id_gs}, the latter does not functionally determine the former two.
 
-TODO
+\begin{table}[ht!]
+  \begin{widepage}
+    \centering
+    \begin{tabular}{|l|r|}
+    \hline
+      Determinant & Dependents \\ \hline \hline
+      \{\} & \inlinecode{status_gzp} \\ \hline
+      \{\} & \inlinecode{desc_i} \\ \hline
+      \{\} & \inlinecode{desc_d} \\ \hline
+      \{\} & \inlinecode{id_phen} \\ \hline
+      \{\inlinecode{ogc_fid}\} & \ast \\ \hline
+      \{\inlinecode{gml_id}\} & \ast \\ \hline
+      \{\inlinecode{objectid}\} & \ast \\ \hline
+      \{\inlinecode{geom}\} & \inlinecode{x_label}, \inlinecode{y_label}, \inlinecode{istat_code}, \dots, \inlinecode{id_gp},\inlinecode{id_process}, \dots, \inlinecode{id_gs}, \dots \\ \hline
+      \{\inlinecode{x_label}, \dots\} & \dots \\ \hline
+      \{\inlinecode{y_label}, \dots\} & \dots \\ \hline
+      \{\inlinecode{istat_code}\} & \inlinecode{name_i}, \inlinecode{name_d}, \inlinecode{gem_id} \\ \hline
+      \{\inlinecode{name_i}\} & \inlinecode{istat_code}, \inlinecode{name_d}, \inlinecode{gem_id} \\ \hline
+      \{\inlinecode{name_d}\} & \inlinecode{istat_code}, \inlinecode{name_i}, \inlinecode{gem_id} \\ \hline
+      \{\inlinecode{id_process}\} & \inlinecode{processo}, \inlinecode{prozess} \\ \hline
+      \{\inlinecode{processo}\} & \inlinecode{id_process}, \inlinecode{prozess} \\ \hline
+      \{\inlinecode{prozess}\} & \inlinecode{id_process}, \inlinecode{processo} \\ \hline
+      \{\inlinecode{code}\} & \inlinecode{pericolo}, \inlinecode{gefahr} \\ \hline
+      \{\inlinecode{pericolo}\} & \inlinecode{code}, \inlinecode{gefahr} \\ \hline
+      \{\inlinecode{gefahr}\} & \inlinecode{code}, \inlinecode{pericolo} \\ \hline
+      \{\inlinecode{id_gs}\} & \inlinecode{gradodistudio}, \inlinecode{bearbeitungstiefe} \\ \hline
+      \{\inlinecode{gradodistudio}\} & \inlinecode{id_gs}, \inlinecode{bearbeitungstiefe} \\ \hline
+      \{\inlinecode{bearbeitungstiefe}\} & \inlinecode{id_gs}, \inlinecode{gradodistudio} \\ \hline
+    \end{tabular}
+  \end{widepage}
+  \caption{Functional dependencies discovered in \inlinecode{bz_hazard_avalanche} table using the Metanome HyFD algorithm. Multiple columns in the dependents means that all of them are functionally dependent on the determinant. Unique column combinations have been marked with \ast\  as dependents for brevity. Further, some functional dependencies that are not particularly insightful have been abbreviated using \dots.}
+  \label{tab:bz_hazard_avalanche_fd}
+\end{table}
+
+The functional dependencies for table \inlinecode{bz_hazard_avalanche} are show in \cref{tab:bz_hazard_avalanche_fd}. Again, because in total the algorithm fount 281 different functional dependencies, \cref{tab:bz_hazard_avalanche_fd} removes some of them that contain \inlinecode{geom}, \inlinecode{x_label}, or \inlinecode{y_label} that are largely not insightful.
+The overall structure of the functional dependencies is very similar to that for the landslide hazard zone dataset. The main difference is that because there are fewer missing values, it does not contain the misleading functional dependencies related to \inlinecode{id_process} and \inlinecode{id_gs}.
+The columns \inlinecode{status_gzp}, \inlinecode{desc_i}, \inlinecode{desc_d}, and \inlinecode{id_phen} are all constant and the columns \inlinecode{ogc_fid}, \inlinecode{gml_id}, and \inlinecode{objectid} are all individually unique in the dataset.
+The columns related to municipalities can clearly be identified as \inlinecode{istat_code}, \inlinecode{name_i}, and \inlinecode{name_d}. Each of these individually functionally determines the remaining two.
+Similarly, the same dynamic exists for the avalanche type represented by \inlinecode{id_process}, \inlinecode{processo}, and \inlinecode{prozess}.
+Further also the columns \inlinecode{code}, \inlinecode{pericolo}, and \inlinecode{gefahr} have the same relationship for the danger level.
+Finally, \inlinecode{id_gs}, \inlinecode{gradodistudio}, and \inlinecode{bearbeitungstiefe} are all information about the investigation depth.
 
 
 \subsubsection{\texorpdfstring{\inlinecode{bz_admin_municipality}}{bz\_admin\_municipality}}
