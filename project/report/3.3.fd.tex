@@ -168,5 +168,35 @@ Finally, \inlinecode{id_gs}, \inlinecode{gradodistudio}, and \inlinecode{bearbei
 
 \subsubsection{\texorpdfstring{\inlinecode{bz_admin_municipality}}{bz\_admin\_municipality}}
 
-TODO
+\begin{table}[ht!]
+  \begin{widepage}
+    \centering
+    \begin{tabular}{|l|r|}
+    \hline
+      Determinant & Dependents \\ \hline \hline
+      \{\inlinecode{ogc_fid}\} & \ast \\ \hline
+      \{\inlinecode{gml_id}\} & \ast \\ \hline
+      \{\inlinecode{id}\} & \ast \\ \hline
+      \{\inlinecode{code}\} & \ast \\ \hline
+      \{\inlinecode{istat_code}\} & \ast \\ \hline
+      \{\inlinecode{belfiore_code}\} & \ast \\ \hline
+      \{\inlinecode{name_it}\} & \ast \\ \hline
+      \{\inlinecode{name_de}\} & \ast \\ \hline
+      \{\inlinecode{area}\} & \ast \\ \hline
+      \{\inlinecode{map_label}\} & \ast \\ \hline
+      \{\inlinecode{geom}\} & \ast \\ \hline
+      \{\inlinecode{health_district}\} & \inlinecode{health_region} \\ \hline
+      \{\inlinecode{distr_code}\} & \inlinecode{distr_de}, \inlinecode{distr_it} \\ \hline
+      \{\inlinecode{distr_de}\} & \inlinecode{distr_code}, \inlinecode{distr_it} \\ \hline
+      \{\inlinecode{distr_it}\} & \inlinecode{distr_code}, \inlinecode{distr_de} \\ \hline
+    \end{tabular}
+  \end{widepage}
+  \caption{Functional dependencies discovered in \inlinecode{bz_admin_municipality} table using the Metanome HyFD algorithm. Multiple columns in the dependents means that all of them are functionally dependent on the determinant. Unique column combinations have been marked with \ast\  as dependents for brevity.}
+  \label{tab:bz_admin_municipality_fd}
+\end{table}
+
+All the functional dependencies discovered by the algorithm in the \inlinecode{bz_admin_municipality} table are shown in \cref{tab:bz_admin_municipality_fd}. This table, as has already been discussed in \cref{ucc}, contains numerous unique columns.
+Aside from the functional dependencies for these unique columns combinations, there are also two other interesting insights.
+The column \inlinecode{health_district} functionally determines the value of the \inlinecode{health_region} variable.
+Finally, the three different columns \inlinecode{distr_code}, \inlinecode{distr_de}, and \inlinecode{distr_it} represent the information about the the district the municipality belongs to. Each of them individually fully functionally determines the other two of them. These three could be extracted into a separate relation with a primary key of \inlinecode{distr_code} for the relational schema.
 
