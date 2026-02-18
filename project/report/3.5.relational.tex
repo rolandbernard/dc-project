@@ -1,4 +1,135 @@
 
 \subsection{Relational Database Schema} \label{relational}
 
-TODO
+Based on the above data profiling results, a relational schema has been developed that captures all the relevant data for answering the application questions outlined in the introduction.
+To exploit metadata extracted from dependency discovery algorithms, the schema design relies heavily on removing data redundancies highlighted by the functional dependency analyses.
+Further, the unique column combination and inclusion dependency profiling results dictate the schema's relational constraints such as the primary and foreign keys.
+Some attributes present in the raw dataset have also been excluded from the developed schema. The exclusion is guided by two main criteria, data quality and redundancy findings from the data profiling steps and the relevance to the application domain outlined in \cref{into}.
+
+\begin{table}[ht!]
+  \centering
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large District} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large Municipality} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill \\
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large InfrastructureType} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large DangerLevel} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill \\
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large InfrastructureLine} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large InfrastructureNode} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill \\
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large LandslideProcess} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large AvalancheProcess} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill \\
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large LandslideHazard} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large AvalancheHazard} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill
+  \caption{Specification of the relational schema designed for the data source in this project. Primary keys are underlined and marked with "PK", while foreign keys are marked with "FK: Relation[attribute]".}
+  \label{tab:schema}
+\end{table}
+
+The complete specification of the developed relational schema is shown in \cref{tab:schema}. The rest of this section will describe in detail the schema and the rationale for each design depiction taken, referencing both the relevance to the application domain the results of data profiling.
+
+\paragraph{Schema Normalization and Entity Extraction}
+
+
+\paragraph{Primary and Foreign Key Definitions}
+
+
+\paragraph{Completely Uninformative Attributes}
+
+
+\paragraph{Attributes Excluded to Ensure Normalization}
+
+
+\paragraph{Display, UI, and Cartographic Artifacts}
+
+
+\paragraph{Out-of-Scope Administrative Metadata}
+
+
+\paragraph{Derived Spatial Properties}
+
+
+\paragraph{Proposed Relational Schema}
+
+
