@@ -11,11 +11,147 @@ Some attributes present in the raw dataset have also been excluded from the deve
   \hfill
   \begin{subtable}[t]{0.48\linewidth}
     \centering
+    {\large InfrastructureLineType} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+      \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
+      \inlinecode{bez_d} & \inlinecode{VARCHAR[48]} & \\ \hline
+      \inlinecode{bez_i} & \inlinecode{VARCHAR[48]} & \\ \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large InfrastructureNodeType} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+      \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
+      \inlinecode{bez_d} & \inlinecode{VARCHAR[48]} & \\ \hline
+      \inlinecode{bez_i} & \inlinecode{VARCHAR[48]} & \\ \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill \\
+  \vskip1mm
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large InfrastructureLine} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+      \underline{\inlinecode{ogc_fid}} & \inlinecode{INTEGER} & PK \\ \hline
+      \inlinecode{code} & \inlinecode{INTEGER} & FK: InfrastructureLineType \\ \hline
+      \inlinecode{istat_code} & \inlinecode{INTEGER} & FK: Municipality \\ \hline
+      \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large InfrastructureNode} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+      \underline{\inlinecode{ogc_fid}} & \inlinecode{INTEGER} & PK \\ \hline
+      \inlinecode{code} & \inlinecode{INTEGER} & FK: InfrastructureNodeType \\ \hline
+      \inlinecode{istat_code} & \inlinecode{INTEGER} & FK: Municipality \\ \hline
+      \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill \\
+  \vskip1mm
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large LandslideProcess} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+      \underline{\inlinecode{id_process}} & \inlinecode{CHAR[2]} & PK \\ \hline
+      \inlinecode{processo} & \inlinecode{VARCHAR[32]} & \\ \hline
+      \inlinecode{prozess} & \inlinecode{VARCHAR[32]} & \\ \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large AvalancheProcess} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+      \underline{\inlinecode{id_process}} & \inlinecode{CHAR[2]} & PK \\ \hline
+      \inlinecode{processo} & \inlinecode{VARCHAR[32]} & \\ \hline
+      \inlinecode{prozess} & \inlinecode{VARCHAR[32]} & \\ \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill \\
+  \vskip1mm
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large LandslideDangerLevel} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+      \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
+      \inlinecode{pericolo} & \inlinecode{VARCHAR[64]} & \\ \hline
+      \inlinecode{gefahr} & \inlinecode{VARCHAR[64]} & \\ \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large AvalancheDangerLevel} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+      \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
+      \inlinecode{pericolo} & \inlinecode{VARCHAR[64]} & \\ \hline
+      \inlinecode{gefahr} & \inlinecode{VARCHAR[64]} & \\ \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill \\
+  \vskip1mm
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large LandslideHazard} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+      \underline{\inlinecode{ogc_fid}} & \inlinecode{INTEGER} & PK \\ \hline
+      \inlinecode{code} & \inlinecode{INTEGER} & FK: LandslideDangerLevel \\ \hline
+      \inlinecode{id_process} & \inlinecode{CHAR[2]} & FK: LandslideProcess \\ \hline
+      \inlinecode{istat_code} & \inlinecode{INTEGER} & FK: Municipality \\ \hline
+      \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
+    {\large AvalancheHazard} \\
+    \begin{tabular}{|l|l|l|}
+    \hline
+      Attribute & Data Type & Constraints \\ \hline \hline
+      \underline{\inlinecode{ogc_fid}} & \inlinecode{INTEGER} & PK \\ \hline
+      \inlinecode{code} & \inlinecode{INTEGER} & FK: AvalancheDangerLevel \\ \hline
+      \inlinecode{id_process} & \inlinecode{CHAR[2]} & FK: AvalancheProcess \\ \hline
+      \inlinecode{istat_code} & \inlinecode{INTEGER} & FK: Municipality \\ \hline
+      \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
+    \end{tabular}
+  \end{subtable}
+  \hfill \\
+  \vskip1mm
+  \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+    \centering
     {\large District} \\
     \begin{tabular}{|l|l|l|}
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
-      \underline{\inlinecode{distr_code}} & \inlinecode{INT} & PK \\ \hline
+      \underline{\inlinecode{distr_code}} & \inlinecode{INTEGER} & PK \\ \hline
       \inlinecode{distr_de} & \inlinecode{VARCHAR[32]} & \\ \hline
       \inlinecode{distr_it} & \inlinecode{VARCHAR[32]} & \\ \hline
     \end{tabular}
@@ -27,86 +163,17 @@ Some attributes present in the raw dataset have also been excluded from the deve
     \begin{tabular}{|l|l|l|}
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
-    \end{tabular}
-  \end{subtable}
-  \hfill \\
-  \hfill
-  \begin{subtable}[t]{0.48\linewidth}
-    \centering
-    {\large InfrastructureType} \\
-    \begin{tabular}{|l|l|l|}
-    \hline
-      Attribute & Data Type & Constraints \\ \hline \hline
+      \underline{\inlinecode{istat_code}} & \inlinecode{INTEGER} & PK \\ \hline
+      \inlinecode{name_it} & \inlinecode{VARCHAR[32]} & \\ \hline
+      \inlinecode{name_de} & \inlinecode{VARCHAR[32]} & \\ \hline
+      \inlinecode{name_ld} & \inlinecode{VARCHAR[32]} & OPTIONAL \\ \hline
+      \inlinecode{zip_code} & \inlinecode{INTEGER} & \\ \hline
+      \inlinecode{distr_code} & \inlinecode{INTEGER} & FK: District \\ \hline
+      \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
     \end{tabular}
   \end{subtable}
   \hfill
-  \begin{subtable}[t]{0.48\linewidth}
-    \centering
-    {\large DangerLevel} \\
-    \begin{tabular}{|l|l|l|}
-    \hline
-      Attribute & Data Type & Constraints \\ \hline \hline
-    \end{tabular}
-  \end{subtable}
-  \hfill \\
-  \hfill
-  \begin{subtable}[t]{0.48\linewidth}
-    \centering
-    {\large InfrastructureLine} \\
-    \begin{tabular}{|l|l|l|}
-    \hline
-      Attribute & Data Type & Constraints \\ \hline \hline
-    \end{tabular}
-  \end{subtable}
-  \hfill
-  \begin{subtable}[t]{0.48\linewidth}
-    \centering
-    {\large InfrastructureNode} \\
-    \begin{tabular}{|l|l|l|}
-    \hline
-      Attribute & Data Type & Constraints \\ \hline \hline
-    \end{tabular}
-  \end{subtable}
-  \hfill \\
-  \hfill
-  \begin{subtable}[t]{0.48\linewidth}
-    \centering
-    {\large LandslideProcess} \\
-    \begin{tabular}{|l|l|l|}
-    \hline
-      Attribute & Data Type & Constraints \\ \hline \hline
-    \end{tabular}
-  \end{subtable}
-  \hfill
-  \begin{subtable}[t]{0.48\linewidth}
-    \centering
-    {\large AvalancheProcess} \\
-    \begin{tabular}{|l|l|l|}
-    \hline
-      Attribute & Data Type & Constraints \\ \hline \hline
-    \end{tabular}
-  \end{subtable}
-  \hfill \\
-  \hfill
-  \begin{subtable}[t]{0.48\linewidth}
-    \centering
-    {\large LandslideHazard} \\
-    \begin{tabular}{|l|l|l|}
-    \hline
-      Attribute & Data Type & Constraints \\ \hline \hline
-    \end{tabular}
-  \end{subtable}
-  \hfill
-  \begin{subtable}[t]{0.48\linewidth}
-    \centering
-    {\large AvalancheHazard} \\
-    \begin{tabular}{|l|l|l|}
-    \hline
-      Attribute & Data Type & Constraints \\ \hline \hline
-    \end{tabular}
-  \end{subtable}
-  \hfill
-  \caption{Specification of the relational schema designed for the data source in this project. Primary keys are underlined and marked with "PK", while foreign keys are marked with "FK: Relation[attribute]".}
+  \caption{Specification of the relational schema designed for the data source in this project. Primary keys are underlined and marked with "PK", while foreign keys are marked with "FK: Relation". Foreign keys always refer to the primary key of the target relation. Attributes not marked with "OPTIONAL" have a not-null constraint by default.}
   \label{tab:schema}
 \end{table}
 
