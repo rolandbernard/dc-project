@@ -11,25 +11,25 @@ Some attributes present in the raw dataset have also been excluded from the deve
   \hfill
   \begin{subtable}[t]{0.48\linewidth}
     \centering
-    {\large InfrastructureLineType} \\
+    {\large InfrastructureType} \\
     \begin{tabular}{|l|l|l|}
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
       \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
-      \inlinecode{bez_d} & \inlinecode{VARCHAR[48]} & \\ \hline
-      \inlinecode{bez_i} & \inlinecode{VARCHAR[48]} & \\ \hline
+      \inlinecode{name_it} & \inlinecode{VARCHAR[48]} & UNIQUE \\ \hline
+      \inlinecode{name_de} & \inlinecode{VARCHAR[48]} & UNIQUE \\ \hline
     \end{tabular}
   \end{subtable}
   \hfill
   \begin{subtable}[t]{0.48\linewidth}
     \centering
-    {\large InfrastructureNodeType} \\
+    {\large HazardProcess} \\
     \begin{tabular}{|l|l|l|}
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
-      \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
-      \inlinecode{bez_d} & \inlinecode{VARCHAR[48]} & \\ \hline
-      \inlinecode{bez_i} & \inlinecode{VARCHAR[48]} & \\ \hline
+      \underline{\inlinecode{code}} & \inlinecode{CHAR[2]} & PK \\ \hline
+      \inlinecode{name_it} & \inlinecode{VARCHAR[32]} & UNIQUE \\ \hline
+      \inlinecode{name_de} & \inlinecode{VARCHAR[32]} & UNIQUE \\ \hline
     \end{tabular}
   \end{subtable}
   \hfill \\
@@ -41,8 +41,8 @@ Some attributes present in the raw dataset have also been excluded from the deve
     \begin{tabular}{|l|l|l|}
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
-      \underline{\inlinecode{ogc_fid}} & \inlinecode{INTEGER} & PK \\ \hline
-      \inlinecode{code} & \inlinecode{INTEGER} & FK: InfrastructureLineType \\ \hline
+      \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
+      \inlinecode{type_code} & \inlinecode{INTEGER} & FK: InfrastructureType \\ \hline
       \inlinecode{istat_code} & \inlinecode{INTEGER} & FK: Municipality \\ \hline
       \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
     \end{tabular}
@@ -54,8 +54,8 @@ Some attributes present in the raw dataset have also been excluded from the deve
     \begin{tabular}{|l|l|l|}
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
-      \underline{\inlinecode{ogc_fid}} & \inlinecode{INTEGER} & PK \\ \hline
-      \inlinecode{code} & \inlinecode{INTEGER} & FK: InfrastructureNodeType \\ \hline
+      \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
+      \inlinecode{type_code} & \inlinecode{INTEGER} & FK: InfrastructureType \\ \hline
       \inlinecode{istat_code} & \inlinecode{INTEGER} & FK: Municipality \\ \hline
       \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
     \end{tabular}
@@ -65,51 +65,25 @@ Some attributes present in the raw dataset have also been excluded from the deve
   \hfill
   \begin{subtable}[t]{0.48\linewidth}
     \centering
-    {\large LandslideProcess} \\
-    \begin{tabular}{|l|l|l|}
-    \hline
-      Attribute & Data Type & Constraints \\ \hline \hline
-      \underline{\inlinecode{id_process}} & \inlinecode{CHAR[2]} & PK \\ \hline
-      \inlinecode{processo} & \inlinecode{VARCHAR[32]} & \\ \hline
-      \inlinecode{prozess} & \inlinecode{VARCHAR[32]} & \\ \hline
-    \end{tabular}
-  \end{subtable}
-  \hfill
-  \begin{subtable}[t]{0.48\linewidth}
-    \centering
-    {\large AvalancheProcess} \\
-    \begin{tabular}{|l|l|l|}
-    \hline
-      Attribute & Data Type & Constraints \\ \hline \hline
-      \underline{\inlinecode{id_process}} & \inlinecode{CHAR[2]} & PK \\ \hline
-      \inlinecode{processo} & \inlinecode{VARCHAR[32]} & \\ \hline
-      \inlinecode{prozess} & \inlinecode{VARCHAR[32]} & \\ \hline
-    \end{tabular}
-  \end{subtable}
-  \hfill \\
-  \vskip1mm
-  \hfill
-  \begin{subtable}[t]{0.48\linewidth}
-    \centering
-    {\large LandslideDangerLevel} \\
+    {\large DangerLevel} \\
     \begin{tabular}{|l|l|l|}
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
       \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
-      \inlinecode{pericolo} & \inlinecode{VARCHAR[64]} & \\ \hline
-      \inlinecode{gefahr} & \inlinecode{VARCHAR[64]} & \\ \hline
+      \inlinecode{name_it} & \inlinecode{VARCHAR[64]} & UNIQUE \\ \hline
+      \inlinecode{name_de} & \inlinecode{VARCHAR[64]} & UNIQUE \\ \hline
     \end{tabular}
   \end{subtable}
   \hfill
   \begin{subtable}[t]{0.48\linewidth}
     \centering
-    {\large AvalancheDangerLevel} \\
+    {\large District} \\
     \begin{tabular}{|l|l|l|}
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
       \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
-      \inlinecode{pericolo} & \inlinecode{VARCHAR[64]} & \\ \hline
-      \inlinecode{gefahr} & \inlinecode{VARCHAR[64]} & \\ \hline
+      \inlinecode{name_it} & \inlinecode{VARCHAR[32]} & UNIQUE \\ \hline
+      \inlinecode{name_de} & \inlinecode{VARCHAR[32]} & UNIQUE \\ \hline
     \end{tabular}
   \end{subtable}
   \hfill \\
@@ -121,9 +95,9 @@ Some attributes present in the raw dataset have also been excluded from the deve
     \begin{tabular}{|l|l|l|}
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
-      \underline{\inlinecode{ogc_fid}} & \inlinecode{INTEGER} & PK \\ \hline
-      \inlinecode{code} & \inlinecode{INTEGER} & FK: LandslideDangerLevel \\ \hline
-      \inlinecode{id_process} & \inlinecode{CHAR[2]} & FK: LandslideProcess \\ \hline
+      \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
+      \inlinecode{danger_code} & \inlinecode{INTEGER} & FK: DangerLevel \\ \hline
+      \inlinecode{process_code} & \inlinecode{CHAR[2]} & FK: HazardProcess \\ \hline
       \inlinecode{istat_code} & \inlinecode{INTEGER} & FK: Municipality \\ \hline
       \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
     \end{tabular}
@@ -135,9 +109,9 @@ Some attributes present in the raw dataset have also been excluded from the deve
     \begin{tabular}{|l|l|l|}
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
-      \underline{\inlinecode{ogc_fid}} & \inlinecode{INTEGER} & PK \\ \hline
-      \inlinecode{code} & \inlinecode{INTEGER} & FK: AvalancheDangerLevel \\ \hline
-      \inlinecode{id_process} & \inlinecode{CHAR[2]} & FK: AvalancheProcess \\ \hline
+      \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
+      \inlinecode{danger_code} & \inlinecode{INTEGER} & FK: DangerLevel \\ \hline
+      \inlinecode{process_code} & \inlinecode{CHAR[2]} & FK: HazardProcess \\ \hline
       \inlinecode{istat_code} & \inlinecode{INTEGER} & FK: Municipality \\ \hline
       \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
     \end{tabular}
@@ -147,25 +121,13 @@ Some attributes present in the raw dataset have also been excluded from the deve
   \hfill
   \begin{subtable}[t]{0.48\linewidth}
     \centering
-    {\large District} \\
-    \begin{tabular}{|l|l|l|}
-    \hline
-      Attribute & Data Type & Constraints \\ \hline \hline
-      \underline{\inlinecode{distr_code}} & \inlinecode{INTEGER} & PK \\ \hline
-      \inlinecode{distr_de} & \inlinecode{VARCHAR[32]} & \\ \hline
-      \inlinecode{distr_it} & \inlinecode{VARCHAR[32]} & \\ \hline
-    \end{tabular}
-  \end{subtable}
-  \hfill
-  \begin{subtable}[t]{0.48\linewidth}
-    \centering
     {\large Municipality} \\
     \begin{tabular}{|l|l|l|}
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
       \underline{\inlinecode{istat_code}} & \inlinecode{INTEGER} & PK \\ \hline
-      \inlinecode{name_it} & \inlinecode{VARCHAR[32]} & \\ \hline
-      \inlinecode{name_de} & \inlinecode{VARCHAR[32]} & \\ \hline
+      \inlinecode{name_it} & \inlinecode{VARCHAR[32]} & UNIQUE \\ \hline
+      \inlinecode{name_de} & \inlinecode{VARCHAR[32]} & UNIQUE \\ \hline
       \inlinecode{name_ld} & \inlinecode{VARCHAR[32]} & OPTIONAL \\ \hline
       \inlinecode{zip_code} & \inlinecode{INTEGER} & \\ \hline
       \inlinecode{distr_code} & \inlinecode{INTEGER} & FK: District \\ \hline
@@ -173,13 +135,24 @@ Some attributes present in the raw dataset have also been excluded from the deve
     \end{tabular}
   \end{subtable}
   \hfill
+  \begin{subtable}[t]{0.48\linewidth}
+  \end{subtable}
+  \hfill
   \caption{Specification of the relational schema designed for the data source in this project. Primary keys are underlined and marked with "PK", while foreign keys are marked with "FK: Relation". Foreign keys always refer to the primary key of the target relation. Attributes not marked with "OPTIONAL" have a not-null constraint by default.}
   \label{tab:schema}
 \end{table}
 
-The complete specification of the developed relational schema is shown in \cref{tab:schema}. The rest of this section will describe in detail the schema and the rationale for each design depiction taken, referencing both the relevance to the application domain the results of data profiling.
+The complete specification of the developed relational schema is shown in \cref{tab:schema}. Note that, as will be explained below, some attributes have been renamed with respect to the original dataset for better understanding. For example, most primary key identifiers have been named \inlinecode{code}. The rest of this section will describe in detail the schema and the rationale for each design depiction taken, referencing both the relevance to the application domain the results of data profiling.
 
 \paragraph{Schema Normalization and Entity Extraction}
+
+Based on the functional dependencies discovered in \cref{fd}, a number of entities have been extracted from the raw table to remove data redundancy.
+
+Within \inlinecode{bz_admin_municipality}, the district related attributes \inlinecode{distr_code}, \inlinecode{distr_de}, and \inlinecode{distr_it} each mutually determine one another. This means they can be isolated into a separate District relation to prevent duplication across municipalities. In this relation the \inlinecode{distr_code}, \inlinecode{distr_de}, and \inlinecode{distr_it} attributes are named respectively \inlinecode{code}, \inlinecode{name_de}, and \inlinecode{name_it}. This removes the redundant use "distr" and makes it clear that the latter two are the name.
+
+For both the \inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node} the code, which identifies the type of infrastructure, functionally determine the German and Italian names in \inlinecode{bez_d} and \inlinecode{bez_i}. For this reason, these attributes were extracted into an InfrastructureType relation. Note that for simplicity, and because data profiling has shown that the two have disjoint code domain, the types in both source tables were extracted into a single relation. Note that \inlinecode{bez_d} and \inlinecode{bez_i} were renamed respectively to \inlinecode{name_de} and \inlinecode{name_it} for consistency with other relations.
+
+
 
 
 \paragraph{Primary and Foreign Key Definitions}
@@ -200,6 +173,6 @@ The complete specification of the developed relational schema is shown in \cref{
 \paragraph{Derived Spatial Properties}
 
 
-\paragraph{Proposed Relational Schema}
+\paragraph{Proposed Data Types}
 
 
