@@ -44,6 +44,7 @@ Some attributes present in the raw dataset have also been excluded from the deve
       \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
       \inlinecode{type_code} & \inlinecode{INTEGER} & FK: InfrastructureType \\ \hline
       \inlinecode{istat_code} & \inlinecode{INTEGER} & FK: Municipality \\ \hline
+      \inlinecode{length} & \inlinecode{DOUBLE} & \\ \hline
       \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
     \end{tabular}
   \end{subtable}
@@ -131,6 +132,7 @@ Some attributes present in the raw dataset have also been excluded from the deve
       \inlinecode{name_ld} & \inlinecode{VARCHAR[32]} & OPTIONAL \\ \hline
       \inlinecode{zip_code} & \inlinecode{INTEGER} & \\ \hline
       \inlinecode{distr_code} & \inlinecode{INTEGER} & FK: District \\ \hline
+      \inlinecode{area} & \inlinecode{DOUBLE} & \\ \hline
       \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
     \end{tabular}
   \end{subtable}
@@ -144,6 +146,7 @@ Some attributes present in the raw dataset have also been excluded from the deve
 
 The complete specification of the developed relational schema is shown in \cref{tab:schema}. Note that, as will be explained below, some attributes have been renamed with respect to the original dataset for better understanding. For example, most primary key identifiers have been named \inlinecode{code}. The rest of this section will describe in detail the schema and the rationale for each design depiction taken, referencing both the relevance to the application domain the results of data profiling.
 
+
 \paragraph{Schema Normalization and Entity Extraction}
 
 Based on the functional dependencies discovered in \cref{fd}, a number of entities have been extracted from the raw table to remove data redundancy.
@@ -152,25 +155,47 @@ Within \inlinecode{bz_admin_municipality}, the district related attributes \inli
 
 For both the \inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node} the code, which identifies the type of infrastructure, functionally determine the German and Italian names in \inlinecode{bez_d} and \inlinecode{bez_i}. For this reason, these attributes were extracted into an InfrastructureType relation. Note that for simplicity, and because data profiling has shown that the two have disjoint code domain, the types in both source tables were extracted into a single relation. Note that \inlinecode{bez_d} and \inlinecode{bez_i} were renamed respectively to \inlinecode{name_de} and \inlinecode{name_it} for consistency with other relations.
 
+In the hazard datasets \inlinecode{bz_hazard_landslide} and \inlinecode{bz_hazard_avalanche} the danger classifications is composed of \inlinecode{code}, \inlinecode{pericolo}, and \inlinecode{gefahr}, and these attributes fully determine each other, therefore suggesting the creation of a distinct DangerLevel table. In this extracted entity, the \inlinecode{pericolo} and \inlinecode{gefahr} attributes are instead names \inlinecode{name_it} and \inlinecode{name_de} respectively. Note that while both hazard kinds use the same danger classification scale, the codes are different and also the names differ very slightly. For this reason, a small data transformation is applied to transform them to have the same names and identifiers.
 
+Finally, similar to the danger level, also the hazard process is formed by the three attributes \inlinecode{id_process}, \inlinecode{processo}, and \inlinecode{prozess} in both hazard datasets. Note that unlike with the danger level, data profiling has shown that the hazard process uses the same space of identifiers in both original tables, and they also share the same names for each process. For this reason they can trivially use the same extracted entity. In the extracted entity the attributes' \inlinecode{id_process}, \inlinecode{processo}, and \inlinecode{prozess} are named \inlinecode{code}, \inlinecode{name_it}, and \inlinecode{name_de} for consistency.
 
 
 \paragraph{Primary and Foreign Key Definitions}
 
+The results of the unique column combination and inclusion dependency discovery results have been used determine the chosen primary key and foreign key constraints. The profiling results have also been used to motivate a number of non-primary key constraints.
 
-\paragraph{Completely Uninformative Attributes}
+The inclusion dependency analysis confirmed that \inlinecode{istat_code} from the infrastructure and hazard datasets is fully included within the \inlinecode{istat_code} column of the administrative municipality dataset. Consequently, even though the unique column combination discovery identified also numerous other possible primary keys, \inlinecode{istat_code} has been selected as primary key for the municipality table and serves also as a foreign key in all the infrastructure and hazard tables.
 
+For both of the infrastructure tables, the unique column combination discovery identified \inlinecode{ogc_fid}, \inlinecode{gml_id}, and \inlinecode{objectid} as minimal unique combinations. The identifier in \inlinecode{ogc_fid} has been chosen as the primary key because it is a dense integer and is therefore most appropriate primary key in the absences of other information. Note that in both InfrastructureLine and InfrastructureNode this identifier has been renamed to \inlinecode{code} for consistency with the other tables.
 
-\paragraph{Attributes Excluded to Ensure Normalization}
-
-
-\paragraph{Display, UI, and Cartographic Artifacts}
-
-
-\paragraph{Out-of-Scope Administrative Metadata}
+Finally, also for the hazard datasets, the unique column combination results present the same three candidate keys \inlinecode{ogc_fid}, \inlinecode{gml_id}, and \inlinecode{objectid}. For this reason, exactly the same choice has been made. \inlinecode{ogc_fid} is used as the primary key of both the LandslideHazard and AvalancheHazard relations, but like with the infrastructure tables, these have been renamed to \inlinecode{code}.
 
 
-\paragraph{Derived Spatial Properties}
+\paragraph{Attributes Excluded from the Relational Schema}
+
+As already mentioned, some columns of the original datasets have not been incorporated into the relational schema, either for reasons of data quality, redundancy, or insufficient relevance to the chosen application domain.
+
+First, data profiling has shown that several columns contain no usable information, making their inclusion unnecessary for schema design. \inlinecode{codealt} and \inlinecode{blp}  in the \inlinecode{bz_infrastructure_line} and \inlinecode{bz_infrastructure_node} tables have been confirmed by profiling to both contain 100\% missing values across all 47551 line records and 4223 node records.
+Similarly, the value for \inlinecode{id_phen} in the \inlinecode{bz_hazard_avalanche} table is missing for all 13071 rows.
+Further, while the \inlinecode{status_gzp}, \inlinecode{desc_i}, and \inlinecode{desc_d} always contain a value, this value is constant across every row. Additionally, these indicate administrative approval status and therefore offer no utility for exposure queries.
+
+Some other attributes have been omitted in order to avoid redundancy.
+This is the case for those attributes that have been extracted into separate entities like the municipality names in the hazard and infrastructure datasets. Storing municipality names inside the infrastructure and hazard tables would violate Third Normal Form. Instead, storing \inlinecode{istat_code} as a foreign key to the Municipality relation preserves this information cleanly.
+In addition to the attributes made redundant by normalization, all the datasets also contain multiple different identifiers, such as \inlinecode{ogc_fid}, \inlinecode{gml_id} and \inlinecode{objectid} for the infrastructure tables. Having multiple of these identifiers, which are otherwise not used and have no inherent semantic values, does not give any additional benefit. For this reason, only a single identifier has been selected as the primary key for each relation. All other identifiers present in these tables have been dropped from the relational schema.
+
+Several attributes in the original datasets exist solely for rendering or front-end visualization, adding no semantic value to database queries.
+The point coordinates \inlinecode{x_label} and \inlinecode{y_label} in the hazard tables are purely for placing map text labels in software and are therefore dropped from the relational schema.
+The \inlinecode{nda_text_*} columns contain the static UI button labels "Öffne" and "Apri" for web portals, while \inlinecode{nda_link_*} contains external URLs to land-use regulations. Neither contributes to answering risk assessment queries and are therefore excluded.
+\inlinecode{map_label} has also been dropped from the Municipality relation, because it contains only a pre-formatted display string concatenating bilingual municipality names, which can be constructed dynamically in SPARQL or SQL when needed.
+
+Finally, in addition to these front-end oriented attributes, there are also some attributes that were excluded because they are not relevant to the chosen application domain.
+In the municipality dataset, \inlinecode{health_region}, and \inlinecode{health_district} contain healthcare administrative boundaries. While these could be interesting for infrastructure risk assessments is some cases, because they only contain identifiers and no actual labels, it is difficult to use them without additional datasets, and they were therefore omitted.
+Further, the columns \inlinecode{id_gp}, \inlinecode{gradodistudio}, \inlinecode{bearbeitungstiefe}, and \inlinecode{id_gs} in the hazards datasets contain internal codes tracking survey depth. While relevant to geological surveying, they have been dropped from the relational schema because they are not relevant to the chosen application.
+
+
+\paragraph{Not Merging Hazard and Infrastructure Tables}
+
+
 
 
 \paragraph{Proposed Data Types}
