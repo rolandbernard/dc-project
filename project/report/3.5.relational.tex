@@ -16,8 +16,8 @@ Some attributes present in the raw dataset have also been excluded from the deve
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
       \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
-      \inlinecode{name_it} & \inlinecode{VARCHAR[48]} & UNIQUE \\ \hline
-      \inlinecode{name_de} & \inlinecode{VARCHAR[48]} & UNIQUE \\ \hline
+      \inlinecode{name_it} & \inlinecode{VARCHAR[64]} & UNIQUE \\ \hline
+      \inlinecode{name_de} & \inlinecode{VARCHAR[64]} & UNIQUE \\ \hline
     \end{tabular}
   \end{subtable}
   \hfill
@@ -28,8 +28,8 @@ Some attributes present in the raw dataset have also been excluded from the deve
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
       \underline{\inlinecode{code}} & \inlinecode{CHAR[2]} & PK \\ \hline
-      \inlinecode{name_it} & \inlinecode{VARCHAR[32]} & UNIQUE \\ \hline
-      \inlinecode{name_de} & \inlinecode{VARCHAR[32]} & UNIQUE \\ \hline
+      \inlinecode{name_it} & \inlinecode{VARCHAR[64]} & UNIQUE \\ \hline
+      \inlinecode{name_de} & \inlinecode{VARCHAR[64]} & UNIQUE \\ \hline
     \end{tabular}
   \end{subtable}
   \hfill \\
@@ -83,8 +83,8 @@ Some attributes present in the raw dataset have also been excluded from the deve
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
       \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
-      \inlinecode{name_it} & \inlinecode{VARCHAR[32]} & UNIQUE \\ \hline
-      \inlinecode{name_de} & \inlinecode{VARCHAR[32]} & UNIQUE \\ \hline
+      \inlinecode{name_it} & \inlinecode{VARCHAR[64]} & UNIQUE \\ \hline
+      \inlinecode{name_de} & \inlinecode{VARCHAR[64]} & UNIQUE \\ \hline
     \end{tabular}
   \end{subtable}
   \hfill \\
@@ -127,9 +127,9 @@ Some attributes present in the raw dataset have also been excluded from the deve
     \hline
       Attribute & Data Type & Constraints \\ \hline \hline
       \underline{\inlinecode{istat_code}} & \inlinecode{INTEGER} & PK \\ \hline
-      \inlinecode{name_it} & \inlinecode{VARCHAR[32]} & UNIQUE \\ \hline
-      \inlinecode{name_de} & \inlinecode{VARCHAR[32]} & UNIQUE \\ \hline
-      \inlinecode{name_ld} & \inlinecode{VARCHAR[32]} & OPTIONAL \\ \hline
+      \inlinecode{name_it} & \inlinecode{VARCHAR[64]} & UNIQUE \\ \hline
+      \inlinecode{name_de} & \inlinecode{VARCHAR[64]} & UNIQUE \\ \hline
+      \inlinecode{name_ld} & \inlinecode{VARCHAR[64]} & OPTIONAL \\ \hline
       \inlinecode{zip_code} & \inlinecode{INTEGER} & \\ \hline
       \inlinecode{distr_code} & \inlinecode{INTEGER} & FK: District \\ \hline
       \inlinecode{area} & \inlinecode{DOUBLE} & \\ \hline
@@ -193,11 +193,12 @@ In the municipality dataset, \inlinecode{health_region}, and \inlinecode{health_
 Further, the columns \inlinecode{id_gp}, \inlinecode{gradodistudio}, \inlinecode{bearbeitungstiefe}, and \inlinecode{id_gs} in the hazards datasets contain internal codes tracking survey depth. While relevant to geological surveying, they have been dropped from the relational schema because they are not relevant to the chosen application.
 
 
-\paragraph{Not Merging Hazard and Infrastructure Tables}
-
-
-
-
 \paragraph{Proposed Data Types}
 
+The data types for the different attributes in the relational schema have been chosen mostly based on what has been discovered during the single column analysis performed in \cref{single}.
+For example, the type \inlinecode{VARCHAR[64]} has been used for all fields that contain small string, such as for the name fields. This size has been determined during data profiling to be large enough for all names in the dataset.
+Note that during data profiling it was discovered that some columns, while they are formatted as real numbers, they actually only contain whole integer values. This is primarily the case for the different identifier columns such as for example the \inlinecode{istat_code} or \inlinecode{distr_code} in the municipality dataset. For these columns, a minor data transformation has been applied to transform them into proper integer variables and given \inlinecode{INTEGER} type in the schema.
+The only exception to the use of integers for the identifiers is that the HazardProcess makes use of a two character code. Appropriately, a data type of \inlinecode{CHAR[2]} is used for this attribute.
+For all the actual real valued attributes, namely \inlinecode{shape_len} and \inlinecode{area}, a data type of \inlinecode{DOUBLE} has been selected for this project.
+Finally, all geometry information will be stored in a PostGIS \cite{postgis2026} instance using the \inlinecode{GEOMETRY} data type.
 
