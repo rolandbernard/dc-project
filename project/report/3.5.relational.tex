@@ -44,7 +44,7 @@ Some attributes present in the raw dataset have also been excluded from the deve
       \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
       \inlinecode{type_code} & \inlinecode{INTEGER} & FK: InfrastructureType \\ \hline
       \inlinecode{istat_code} & \inlinecode{INTEGER} & FK: Municipality \\ \hline
-      \inlinecode{length} & \inlinecode{DOUBLE} & \\ \hline
+      \inlinecode{shape_len} & \inlinecode{REAL} & \\ \hline
       \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
     \end{tabular}
   \end{subtable}
@@ -132,7 +132,7 @@ Some attributes present in the raw dataset have also been excluded from the deve
       \inlinecode{name_ld} & \inlinecode{VARCHAR[64]} & OPTIONAL \\ \hline
       \inlinecode{zip_code} & \inlinecode{INTEGER} & \\ \hline
       \inlinecode{distr_code} & \inlinecode{INTEGER} & FK: District \\ \hline
-      \inlinecode{area} & \inlinecode{DOUBLE} & \\ \hline
+      \inlinecode{area} & \inlinecode{REAL} & \\ \hline
       \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
     \end{tabular}
   \end{subtable}
@@ -199,6 +199,6 @@ The data types for the different attributes in the relational schema have been c
 For example, the type \inlinecode{VARCHAR[64]} has been used for all fields that contain small string, such as for the name fields. This size has been determined during data profiling to be large enough for all names in the dataset.
 Note that during data profiling it was discovered that some columns, while they are formatted as real numbers, they actually only contain whole integer values. This is primarily the case for the different identifier columns such as for example the \inlinecode{istat_code} or \inlinecode{distr_code} in the municipality dataset. For these columns, a minor data transformation has been applied to transform them into proper integer variables and given \inlinecode{INTEGER} type in the schema.
 The only exception to the use of integers for the identifiers is that the HazardProcess makes use of a two character code. Appropriately, a data type of \inlinecode{CHAR[2]} is used for this attribute.
-For all the actual real valued attributes, namely \inlinecode{shape_len} and \inlinecode{area}, a data type of \inlinecode{DOUBLE} has been selected for this project.
+For all the actual real valued attributes, namely \inlinecode{shape_len} and \inlinecode{area}, a data type of \inlinecode{REAL} has been selected for this project.
 Finally, all geometry information will be stored in a PostGIS \cite{postgis2026} instance using the \inlinecode{GEOMETRY} data type.
 
