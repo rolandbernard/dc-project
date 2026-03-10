@@ -144,8 +144,14 @@ Some attributes present in the raw dataset have also been excluded from the deve
   \label{tab:schema}
 \end{table}
 
-The complete specification of the developed relational schema is shown in \cref{tab:schema}. Note that, as will be explained below, some attributes have been renamed with respect to the original dataset for better understanding. For example, most primary key identifiers have been named \inlinecode{code}. The rest of this section will describe in detail the schema and the rationale for each design depiction taken, referencing both the relevance to the application domain the results of data profiling.
+The complete specification of the developed relational schema is shown in \cref{tab:schema}. A graphical representation of the exact same relational schema is shown in the form of an Entity-Relationship diagram in \cref{fig:er-diagram}. Note that, as will be explained below, some attributes have been renamed with respect to the original dataset for better understanding. For example, most primary key identifiers have been named \inlinecode{code}. The rest of this section will describe in detail the schema and the rationale for each design depiction taken, referencing both the relevance to the application domain the results of data profiling.
 
+\begin{figure*}[ht!]
+  \centering
+  \includegraphics[width=\linewidth]{figures/er-diagram.pdf}
+  \caption{Entity-Relationship of the developed relational schema. This ER diagram shows the equivalent information of what is pretested in tabular form in \ref{tab:schema}.}
+  \label{fig:er-diagram}
+\end{figure*}
 
 \paragraph{Schema Normalization and Entity Extraction}
 
