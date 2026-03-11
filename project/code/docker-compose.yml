@@ -1,0 +1,52 @@
+services:
+
+  # PostgreSQL Containers (PostGIS + pgadmin)
+  postgres:
+    image: postgis/postgis:18-3.6
+    container_name: "${COMPOSE_PROJECT_NAME:-dc}-postgres"
+    restart: always
+    ports:
+      - "${PORT_POSTGRES:-25432}:5432"
+    profiles:
+      - db
+      - dbui
+      - ontop
+      - frontend
+    volumes:
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/init.sql:z
+      - postgres-data:/var/lib/postgresql:z
+    environment:
+      POSTGRES_DB: "db"
+      POSTGRES_USER: "${USERID:-user}"
+      POSTGRES_PASSWORD: "${USERPWD:-user}"
+    command: ["postgres"]
+    stop_grace_period: 5m
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${USERID:-user}", "-d", "db"]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+
+  pgadmin:
+    image: dpage/pgadmin4:9.18
+    container_name: "${COMPOSE_PROJECT_NAME:-dc}-pgadmin"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - dbui
+    ports:
+      - "${PORT_PGADMIN:-20080}:80"
+    volumes:
+      - ./sql/pgadmin4/servers.json:/pgadmin4/servers.json:z
+      - pgadmin-data:/var/lib/pgadmin:z
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${USEREMAIL:-user@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${USERPWD:-user}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_DISABLE_POSTFIX: "true"
+      GUNICORN_ACCESS_LOGFILE: "/dev/null"
+
+volumes:
+  postgres-data:
+  pgadmin-data:

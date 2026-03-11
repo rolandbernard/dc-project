@@ -1,6 +1,9 @@
 # Temporary files
 .*
 !.gitignore
+!.env.example
+
+# Data
 /data
 /nets/*.net
 __pycache__
@@ -9,7 +12,7 @@ venv
 # Build results
 submission*
 
-### Latex ###
+# Latex
 *.synctex.gz
 *.aux
 *.fls
