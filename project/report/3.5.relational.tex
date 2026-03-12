@@ -43,7 +43,7 @@ Some attributes present in the raw dataset have also been excluded from the deve
       Attribute & Data Type & Constraints \\ \hline \hline
       \underline{\inlinecode{code}} & \inlinecode{INTEGER} & PK \\ \hline
       \inlinecode{type_code} & \inlinecode{INTEGER} & FK: InfrastructureType \\ \hline
-      \inlinecode{istat_code} & \inlinecode{INTEGER} & FK: Municipality \\ \hline
+      \inlinecode{istat_code} & \inlinecode{INTEGER} & OPT, FK: Municipality \\ \hline
       \inlinecode{shape_len} & \inlinecode{REAL} & \\ \hline
       \inlinecode{geom} & \inlinecode{GEOMETRY} & \\ \hline
     \end{tabular}
@@ -129,7 +129,7 @@ Some attributes present in the raw dataset have also been excluded from the deve
       \underline{\inlinecode{istat_code}} & \inlinecode{INTEGER} & PK \\ \hline
       \inlinecode{name_it} & \inlinecode{VARCHAR[64]} & UNIQUE \\ \hline
       \inlinecode{name_de} & \inlinecode{VARCHAR[64]} & UNIQUE \\ \hline
-      \inlinecode{name_ld} & \inlinecode{VARCHAR[64]} & OPTIONAL \\ \hline
+      \inlinecode{name_ld} & \inlinecode{VARCHAR[64]} & OPT \\ \hline
       \inlinecode{zip_code} & \inlinecode{INTEGER} & \\ \hline
       \inlinecode{distr_code} & \inlinecode{INTEGER} & FK: District \\ \hline
       \inlinecode{area} & \inlinecode{REAL} & \\ \hline
@@ -140,7 +140,7 @@ Some attributes present in the raw dataset have also been excluded from the deve
   \begin{subtable}[t]{0.48\linewidth}
   \end{subtable}
   \hfill
-  \caption{Specification of the relational schema designed for the data source in this project. Primary keys are underlined and marked with "PK", while foreign keys are marked with "FK: Relation". Foreign keys always refer to the primary key of the target relation. Attributes not marked with "OPTIONAL" have a not-null constraint by default.}
+  \caption{Specification of the relational schema designed for the data source in this project. Primary keys are underlined and marked with "PK", while foreign keys are marked with "FK: Relation". Foreign keys always refer to the primary key of the target relation. Optional attributes are marked with "OPT". Attributes not marked as such have a not-null constraint by default.}
   \label{tab:schema}
 \end{table}
 

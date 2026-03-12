@@ -40,7 +40,7 @@ CREATE TABLE InfrastructureType (
 CREATE TABLE InfrastructureLine (
     code INTEGER PRIMARY KEY,
     type_code INTEGER NOT NULL,
-    istat_code INTEGER NOT NULL,
+    istat_code INTEGER,
     shape_len REAL NOT NULL,
     geom GEOMETRY NOT NULL,
     FOREIGN KEY (type_code) REFERENCES InfrastructureType(code),
