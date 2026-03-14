@@ -13,7 +13,7 @@ services:
       - ontop
       - frontend
     volumes:
-      - ./sql/schema.sql:/docker-entrypoint-initdb.d/init.sql:z
+      - ./sql/:/docker-entrypoint-initdb.d/:z
       - postgres-data:/var/lib/postgresql:z
     environment:
       POSTGRES_DB: "db"
@@ -38,7 +38,7 @@ services:
     ports:
       - "${PORT_PGADMIN:-20080}:80"
     volumes:
-      - ./sql/pgadmin4/servers.json:/pgadmin4/servers.json:z
+      - ./scripts/pgadmin4/servers.json:/pgadmin4/servers.json:z
       - pgadmin-data:/var/lib/pgadmin:z
     environment:
       PGADMIN_DEFAULT_EMAIL: ${USEREMAIL:-user@example.com}

@@ -98,28 +98,28 @@ def write_rows(rows: list[tuple], f):
         f.write(")")
 
 
-with open("sql/district.sql", "w") as f:
+with open("sql/01.district.sql", "w") as f:
     f.write("-- This file has been automatically generated.\n")
     f.write("INSERT INTO District (code, name_it, name_de)\n")
     f.write("VALUES\n")
     write_rows(district, f)
     f.write(";\n")
 
-with open("sql/municipality.sql", "w") as f:
+with open("sql/02.municipality.sql", "w") as f:
     f.write("-- This file has been automatically generated.\n")
     f.write("INSERT INTO Municipality (istat_code, name_it, name_de, name_ld, zip_code, distr_code, area, geom)\n")
     f.write("VALUES\n")
     write_rows(municipality, f)
     f.write(";\n")
 
-with open("sql/infrastructuretype.sql", "w") as f:
+with open("sql/03.infrastructuretype.sql", "w") as f:
     f.write("-- This file has been automatically generated.\n")
     f.write("INSERT INTO InfrastructureType (code, name_it, name_de)\n")
     f.write("VALUES\n")
     write_rows(infra_type, f)
     f.write(";\n")
 
-with open("sql/infrastructureline.sql", "w") as f:
+with open("sql/04.infrastructureline.sql", "w") as f:
     f.write("-- This file has been automatically generated.\n")
     f.write(
         "INSERT INTO InfrastructureLine (code, type_code, istat_code, shape_len, geom)\n")
@@ -127,49 +127,37 @@ with open("sql/infrastructureline.sql", "w") as f:
     write_rows(infra_line, f)
     f.write(";\n")
 
-with open("sql/infrastructurenode.sql", "w") as f:
+with open("sql/05.infrastructurenode.sql", "w") as f:
     f.write("-- This file has been automatically generated.\n")
     f.write("INSERT INTO InfrastructureNode (code, type_code, istat_code, geom)\n")
     f.write("VALUES\n")
     write_rows(infra_node, f)
     f.write(";\n")
 
-with open("sql/hazardprocess.sql", "w") as f:
+with open("sql/06.hazardprocess.sql", "w") as f:
     f.write("-- This file has been automatically generated.\n")
     f.write("INSERT INTO HazardProcess (code, name_it, name_de)\n")
     f.write("VALUES\n")
     write_rows(hazard_process, f)
     f.write(";\n")
 
-with open("sql/dangerlevel.sql", "w") as f:
+with open("sql/07.dangerlevel.sql", "w") as f:
     f.write("-- This file has been automatically generated.\n")
     f.write("INSERT INTO DangerLevel (code, name_it, name_de)\n")
     f.write("VALUES\n")
     write_rows(danger_level, f)
     f.write(";\n")
 
-with open("sql/landslidehazard.sql", "w") as f:
+with open("sql/08.landslidehazard.sql", "w") as f:
     f.write("-- This file has been automatically generated.\n")
     f.write("INSERT INTO LandslideHazard (code, danger_code, process_code, istat_code, geom)\n")
     f.write("VALUES\n")
     write_rows(landslide, f)
     f.write(";\n")
 
-with open("sql/avalanchehazard.sql", "w") as f:
+with open("sql/09.avalanchehazard.sql", "w") as f:
     f.write("-- This file has been automatically generated.\n")
     f.write("INSERT INTO AvalancheHazard (code, danger_code, process_code, istat_code, geom)\n")
     f.write("VALUES\n")
     write_rows(avalanche, f)
     f.write(";\n")
-
-# Generate a single `init.sql` file that can be used to both define the schema
-# and load all of the data into the database. Note that they must be loaded in
-# the correct order to avoid breaking foreign keys.
-with open("sql/init.sql", "w") as f:
-    for file in [
-        "sql/schema.sql", "sql/district.sql", "sql/municipality.sql", "sql/infrastructuretype.sql",
-        "sql/infrastructureline.sql", "sql/infrastructurenode.sql", "sql/hazardprocess.sql",
-        "sql/dangerlevel.sql", "sql/landslidehazard.sql", "sql/avalanchehazard.sql"
-    ]:
-        with open(file, "r") as fi:
-            f.write(fi.read())
