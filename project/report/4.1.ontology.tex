@@ -10,3 +10,32 @@ An OWL 2 QL ontology that contains relevant classes and properties has been deve
   \label{fig:ontology}
 \end{figure*}
 
+In order to fulfill the project's goal of assessing infrastructure vulnerability, the ontology models the intersection of critical infrastructure and natural hazard zones. It is designed in compliance with the OWL 2 QL profile that we learned in the course to guarantee efficient query answering via the Ontop virtual knowledge graph system. The conceptual schema is divided into four main domains: spatial entities, infrastructure assets, hazard areas, and administrative boundaries.   
+
+\subsubsection{Class Hierarchy and Disjointness}
+
+At the root of the spatial domain is the GeometricObject class, which serves as a superclass for Infrastructure, HazardZone, and Municipality. This allows shared spatial properties to be abstracted at a high level, instead of duplicating them for each of the subclasses. Even though they are part of the same class hierarchy, the classes Infrastructure, HazardZone, and Municipality are defined to be mutually disjoint.
+
+The Infrastructure class is subclassed along two orthogonal dimensions. The infrastructure is first divided based on their structure into InfrastructureNode and InfrastructureLine, which are declared as mutually disjoint. Then the infrastructure objects are also categorized thematically into CommunicationInfrastructure, EnergyInfrastructure, WaterInfrastructure, and WasteInfrastructure. These thematic classes are strictly disjoint, ensuring that a single infrastructure element cannot simultaneously belong to distinct functional networks. Note that while most of the infrastructure types can be clearly split into one of they, some infrastructure elements may not belong to any of these thematic subclasses.
+
+Similarly, the HazardZone class is also specialized along two dimensions. First, it is split into disjoint LandslideZone and AvalancheZone classes. To capture the severity of the hazards, as identified in the \inlinecode{pericolo} and \inlinecode{gefahr} columns during the data profiling phase, HazardZone is further classified into the four mutually disjoint danger levels VeryHighDangerZone, HighDangerZone, MediumDangerZone, and LowDangerZone.
+
+Finally, the administrative domain consists of the Municipality and District classes, which provide the information required to for example aggregate the exposed assets per municipality or district.
+
+
+\subsubsection{Object Properties}
+
+The relationships between the above described classes are formalized through specific object properties designed to answer the project's core application queries. General spatial overlaps are handled by the intersectsWith property defined between two GeometricObject. Note that this object property is explicitly defined to be symmetric, which can be represented in OWL 2 QL by a object property that is its own inverse. To explicitly address vulnerability of infrastructure to hazards, isExposedTo is introduced as a sub-property of intersectsWith, linking Infrastructure directly to HazardZone. These object properties will later be populated by performing spatial joins over the geometries of the respective elements. Note that there are no cardinality restrictions on these properties, since a single geometry can intersect with an arbitrary number of other geometries.
+
+Administrative containment is modeled using the infrastructureIn and hazardZoneIn properties, which link physical and hazard entities to a Municipality. Finally, the belongsTo property maps a Municipality to a District. Note that these properties are envisioned to be derived from the municipality specified in the infrastructure and hazard datasets instead of using geometric intersection. For this reason, the properties map each Infrastructure element to at most one Municipality, and each HazardZone to exactly one Municipality. The infrastructureIn property does not use mandatory participation, because data profiling has shown that some infrastructure lines are missing municipality information. Further, mandatory participation and functionality constraints on the belongsTo object property enforce that each Municipality belonging to exactly one District. This enforces the structural integrity observed in the relational datasets. While functionality of object or data properties can not be enforced in OWL 2 QL, these are still included in \cref{fig:ontology} for completeness.
+
+
+\subsubsection{Data Properties}
+
+Many of the data properties are directly mapped from the insights extracted during the elementary data analysis during relational schema creation. For example, istatCode, zipCode, area, and localized names nameIt, nameDe, and nameLd are assigned to Municipality and directly taken from the associated relation. Reflecting the high number of missing values discovered in the single-column analysis of the \inlinecode{bz_admin_municipality} table, the Ladin name property nameLd is explicitly constrained with a cardinality of [0\dots1] to indicate that it is optional. The data type xsd:integer is used for istatCode and zipCode, while xsd:string is used for all the localized names. Lastly, xsd:float is used as the data type for the area data property.
+
+Similarly, the District class exposes the code
+
+Finally, spatial geometries are uniformly captured across all physical entities via the geometry property on the GeometricObject class. The property is stored as strings representing the Well-Known Text format discovered during profiling.
+
+
