@@ -32,7 +32,7 @@ avalanche = []
 for row in df_line.itertuples():
     infra_type.append((int(row.code), row.bez_i, row.bez_d))  # type: ignore
     infra_line.append((
-        row.ogc_fid, int(row.code),  # type: ignore
+        int(row.objectid), int(row.code),  # type: ignore
         None if math.isnan(row.istat_code)  # type: ignore
         else int(row.istat_code),  # type: ignore
         row.shape_len, row.geom))
@@ -41,7 +41,7 @@ for row in df_line.itertuples():
 for row in df_node.itertuples():
     infra_type.append((int(row.code), row.bez_i, row.bez_d))  # type: ignore
     infra_node.append((
-        row.ogc_fid, int(row.code), int(row.istat_code), row.geom))  # type: ignore
+        int(row.objectid), int(row.code), int(row.istat_code), row.geom))  # type: ignore
 
 # Generate from `df_landslide`.
 for row in df_landslide.itertuples():
@@ -53,7 +53,7 @@ for row in df_landslide.itertuples():
     elif row.id_process == "SD":
         hazard_process.append(("SD", "Altro", "Sonstiges"))
     landslide.append((
-        row.ogc_fid, int(row.code) % 100, row.id_process, int(row.istat_code), row.geom))  # type: ignore
+        int(row.objectid), int(row.code) % 100, row.id_process, int(row.istat_code), row.geom))  # type: ignore
 
 # Generate from `df_avalanche`.
 for row in df_avalanche.itertuples():
@@ -62,7 +62,7 @@ for row in df_avalanche.itertuples():
     hazard_process.append((
         row.id_process, row.processo, row.prozess))  # type: ignore
     avalanche.append((
-        row.ogc_fid, int(row.code) % 100, row.id_process, int(row.istat_code), row.geom))  # type: ignore
+        int(row.objectid), int(row.code) % 100, row.id_process, int(row.istat_code), row.geom))  # type: ignore
 
 # Generate from `df_municipality`.
 for row in df_municipality.itertuples():
