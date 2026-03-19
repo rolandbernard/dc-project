@@ -1,0 +1,388 @@
+@prefix : <http://rolandb.com/ontologies/dc/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://rolandb.com/ontologies/dc/> .
+
+<http://rolandb.com/ontologies/dc> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://rolandb.com/ontologies/dc#belongsTo
+:belongsTo rdf:type owl:ObjectProperty ,
+                    owl:FunctionalProperty ;
+           rdfs:domain :Municipality ;
+           rdfs:range :District .
+
+
+###  http://rolandb.com/ontologies/dc#hazardZoneIn
+:hazardZoneIn rdf:type owl:ObjectProperty ,
+                       owl:FunctionalProperty ;
+              rdfs:domain :HazardZone ;
+              rdfs:range :Municipality .
+
+
+###  http://rolandb.com/ontologies/dc#infrastructureIn
+:infrastructureIn rdf:type owl:ObjectProperty ,
+                           owl:FunctionalProperty ;
+                  rdfs:domain :Infrastructure ;
+                  rdfs:range :Municipality .
+
+
+###  http://rolandb.com/ontologies/dc#intersectsWith
+:intersectsWith rdf:type owl:ObjectProperty ;
+                owl:inverseOf :intersectsWith ;
+                rdf:type owl:SymmetricProperty ;
+                rdfs:domain :GeometricObject ;
+                rdfs:range :GeometricObject .
+
+
+###  http://rolandb.com/ontologies/dc#isExposedTo
+:isExposedTo rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf :intersectsWith ;
+             rdfs:domain :Infrastructure ;
+             rdfs:range :HazardZone .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://rolandb.com/ontologies/dc#area
+:area rdf:type owl:DatatypeProperty ,
+               owl:FunctionalProperty ;
+      rdfs:domain :Municipality ;
+      rdfs:range xsd:float .
+
+
+###  http://rolandb.com/ontologies/dc#dangerNameDe
+:dangerNameDe rdf:type owl:DatatypeProperty ,
+                       owl:FunctionalProperty ;
+              rdfs:domain :HazardZone ;
+              rdfs:range xsd:string .
+
+
+###  http://rolandb.com/ontologies/dc#dangerNameIt
+:dangerNameIt rdf:type owl:DatatypeProperty ,
+                       owl:FunctionalProperty ;
+              rdfs:domain :HazardZone ;
+              rdfs:range xsd:string .
+
+
+###  http://rolandb.com/ontologies/dc#districtCode
+:districtCode rdf:type owl:DatatypeProperty ,
+                       owl:FunctionalProperty ;
+              rdfs:domain :District ;
+              rdfs:range xsd:integer .
+
+
+###  http://rolandb.com/ontologies/dc#districtNameDe
+:districtNameDe rdf:type owl:DatatypeProperty ,
+                         owl:FunctionalProperty ;
+                rdfs:domain :District ;
+                rdfs:range xsd:string .
+
+
+###  http://rolandb.com/ontologies/dc#districtNameIt
+:districtNameIt rdf:type owl:DatatypeProperty ,
+                         owl:FunctionalProperty ;
+                rdfs:domain :District ;
+                rdfs:range xsd:string .
+
+
+###  http://rolandb.com/ontologies/dc#geometry
+:geometry rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :GeometricObject ;
+          rdfs:range xsd:string .
+
+
+###  http://rolandb.com/ontologies/dc#hazardCode
+:hazardCode rdf:type owl:DatatypeProperty ,
+                     owl:FunctionalProperty ;
+            rdfs:domain :HazardZone ;
+            rdfs:range xsd:integer .
+
+
+###  http://rolandb.com/ontologies/dc#infrastructureCode
+:infrastructureCode rdf:type owl:DatatypeProperty ,
+                             owl:FunctionalProperty ;
+                    rdfs:domain :Infrastructure ;
+                    rdfs:range xsd:integer .
+
+
+###  http://rolandb.com/ontologies/dc#istatCode
+:istatCode rdf:type owl:DatatypeProperty ,
+                    owl:FunctionalProperty ;
+           rdfs:domain :Municipality ;
+           rdfs:range xsd:integer .
+
+
+###  http://rolandb.com/ontologies/dc#lineLength
+:lineLength rdf:type owl:DatatypeProperty ,
+                     owl:FunctionalProperty ;
+            rdfs:domain :InfrastructureLine ;
+            rdfs:range xsd:float .
+
+
+###  http://rolandb.com/ontologies/dc#nameDe
+:nameDe rdf:type owl:DatatypeProperty ,
+                 owl:FunctionalProperty ;
+        rdfs:domain :Municipality ;
+        rdfs:range xsd:string .
+
+
+###  http://rolandb.com/ontologies/dc#nameIt
+:nameIt rdf:type owl:DatatypeProperty ,
+                 owl:FunctionalProperty ;
+        rdfs:domain :Municipality ;
+        rdfs:range xsd:string .
+
+
+###  http://rolandb.com/ontologies/dc#nameLd
+:nameLd rdf:type owl:DatatypeProperty ,
+                 owl:FunctionalProperty ;
+        rdfs:domain :Municipality ;
+        rdfs:range xsd:string .
+
+
+###  http://rolandb.com/ontologies/dc#processNameDe
+:processNameDe rdf:type owl:DatatypeProperty ,
+                        owl:FunctionalProperty ;
+               rdfs:domain :HazardZone ;
+               rdfs:range xsd:string .
+
+
+###  http://rolandb.com/ontologies/dc#processNameIt
+:processNameIt rdf:type owl:DatatypeProperty ,
+                        owl:FunctionalProperty ;
+               rdfs:domain :HazardZone ;
+               rdfs:range xsd:string .
+
+
+###  http://rolandb.com/ontologies/dc#typeNameDe
+:typeNameDe rdf:type owl:DatatypeProperty ,
+                     owl:FunctionalProperty ;
+            rdfs:domain :Infrastructure ;
+            rdfs:range xsd:string .
+
+
+###  http://rolandb.com/ontologies/dc#typeNameIt
+:typeNameIt rdf:type owl:DatatypeProperty ,
+                     owl:FunctionalProperty ;
+            rdfs:domain :Infrastructure ;
+            rdfs:range xsd:string .
+
+
+###  http://rolandb.com/ontologies/dc#zipCode
+:zipCode rdf:type owl:DatatypeProperty ,
+                  owl:FunctionalProperty ;
+         rdfs:domain :Municipality ;
+         rdfs:range xsd:integer .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://rolandb.com/ontologies/dc#AvalancheZone
+:AvalancheZone rdf:type owl:Class ;
+               rdfs:subClassOf :HazardZone ;
+               owl:disjointWith :LandslideZone .
+
+
+###  http://rolandb.com/ontologies/dc#CommunicationInfrastructure
+:CommunicationInfrastructure rdf:type owl:Class ;
+                             rdfs:subClassOf :Infrastructure .
+
+
+###  http://rolandb.com/ontologies/dc#District
+:District rdf:type owl:Class ;
+          rdfs:subClassOf [ rdf:type owl:Restriction ;
+                            owl:onProperty :districtCode ;
+                            owl:someValuesFrom xsd:integer
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :districtNameDe ;
+                            owl:someValuesFrom xsd:string
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :districtNameIt ;
+                            owl:someValuesFrom xsd:string
+                          ] .
+
+
+###  http://rolandb.com/ontologies/dc#EnergyInfrastructure
+:EnergyInfrastructure rdf:type owl:Class ;
+                      rdfs:subClassOf :Infrastructure .
+
+
+###  http://rolandb.com/ontologies/dc#GeometricObject
+:GeometricObject rdf:type owl:Class ;
+                 rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                   owl:onProperty :geometry ;
+                                   owl:someValuesFrom xsd:string
+                                 ] .
+
+
+###  http://rolandb.com/ontologies/dc#HazardZone
+:HazardZone rdf:type owl:Class ;
+            rdfs:subClassOf :GeometricObject ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :hazardZoneIn ;
+                              owl:someValuesFrom :Municipality
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :dangerNameDe ;
+                              owl:someValuesFrom xsd:string
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :dangerNameIt ;
+                              owl:someValuesFrom xsd:string
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :hazardCode ;
+                              owl:someValuesFrom xsd:integer
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :processNameDe ;
+                              owl:someValuesFrom xsd:string
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :processNameIt ;
+                              owl:someValuesFrom xsd:string
+                            ] .
+
+
+###  http://rolandb.com/ontologies/dc#HighDangerZone
+:HighDangerZone rdf:type owl:Class ;
+                rdfs:subClassOf :HazardZone .
+
+
+###  http://rolandb.com/ontologies/dc#Infrastructure
+:Infrastructure rdf:type owl:Class ;
+                rdfs:subClassOf :GeometricObject ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty :infrastructureCode ;
+                                  owl:someValuesFrom xsd:integer
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty :typeNameDe ;
+                                  owl:someValuesFrom xsd:string
+                                ] ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty :typeNameIt ;
+                                  owl:someValuesFrom xsd:string
+                                ] .
+
+
+###  http://rolandb.com/ontologies/dc#InfrastructureLine
+:InfrastructureLine rdf:type owl:Class ;
+                    rdfs:subClassOf :Infrastructure ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :lineLength ;
+                                      owl:someValuesFrom xsd:float
+                                    ] ;
+                    owl:disjointWith :InfrastructureNode .
+
+
+###  http://rolandb.com/ontologies/dc#InfrastructureNode
+:InfrastructureNode rdf:type owl:Class ;
+                    rdfs:subClassOf :Infrastructure .
+
+
+###  http://rolandb.com/ontologies/dc#LandslideZone
+:LandslideZone rdf:type owl:Class ;
+               rdfs:subClassOf :HazardZone .
+
+
+###  http://rolandb.com/ontologies/dc#LowDangerZone
+:LowDangerZone rdf:type owl:Class ;
+               rdfs:subClassOf :HazardZone .
+
+
+###  http://rolandb.com/ontologies/dc#MediumDangerZone
+:MediumDangerZone rdf:type owl:Class ;
+                  rdfs:subClassOf :HazardZone .
+
+
+###  http://rolandb.com/ontologies/dc#Municipality
+:Municipality rdf:type owl:Class ;
+              rdfs:subClassOf :GeometricObject ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :belongsTo ;
+                                owl:someValuesFrom :District
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :area ;
+                                owl:someValuesFrom xsd:float
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :istatCode ;
+                                owl:someValuesFrom xsd:integer
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :nameDe ;
+                                owl:someValuesFrom xsd:string
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :nameIt ;
+                                owl:someValuesFrom xsd:string
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :zipCode ;
+                                owl:someValuesFrom xsd:integer
+                              ] .
+
+
+###  http://rolandb.com/ontologies/dc#VeryHighDangerZone
+:VeryHighDangerZone rdf:type owl:Class ;
+                    rdfs:subClassOf :HazardZone .
+
+
+###  http://rolandb.com/ontologies/dc#WasteInfrastructure
+:WasteInfrastructure rdf:type owl:Class ;
+                     rdfs:subClassOf :Infrastructure .
+
+
+###  http://rolandb.com/ontologies/dc#WaterInfrastructure
+:WaterInfrastructure rdf:type owl:Class ;
+                     rdfs:subClassOf :Infrastructure .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :CommunicationInfrastructure
+                :EnergyInfrastructure
+                :WasteInfrastructure
+                :WaterInfrastructure
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :District
+                :HazardZone
+                :Infrastructure
+                :Municipality
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :HighDangerZone
+                :LowDangerZone
+                :MediumDangerZone
+                :VeryHighDangerZone
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
