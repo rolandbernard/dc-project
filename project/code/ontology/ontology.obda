@@ -1,0 +1,26 @@
+[PrefixDeclaration]
+:		http://rolandb.com/ontologies/dc#
+owl:		http://www.w3.org/2002/07/owl#
+rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
+xml:		http://www.w3.org/XML/1998/namespace
+xsd:		http://www.w3.org/2001/XMLSchema#
+rdfs:		http://www.w3.org/2000/01/rdf-schema#
+
+[MappingDeclaration] @collection [[
+mappingId	MAP-DISTRICT
+target		:district/{code} a :District ; :districtCode {code}^^xsd:integer ; :districtNameIt {name_it}^^xsd:string ; :districtNameDe {name_de}^^xsd:string . 
+source		SELECT code, name_it, name_de FROM District
+
+mappingId	MAP-MUNICIPALITY
+target		:municipality/{istat_code} a :Municipality ; :istatCode {istat_code}^^xsd:integer ; :zipCode {zip_code}^^xsd:integer ; :nameIt {name_it}^^xsd:string ; :nameDe {name_de}^^xsd:string ; :nameLd {name_ld}^^xsd:string ; :area {area}^^xsd:float ; :geometry {geom}^^xsd:string . 
+source		SELECT istat_code, zip_code, name_it, name_de, name_ld, area, ST_AsText(geom) as geom from Municipality
+
+mappingId	MAP-INFRASTRUCTURE-LINE
+target		:infrastructure/{code} a :InfrastructureLine ; :infrastructureIn :municipality/{istat_code} ; :infrastructureCode {code}^^xsd:integer ; :lineLength {shape_len}^^xsd:float ; :geometry {geom}^^xsd:string . 
+source		SELECT code, istat_code, shape_len, ST_AsText(geom) as geom FROM InfrastructureLine
+
+mappingId	MAP-INFRASTRUCTURE-LINE-TYPE
+target		:infrastructure/{code} :typeNameIt {name_it}^^xsd:string ; :typeNameDe {name_de}^^xsd:string . 
+source		SELECT InfrastructureLine.code, name_it, name_de FROM InfrastructureLine, InfrastructureType WHERE type_code = InfrastructureType.code
+]]
+
