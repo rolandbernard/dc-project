@@ -11,4 +11,10 @@ PREFIX : <http://rolandb.com/ontologies/dc#>
 SELECT DISTINCT ?municipality ?name {
   ?municipality a :Municipality ; :nameDe ?name .
 }
+[QueryItem="LIST-INFRASTRUCTURE"]
+PREFIX : <http://rolandb.com/ontologies/dc#>
+
+SELECT DISTINCT ?infrastructure ?kind {
+  ?infrastructure a :Infrastructure ; :typeNameDe ?kind .
+}
 ]]
