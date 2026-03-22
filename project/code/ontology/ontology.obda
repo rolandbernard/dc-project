@@ -12,8 +12,8 @@ target		:district/{code} a :District ; :districtCode {code}^^xsd:integer ; :dist
 source		SELECT code, name_it, name_de FROM District
 
 mappingId	MAP-MUNICIPALITY
-target		:municipality/{istat_code} a :Municipality ; :istatCode {istat_code}^^xsd:integer ; :zipCode {zip_code}^^xsd:integer ; :nameIt {name_it}^^xsd:string ; :nameDe {name_de}^^xsd:string ; :nameLd {name_ld}^^xsd:string ; :area {area}^^xsd:float ; :geometry {geom}^^xsd:string . 
-source		SELECT istat_code, zip_code, name_it, name_de, name_ld, area, ST_AsText(geom) as geom from Municipality
+target		:municipality/{istat_code} a :Municipality ; :istatCode {istat_code}^^xsd:integer ; :zipCode {zip_code}^^xsd:integer ; :nameIt {name_it}^^xsd:string ; :nameDe {name_de}^^xsd:string ; :nameLd {name_ld}^^xsd:string ; :area {area}^^xsd:float ; :geometry {geom}^^xsd:string ; :belongsTo :district/{distr_code} . 
+source		SELECT istat_code, zip_code, distr_code, name_it, name_de, name_ld, area, ST_AsText(geom) as geom from Municipality
 
 mappingId	MAP-INFRASTRUCTURE-LINE
 target		:infrastructure/{code} a :InfrastructureLine ; :infrastructureIn :municipality/{istat_code} ; :infrastructureCode {code}^^xsd:integer ; :lineLength {shape_len}^^xsd:float ; :geometry {geom}^^xsd:string . 
@@ -58,5 +58,61 @@ source		SELECT InfrastructureNode.code FROM InfrastructureNode, InfrastructureTy
 mappingId	MAP-INFRASTRUCTURE-NODE-WASTE
 target		:infrastructure/{code} a :WasteInfrastructure . 
 source		SELECT InfrastructureNode.code FROM InfrastructureNode, InfrastructureType WHERE type_code = InfrastructureType.code AND name_de IN ('Kläranlage', 'Müllentsorgungsanlage', 'Recyclinganlage')
+
+mappingId	MAP-HAZARD-LANDSLIDE
+target		:hazard/{code} a :LandslideZone ; :hazardZoneIn :municipality/{istat_code} ; :hazardCode {code}^^xsd:integer ; :geometry {geom}^^xsd:string . 
+source		SELECT code, istat_code, ST_AsText(geom) as geom FROM LandslideHazard
+
+mappingId	MAP-HAZARD-LANDSLIDE-DANGER
+target		:hazard/{code} :dangerNameIt {name_it}^^xsd:string ; :dangerNameDe {name_de}^^xsd:string . 
+source		SELECT LandslideHazard.code, name_it, name_de FROM LandslideHazard, DangerLevel WHERE danger_code = DangerLevel.code
+
+mappingId	MAP-HAZARD-LANDSLIDE-PROCESS
+target		:hazard/{code} :processNameIt {name_it}^^xsd:string ; :processNameDe {name_de}^^xsd:string . 
+source		SELECT LandslideHazard.code, name_it, name_de FROM LandslideHazard, HazardProcess WHERE process_code = HazardProcess.code
+
+mappingId	MAP-HAZARD-AVALANCHE
+target		:hazard/{code} a :AvalancheZone ; :hazardZoneIn :municipality/{istat_code} ; :hazardCode {code}^^xsd:integer ; :geometry {geom}^^xsd:string . 
+source		SELECT code, istat_code, ST_AsText(geom) as geom FROM AvalancheHazard
+
+mappingId	MAP-HAZARD-AVALANCHE-DANGER
+target		:hazard/{code} :dangerNameIt {name_it}^^xsd:string ; :dangerNameDe {name_de}^^xsd:string . 
+source		SELECT AvalancheHazard.code, name_it, name_de FROM AvalancheHazard, DangerLevel WHERE danger_code = DangerLevel.code
+
+mappingId	MAP-HAZARD-AVALANCHE-PROCESS
+target		:hazard/{code} :processNameIt {name_it}^^xsd:string ; :processNameDe {name_de}^^xsd:string . 
+source		SELECT AvalancheHazard.code, name_it, name_de FROM AvalancheHazard, HazardProcess WHERE process_code = HazardProcess.code
+
+mappingId	MAP-HAZARD-LANDSLIDE-VERYHIGH
+target		:hazard/{code} a :VeryHighDangerZone . 
+source		SELECT LandslideHazard.code FROM LandslideHazard, DangerLevel WHERE danger_code = DangerLevel.code AND name_de = 'Sehr hohe Gefahrenstufe (H4)'
+
+mappingId	MAP-HAZARD-LANDSLIDE-HIGH
+target		:hazard/{code} a :HighDangerZone . 
+source		SELECT LandslideHazard.code FROM LandslideHazard, DangerLevel WHERE danger_code = DangerLevel.code AND name_de = 'Hohe Gefahrenstufe (H3)'
+
+mappingId	MAP-HAZARD-LANDSLIDE-MEDIUM
+target		:hazard/{code} a :MediumDangerZone . 
+source		SELECT LandslideHazard.code FROM LandslideHazard, DangerLevel WHERE danger_code = DangerLevel.code AND name_de = 'Mittlere Gefahrenstufe (H2)'
+
+mappingId	MAP-HAZARD-LANDSLIDE-LOW
+target		:hazard/{code} a :LowDangerZone . 
+source		SELECT LandslideHazard.code FROM LandslideHazard, DangerLevel WHERE danger_code = DangerLevel.code AND name_de = 'Untersucht und nicht gefährlich'
+
+mappingId	MAP-HAZARD-AVALANCHE-VERYHIGH
+target		:hazard/{code} a :VeryHighDangerZone . 
+source		SELECT AvalancheHazard.code FROM AvalancheHazard, DangerLevel WHERE danger_code = DangerLevel.code AND name_de = 'Sehr hohe Gefahrenstufe (H4)'
+
+mappingId	MAP-HAZARD-AVALANCHE-HIGH
+target		:hazard/{code} a :HighDangerZone . 
+source		SELECT AvalancheHazard.code FROM AvalancheHazard, DangerLevel WHERE danger_code = DangerLevel.code AND name_de = 'Hohe Gefahrenstufe (H3)'
+
+mappingId	MAP-HAZARD-AVALANCHE-MEDIUM
+target		:hazard/{code} a :MediumDangerZone . 
+source		SELECT AvalancheHazard.code FROM AvalancheHazard, DangerLevel WHERE danger_code = DangerLevel.code AND name_de = 'Mittlere Gefahrenstufe (H2)'
+
+mappingId	MAP-HAZARD-AVALANCHE-LOW
+target		:hazard/{code} a :LowDangerZone . 
+source		SELECT AvalancheHazard.code FROM AvalancheHazard, DangerLevel WHERE danger_code = DangerLevel.code AND name_de = 'Untersucht und nicht gefährlich'
 ]]
 
