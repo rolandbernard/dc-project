@@ -201,5 +201,29 @@ target		:infrastructure/{infra_code} :isExposedTo :hazard/{hazard_code} .
 source		SELECT InfrastructureNode.code AS infra_code, AvalancheHazard.code AS hazard_code
 			FROM InfrastructureNode, AvalancheHazard
 			WHERE ST_Intersects(InfrastructureNode.geom, AvalancheHazard.geom)
+
+mappingId	MAP-INTERSECTSWITH-LINE-MUNICIPALITY
+target		:infrastructure/{code} :intersectsWith :municipality/{istat_code} . 
+source		SELECT code, Municipality.istat_code
+			FROM InfrastructureLine, Municipality
+			WHERE ST_Intersects(InfrastructureLine.geom, Municipality.geom)
+
+mappingId	MAP-INTERSECTSWITH-NODE-MUNICIPALITY
+target		:infrastructure/{code} :intersectsWith :municipality/{istat_code} . 
+source		SELECT code, Municipality.istat_code
+			FROM InfrastructureNode, Municipality
+			WHERE ST_Intersects(InfrastructureNode.geom, Municipality.geom)
+
+mappingId	MAP-INTERSECTSWITH-LANDSLIDE-MUNICIPALITY
+target		:hazard/{code} :intersectsWith :municipality/{istat_code} . 
+source		SELECT code, Municipality.istat_code
+			FROM LandslideHazard, Municipality
+			WHERE ST_Intersects(LandslideHazard.geom, Municipality.geom)
+
+mappingId	MAP-INTERSECTSWITH-AVALANCHE-MUNICIPALITY
+target		:hazard/{code} :intersectsWith :municipality/{istat_code} . 
+source		SELECT code, Municipality.istat_code
+			FROM AvalancheHazard, Municipality
+			WHERE ST_Intersects(AvalancheHazard.geom, Municipality.geom)
 ]]
 

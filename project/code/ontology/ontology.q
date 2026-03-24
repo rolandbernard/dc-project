@@ -17,4 +17,10 @@ PREFIX : <http://rolandb.com/ontologies/dc#>
 SELECT DISTINCT ?infrastructure ?kind {
   ?infrastructure a :Infrastructure ; :typeNameDe ?kind .
 }
+[QueryItem="LIST-HAZARD"]
+PREFIX : <http://rolandb.com/ontologies/dc#>
+
+SELECT DISTINCT ?hazard ?process ?danger {
+  ?hazard a :HazardZone ; :processNameDe ?process  ; :dangerNameDe ?danger .
+}
 ]]
