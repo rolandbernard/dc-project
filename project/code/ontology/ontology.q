@@ -23,4 +23,14 @@ PREFIX : <http://rolandb.com/ontologies/dc#>
 SELECT DISTINCT ?hazard ?process ?danger {
   ?hazard a :HazardZone ; :processNameDe ?process  ; :dangerNameDe ?danger .
 }
+[QueryItem="INTERSECTS"]
+PREFIX : <http://rolandb.com/ontologies/dc#>
+
+SELECT DISTINCT ?municipality ?hazard ?process ?danger {
+  ?hazard a :HighDangerZone;
+    :processNameDe ?process ;
+    :dangerNameDe ?danger.
+  ?municipality a :Municipality ;
+    :intersectsWith ?hazard .
+}
 ]]

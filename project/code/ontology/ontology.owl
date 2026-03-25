@@ -1,0 +1,583 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://rolandb.com/ontologies/dc#"
+     xml:base="http://rolandb.com/ontologies/dc"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://rolandb.com/ontologies/dc"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#belongsTo -->
+
+    <owl:ObjectProperty rdf:about="http://rolandb.com/ontologies/dc#belongsTo">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#Municipality"/>
+        <rdfs:range rdf:resource="http://rolandb.com/ontologies/dc#District"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#hazardZoneIn -->
+
+    <owl:ObjectProperty rdf:about="http://rolandb.com/ontologies/dc#hazardZoneIn">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#HazardZone"/>
+        <rdfs:range rdf:resource="http://rolandb.com/ontologies/dc#Municipality"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#infrastructureIn -->
+
+    <owl:ObjectProperty rdf:about="http://rolandb.com/ontologies/dc#infrastructureIn">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#Infrastructure"/>
+        <rdfs:range rdf:resource="http://rolandb.com/ontologies/dc#Municipality"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#intersectsWith -->
+
+    <owl:ObjectProperty rdf:about="http://rolandb.com/ontologies/dc#intersectsWith">
+        <owl:inverseOf rdf:resource="http://rolandb.com/ontologies/dc#intersectsWith"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#GeometricObject"/>
+        <rdfs:range rdf:resource="http://rolandb.com/ontologies/dc#GeometricObject"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#isExposedTo -->
+
+    <owl:ObjectProperty rdf:about="http://rolandb.com/ontologies/dc#isExposedTo">
+        <rdfs:subPropertyOf rdf:resource="http://rolandb.com/ontologies/dc#intersectsWith"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#Infrastructure"/>
+        <rdfs:range rdf:resource="http://rolandb.com/ontologies/dc#HazardZone"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#area -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#area">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#Municipality"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#dangerNameDe -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#dangerNameDe">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#HazardZone"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#dangerNameIt -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#dangerNameIt">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#HazardZone"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#districtCode -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#districtCode">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#District"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#districtNameDe -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#districtNameDe">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#District"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#districtNameIt -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#districtNameIt">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#District"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#geometry -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#geometry">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#GeometricObject"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#hazardCode -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#hazardCode">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#HazardZone"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#infrastructureCode -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#infrastructureCode">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#Infrastructure"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#istatCode -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#istatCode">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#Municipality"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#lineLength -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#lineLength">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#InfrastructureLine"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#nameDe -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#nameDe">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#Municipality"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#nameIt -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#nameIt">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#Municipality"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#nameLd -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#nameLd">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#Municipality"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#processNameDe -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#processNameDe">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#HazardZone"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#processNameIt -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#processNameIt">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#HazardZone"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#typeNameDe -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#typeNameDe">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#Infrastructure"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#typeNameIt -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#typeNameIt">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#Infrastructure"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#zipCode -->
+
+    <owl:DatatypeProperty rdf:about="http://rolandb.com/ontologies/dc#zipCode">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#Municipality"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#AvalancheZone -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#AvalancheZone">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#HazardZone"/>
+        <owl:disjointWith rdf:resource="http://rolandb.com/ontologies/dc#LandslideZone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#CommunicationInfrastructure -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#CommunicationInfrastructure">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#Infrastructure"/>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#District -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#District">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#districtCode"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#districtNameDe"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#districtNameIt"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#EnergyInfrastructure -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#EnergyInfrastructure">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#Infrastructure"/>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#GeometricObject -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#GeometricObject">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#geometry"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#HazardZone -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#HazardZone">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#GeometricObject"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#hazardZoneIn"/>
+                <owl:someValuesFrom rdf:resource="http://rolandb.com/ontologies/dc#Municipality"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#dangerNameDe"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#dangerNameIt"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#hazardCode"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#processNameDe"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#processNameIt"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#HighDangerZone -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#HighDangerZone">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#HazardZone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#Infrastructure -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#Infrastructure">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#GeometricObject"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#infrastructureCode"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#typeNameDe"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#typeNameIt"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#InfrastructureLine -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#InfrastructureLine">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#Infrastructure"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#lineLength"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="http://rolandb.com/ontologies/dc#InfrastructureNode"/>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#InfrastructureNode -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#InfrastructureNode">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#Infrastructure"/>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#LandslideZone -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#LandslideZone">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#HazardZone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#LowDangerZone -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#LowDangerZone">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#HazardZone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#MediumDangerZone -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#MediumDangerZone">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#HazardZone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#Municipality -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#Municipality">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#GeometricObject"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#belongsTo"/>
+                <owl:someValuesFrom rdf:resource="http://rolandb.com/ontologies/dc#District"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#area"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#istatCode"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#nameDe"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#nameIt"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://rolandb.com/ontologies/dc#zipCode"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#VeryHighDangerZone -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#VeryHighDangerZone">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#HazardZone"/>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#WasteInfrastructure -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#WasteInfrastructure">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#Infrastructure"/>
+    </owl:Class>
+    
+
+
+    <!-- http://rolandb.com/ontologies/dc#WaterInfrastructure -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#WaterInfrastructure">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#Infrastructure"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://rolandb.com/ontologies/dc#CommunicationInfrastructure"/>
+            <rdf:Description rdf:about="http://rolandb.com/ontologies/dc#EnergyInfrastructure"/>
+            <rdf:Description rdf:about="http://rolandb.com/ontologies/dc#WasteInfrastructure"/>
+            <rdf:Description rdf:about="http://rolandb.com/ontologies/dc#WaterInfrastructure"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://rolandb.com/ontologies/dc#District"/>
+            <rdf:Description rdf:about="http://rolandb.com/ontologies/dc#HazardZone"/>
+            <rdf:Description rdf:about="http://rolandb.com/ontologies/dc#Infrastructure"/>
+            <rdf:Description rdf:about="http://rolandb.com/ontologies/dc#Municipality"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://rolandb.com/ontologies/dc#HighDangerZone"/>
+            <rdf:Description rdf:about="http://rolandb.com/ontologies/dc#LowDangerZone"/>
+            <rdf:Description rdf:about="http://rolandb.com/ontologies/dc#MediumDangerZone"/>
+            <rdf:Description rdf:about="http://rolandb.com/ontologies/dc#VeryHighDangerZone"/>
+        </owl:members>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+
