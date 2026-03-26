@@ -1,0 +1,10 @@
+PREFIX : <http://rolandb.com/ontologies/dc#>
+
+SELECT DISTINCT ?infraLine ?avalancheZone
+WHERE {
+  ?infraLine a :InfrastructureLine .
+  ?avalancheZone a :AvalancheZone .
+
+  # Link between infrastructure line and the hazard zone
+  ?infraLine :isExposedTo ?avalancheZone .
+}

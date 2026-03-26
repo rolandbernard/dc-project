@@ -1,0 +1,14 @@
+PREFIX : <http://rolandb.com/ontologies/dc#>
+
+SELECT DISTINCT ?waterNode ?landslideZone
+WHERE {
+  # Water infrastructure node
+  ?waterNode a :InfrastructureNode, :WaterInfrastructure .
+
+  # Landslide zone with high or very high danger level
+  ?landslideZone a :LandslideZone , ?dangerType .
+  FILTER (?dangerType IN (:HighDangerZone, :VeryHighDangerZone))
+
+  # Exposure intersection
+  ?waterNode :isExposedTo ?landslideZone .
+}

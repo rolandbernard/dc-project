@@ -1,0 +1,13 @@
+PREFIX : <http://rolandb.com/ontologies/dc#>
+
+SELECT ?municipality ?municipalityNameDe (COUNT(DISTINCT ?infra) AS ?exposedInfraCount)
+WHERE {
+  ?municipality a :Municipality ; :nameDe ?municipalityNameDe .
+  
+  # Infrastructure located in the municipality and exposed to a hazard zone
+  ?infra a :Infrastructure ;
+    :infrastructureIn ?municipality ;
+    :isExposedTo ?hazardZone .
+}
+GROUP BY ?municipality ?municipalityNameDe
+ORDER BY DESC(?exposedInfraCount)

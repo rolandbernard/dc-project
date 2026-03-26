@@ -1,0 +1,16 @@
+PREFIX : <http://rolandb.com/ontologies/dc#>
+
+SELECT ?municipality (COUNT(DISTINCT ?energyLine) AS ?electricityLineCount)
+WHERE {
+  # Specify the municipality
+  ?municipality a :Municipality ; :nameDe "Bozen" .
+
+  # Infrastructure energy lines in this municipality
+  ?energyLine a :InfrastructureLine , :EnergyInfrastructure ;
+    :infrastructureIn ?municipality ;
+    :isExposedTo ?hazardZone .
+              
+  # Ensure the hazard zone itself is in the same municipality
+  ?hazardZone :hazardZoneIn ?municipality .
+}
+GROUP BY ?municipality
