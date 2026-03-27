@@ -1,3 +1,5 @@
+# What are the infrastructure lines that intersect with avalanche-prone areas?
+
 PREFIX : <http://rolandb.com/ontologies/dc#>
 
 SELECT DISTINCT ?infraLine ?avalancheZone

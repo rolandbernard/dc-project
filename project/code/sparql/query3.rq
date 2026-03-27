@@ -1,3 +1,5 @@
+# In a given Municipality, how many electricity lines are currently situated in a hazard zone?
+
 PREFIX : <http://rolandb.com/ontologies/dc#>
 
 SELECT ?municipality (COUNT(DISTINCT ?energyLine) AS ?electricityLineCount)

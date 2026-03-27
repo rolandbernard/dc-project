@@ -1,3 +1,5 @@
+# Which municipalities have the highest count of infrastructure elements exposed to natural hazards?
+
 PREFIX : <http://rolandb.com/ontologies/dc#>
 
 SELECT ?municipality ?municipalityNameDe (COUNT(DISTINCT ?infra) AS ?exposedInfraCount)

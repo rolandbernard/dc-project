@@ -1,0 +1,33 @@
+# Which districts contain at least two different municipalities where water
+# infrastructure lines with a length greater than 1km are exposed to high-danger
+# landslide risk zones, and what is the total length of these vulnerable
+# water lines per district?
+
+PREFIX : <http://rolandb.com/ontologies/dc#>
+
+SELECT ?district 
+       ?districtNameDe 
+       (COUNT(DISTINCT ?municipality) AS ?affectedMunicipalityCount) 
+       (SUM(?lineLength) AS ?totalVulnerableLength)
+WHERE {
+  # District and its municipalities
+  ?municipality a :Municipality ; :belongsTo ?district .
+  ?district :districtNameDe ?districtNameDe .
+
+  # Water infrastructure lines in the municipality
+  ?commLine a :InfrastructureLine , :WaterInfrastructure ;
+    :infrastructureIn ?municipality ;
+    :lineLength ?lineLength ;
+    :isExposedTo ?hazardZone .
+
+  # Filter for lines longer than 1000m = 1km
+  FILTER(?lineLength > 1000)
+
+  # High or very high danger landslide zones
+  ?hazardZone a :LandslideZone , ?dangerLevel .
+  FILTER(?dangerLevel IN (:HighDangerZone, :VeryHighDangerZone))
+}
+GROUP BY ?district ?districtNameDe
+# Require at least 2 distinct municipalities per district meeting the criteria
+HAVING (COUNT(DISTINCT ?municipality) >= 2)
+ORDER BY DESC(?totalVulnerableLength)
