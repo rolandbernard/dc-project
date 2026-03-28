@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" class="font-sans">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/appicon-180x180.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#1e1e1e" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="EPIC-KITCHENS-100 Action Anticipation Visualizer" />
+    <meta name="name" content="EK100 AA Visualizer" />
+    <meta property="og:title" content="EK100 AA Visualizer" />
+    <title>EK100 AA Visualizer</title>
+    <style>
+        :root,
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        :root {
+            background: oklch(95% 0 0);
+            color: oklch(20% 0 0);
+        }
+
+        :root.dark {
+            background: oklch(21% 0 0);
+            color: oklch(85% 0 0);
+        }
+    </style>
+    <script>
+        function setupTheme(query) {
+            if (!query) {
+                query = matchMedia("(prefers-color-scheme: dark)");
+            }
+            document.documentElement.classList.toggle(
+                "dark",
+                "theme" in localStorage ? localStorage.theme === "dark" : query.matches
+            );
+        }
+        matchMedia("(prefers-color-scheme: dark)").addListener(setupTheme);
+        addEventListener("storage", () => setupTheme());
+        setupTheme();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+</head>
+
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+import { Moon, Settings, Sun } from "lucide-react";
+import React, { useState } from "react";
+
+import { useClickOutside, useTheme } from "../hooks";
+
+const OPTIONS = {
+    light: Sun,
+    dark: Moon,
+    system: Settings,
+};
+
+/**
+ * This component implements a theme selector, allowing users to switch between
+ * the light and the dark theme. Additionally, and selected ad default, is also
+ * the option to uses the system level preference.
+ */
+export default function ThemeSelector() {
+    const [show, setShow] = useState(false);
+    const [selected, setSelected] = useTheme();
+    // The following is to close the drop down menu when the user click elsewhere.
+    useClickOutside("div#theme-select", () => setShow(false));
+    return (
+        <div
+            id="theme-select"
+            className="relative m-3"
+            style={{ viewTransitionName: "theme-selector" }}
+        >
+            <button
+                type="button"
+                aria-controls="theme-select"
+                aria-expanded={show}
+                id="search-toggle"
+                className="
+                    flex items-center justify-center w-10 h-10 cursor-pointer
+                    rounded-box hover:bg-content/6 dark:hover:bg-content/10 border
+                    border-transparent active:border-content/10"
+                onClick={() => setShow(true)}
+            >
+                <Moon className="w-5 h-5 hidden dark:block" />
+                <Sun className="w-5 h-5 block dark:hidden" />
+                <span className="sr-only">Theme Selection</span>
+            </button>
+            {show && (
+                <div className="absolute inset-y-full end-3 z-50">
+                    <div className="flex flex-col w-full bg-base-300 shadow-xl dark:shadow-2xl rounded-box p-1">
+                        {Object.entries(OPTIONS).map(([name, icon]) => {
+                            return (
+                                <button
+                                    type="button"
+                                    key={name}
+                                    className={
+                                        "flex items-center justify-start whitespace-nowrap p-2 cursor-pointer rounded-box " +
+                                        "hover:bg-content/6 border border-transparent active:border-content/10 " +
+                                        "dark:hover:bg-content/10 " +
+                                        (selected === name
+                                            ? "text-primary"
+                                            : "")
+                                    }
+                                    onClick={() => setSelected(name)}
+                                >
+                                    {React.createElement(icon, {
+                                        className: "w-5 h-5 inline",
+                                    })}
+                                    <span className="px-4">
+                                        {name[0]?.toUpperCase() + name.slice(1)}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
