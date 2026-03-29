@@ -36,7 +36,8 @@
 ###  http://rolandb.com/ontologies/dc#intersectsWith
 :intersectsWith rdf:type owl:ObjectProperty ;
                 owl:inverseOf :intersectsWith ;
-                rdf:type owl:SymmetricProperty ;
+                rdf:type owl:SymmetricProperty ,
+                         owl:ReflexiveProperty ;
                 rdfs:domain :GeometricObject ;
                 rdfs:range :GeometricObject .
 

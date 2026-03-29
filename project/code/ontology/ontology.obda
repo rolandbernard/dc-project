@@ -225,5 +225,47 @@ target		:hazard/{code} :intersectsWith :municipality/{istat_code} .
 source		SELECT code, Municipality.istat_code
 			FROM AvalancheHazard, Municipality
 			WHERE ST_Intersects(AvalancheHazard.geom, Municipality.geom)
+
+mappingId	MAP-INTERSECTSWITH-LINE-NODE
+target		:infrastructure/{code1} :intersectsWith :infrastructure/{code2} . 
+source		SELECT InfrastructureLine.code AS code1, InfrastructureNode.code AS code2
+			FROM InfrastructureLine, InfrastructureNode
+			WHERE ST_Intersects(InfrastructureLine.geom, InfrastructureNode.geom)
+
+mappingId	MAP-INTERSECTSWITH-LANDSLIDE-AVALANCHE
+target		:hazard/{code1} :intersectsWith :hazard/{code2} . 
+source		SELECT LandslideHazard.code AS code1, AvalancheHazard.code AS code2
+			FROM LandslideHazard, AvalancheHazard
+			WHERE ST_Intersects(LandslideHazard.geom, AvalancheHazard.geom)
+
+mappingId	MAP-INTERSECTSWITH-LINE-LINE
+target		:infrastructure/{code1} :intersectsWith :infrastructure/{code2} . 
+source		SELECT T1.code AS code1, T2.code AS code2
+			FROM InfrastructureLine AS T1, InfrastructureLine AS T2
+			WHERE ST_Intersects(T1.geom, T2.geom)
+
+mappingId	MAP-INTERSECTSWITH-NODE-NODE
+target		:infrastructure/{code1} :intersectsWith :infrastructure/{code2} . 
+source		SELECT T1.code AS code1, T2.code AS code2
+			FROM InfrastructureNode AS T1, InfrastructureNode AS T2
+			WHERE ST_Intersects(T1.geom, T2.geom)
+
+mappingId	MAP-INTERSECTSWITH-LANDSLIDE-LANDSLIDE
+target		:hazard/{code1} :intersectsWith :hazard/{code2} . 
+source		SELECT T1.code AS code1, T2.code AS code2
+			FROM LandslideHazard AS T1, LandslideHazard AS T2
+			WHERE ST_Intersects(T1.geom, T2.geom)
+
+mappingId	MAP-INTERSECTSWITH-AVALANCHE-AVALANCHE
+target		:hazard/{code1} :intersectsWith :hazard/{code2} . 
+source		SELECT T1.code AS code1, T2.code AS code2
+			FROM AvalancheHazard AS T1, AvalancheHazard AS T2
+			WHERE ST_Intersects(T1.geom, T2.geom)
+
+mappingId	MAP-INTERSECTSWITH-MUNICIPALITY-MUNICIPALITY
+target		:municipality/{code1} :intersectsWith :municipality/{code2} . 
+source		SELECT T1.istat_code AS code1, T2.istat_code AS code2
+			FROM Municipality AS T1, Municipality AS T2
+			WHERE ST_Intersects(T1.geom, T2.geom)
 ]]
 

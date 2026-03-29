@@ -56,6 +56,7 @@
     <owl:ObjectProperty rdf:about="http://rolandb.com/ontologies/dc#intersectsWith">
         <owl:inverseOf rdf:resource="http://rolandb.com/ontologies/dc#intersectsWith"/>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ReflexiveProperty"/>
         <rdfs:domain rdf:resource="http://rolandb.com/ontologies/dc#GeometricObject"/>
         <rdfs:range rdf:resource="http://rolandb.com/ontologies/dc#GeometricObject"/>
     </owl:ObjectProperty>
