@@ -22,6 +22,21 @@
 
 \makeatletter
 
+\lstdefinelanguage{Turtle}{
+  morekeywords={@prefix, @base, PREFIX, BASE, a},
+  morecomment=[l]{\#},
+  morestring=[b]",
+  sensitive=true
+}
+
+\lstdefinelanguage{SPARQL}{
+  morekeywords={SELECT, CONSTRUCT, ASK, DESCRIBE, WHERE, PREFIX, BASE, FILTER, OPTIONAL, GRAPH, UNION, ORDER, BY, ASC, DESC, LIMIT, OFFSET, DISTINCT, REDUCED, BIND, AS, GROUP, HAVING},
+  morecomment=[l]{\#},
+  morestring=[b]",
+  morestring=[b]',
+  sensitive=false
+}
+
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}

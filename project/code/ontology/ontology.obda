@@ -18,246 +18,246 @@ source		SELECT istat_code, zip_code, distr_code, name_it, name_de, name_ld, area
 			FROM Municipality
 
 mappingId	MAP-INFRASTRUCTURE-LINE
-target		:infrastructure/{code} a :InfrastructureLine ; :infrastructureIn :municipality/{istat_code} ; :infrastructureCode {code}^^xsd:integer ; :lineLength {shape_len}^^xsd:float ; :geometry {geom}^^xsd:string . 
+target		:infrastructure-line/{code} a :InfrastructureLine ; :infrastructureIn :municipality/{istat_code} ; :infrastructureCode {code}^^xsd:integer ; :lineLength {shape_len}^^xsd:float ; :geometry {geom}^^xsd:string . 
 source		SELECT code, istat_code, shape_len, ST_AsText(geom) AS geom
 			FROM InfrastructureLine
 
 mappingId	MAP-INFRASTRUCTURE-LINE-TYPE
-target		:infrastructure/{code} :typeNameIt {name_it}^^xsd:string ; :typeNameDe {name_de}^^xsd:string . 
+target		:infrastructure-line/{code} :typeNameIt {name_it}^^xsd:string ; :typeNameDe {name_de}^^xsd:string . 
 source		SELECT InfrastructureLine.code, name_it, name_de
 			FROM InfrastructureLine, InfrastructureType
 			WHERE type_code = InfrastructureType.code
 
 mappingId	MAP-INFRASTRUCTURE-NODE
-target		:infrastructure/{code} a :InfrastructureNode ; :infrastructureIn :municipality/{istat_code} ; :infrastructureCode {code}^^xsd:integer ; :geometry {geom}^^xsd:string . 
+target		:infrastructure-node/{code} a :InfrastructureNode ; :infrastructureIn :municipality/{istat_code} ; :infrastructureCode {code}^^xsd:integer ; :geometry {geom}^^xsd:string . 
 source		SELECT code, istat_code, ST_AsText(geom) AS geom
 			FROM InfrastructureNode
 
 mappingId	MAP-INFRASTRUCTURE-NODE-TYPE
-target		:infrastructure/{code} :typeNameIt {name_it}^^xsd:string ; :typeNameDe {name_de}^^xsd:string . 
+target		:infrastructure-node/{code} :typeNameIt {name_it}^^xsd:string ; :typeNameDe {name_de}^^xsd:string . 
 source		SELECT InfrastructureNode.code, name_it, name_de
 			FROM InfrastructureNode, InfrastructureType
 			WHERE type_code = InfrastructureType.code
 
 mappingId	MAP-INFRASTRUCTURE-LINE-ENERGY
-target		:infrastructure/{code} a :EnergyInfrastructure . 
+target		:infrastructure-line/{code} a :EnergyInfrastructure . 
 source		SELECT InfrastructureLine.code
 			FROM InfrastructureLine, InfrastructureType
 			WHERE type_code = InfrastructureType.code
 			  AND name_de IN ('Methangasleitung', 'Hochspannungsleitung', 'Mittelspannungsleitung', 'Fernwärmeleitung', 'Methangasleitung - Bannstreifen', 'Hochspannungsleitung - Bannstreifen')
 
 mappingId	MAP-INFRASTRUCTURE-LINE-WATER
-target		:infrastructure/{code} a :WaterInfrastructure . 
+target		:infrastructure-line/{code} a :WaterInfrastructure . 
 source		SELECT InfrastructureLine.code
 			FROM InfrastructureLine, InfrastructureType
 			WHERE type_code = InfrastructureType.code
 			  AND name_de IN ('Trinkwasserleitung', 'Druckrohrleitung')
 
 mappingId	MAP-INFRASTRUCTURE-LINE-WASTE
-target		:infrastructure/{code} a :WasteInfrastructure . 
+target		:infrastructure-line/{code} a :WasteInfrastructure . 
 source		SELECT InfrastructureLine.code
 			FROM InfrastructureLine, InfrastructureType
 			WHERE type_code = InfrastructureType.code
 			  AND name_de IN ('Abwasserleitung', 'Schlammleitung')
 
 mappingId	MAP-INFRASTRUCTURE-NODE-COMMUNICATION
-target		:infrastructure/{code} a :CommunicationInfrastructure . 
+target		:infrastructure-node/{code} a :CommunicationInfrastructure . 
 source		SELECT InfrastructureNode.code
 			FROM InfrastructureNode, InfrastructureType
 			WHERE type_code = InfrastructureType.code
 			  AND name_de IN ('Kommunikationsinfrastruktur')
 
 mappingId	MAP-INFRASTRUCTURE-NODE-ENERGY
-target		:infrastructure/{code} a :EnergyInfrastructure . 
+target		:infrastructure-node/{code} a :EnergyInfrastructure . 
 source		SELECT InfrastructureNode.code
 			FROM InfrastructureNode, InfrastructureType
 			WHERE type_code = InfrastructureType.code
 			  AND name_de IN ('E-Werk', 'Umspannstation', 'Fernheizanlage')
 
 mappingId	MAP-INFRASTRUCTURE-NODE-WATER
-target		:infrastructure/{code} a :WaterInfrastructure . 
+target		:infrastructure-node/{code} a :WaterInfrastructure . 
 source		SELECT InfrastructureNode.code
 			FROM InfrastructureNode, InfrastructureType
 			WHERE type_code = InfrastructureType.code
 			  AND name_de IN ('Wasserfassung', 'Reservoir', 'Pumpstation')
 
 mappingId	MAP-INFRASTRUCTURE-NODE-WASTE
-target		:infrastructure/{code} a :WasteInfrastructure . 
+target		:infrastructure-node/{code} a :WasteInfrastructure . 
 source		SELECT InfrastructureNode.code
 			FROM InfrastructureNode, InfrastructureType
 			WHERE type_code = InfrastructureType.code
 			  AND name_de IN ('Kläranlage', 'Müllentsorgungsanlage', 'Recyclinganlage')
 
 mappingId	MAP-HAZARD-LANDSLIDE
-target		:hazard/{code} a :LandslideZone ; :hazardZoneIn :municipality/{istat_code} ; :hazardCode {code}^^xsd:integer ; :geometry {geom}^^xsd:string . 
+target		:hazard-landslide/{code} a :LandslideZone ; :hazardZoneIn :municipality/{istat_code} ; :hazardCode {code}^^xsd:integer ; :geometry {geom}^^xsd:string . 
 source		SELECT code, istat_code, ST_AsText(geom) AS geom
 			FROM LandslideHazard
 
 mappingId	MAP-HAZARD-LANDSLIDE-DANGER
-target		:hazard/{code} :dangerNameIt {name_it}^^xsd:string ; :dangerNameDe {name_de}^^xsd:string . 
+target		:hazard-landslide/{code} :dangerNameIt {name_it}^^xsd:string ; :dangerNameDe {name_de}^^xsd:string . 
 source		SELECT LandslideHazard.code, name_it, name_de
 			FROM LandslideHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
 
 mappingId	MAP-HAZARD-LANDSLIDE-PROCESS
-target		:hazard/{code} :processNameIt {name_it}^^xsd:string ; :processNameDe {name_de}^^xsd:string . 
+target		:hazard-landslide/{code} :processNameIt {name_it}^^xsd:string ; :processNameDe {name_de}^^xsd:string . 
 source		SELECT LandslideHazard.code, name_it, name_de
 			FROM LandslideHazard, HazardProcess
 			WHERE process_code = HazardProcess.code
 
 mappingId	MAP-HAZARD-AVALANCHE
-target		:hazard/{code} a :AvalancheZone ; :hazardZoneIn :municipality/{istat_code} ; :hazardCode {code}^^xsd:integer ; :geometry {geom}^^xsd:string . 
+target		:hazard-avalanche/{code} a :AvalancheZone ; :hazardZoneIn :municipality/{istat_code} ; :hazardCode {code}^^xsd:integer ; :geometry {geom}^^xsd:string . 
 source		SELECT code, istat_code, ST_AsText(geom) AS geom
 			FROM AvalancheHazard
 
 mappingId	MAP-HAZARD-AVALANCHE-DANGER
-target		:hazard/{code} :dangerNameIt {name_it}^^xsd:string ; :dangerNameDe {name_de}^^xsd:string . 
+target		:hazard-avalanche/{code} :dangerNameIt {name_it}^^xsd:string ; :dangerNameDe {name_de}^^xsd:string . 
 source		SELECT AvalancheHazard.code, name_it, name_de
 			FROM AvalancheHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
 
 mappingId	MAP-HAZARD-AVALANCHE-PROCESS
-target		:hazard/{code} :processNameIt {name_it}^^xsd:string ; :processNameDe {name_de}^^xsd:string . 
+target		:hazard-avalanche/{code} :processNameIt {name_it}^^xsd:string ; :processNameDe {name_de}^^xsd:string . 
 source		SELECT AvalancheHazard.code, name_it, name_de
 			FROM AvalancheHazard, HazardProcess
 			WHERE process_code = HazardProcess.code
 
 mappingId	MAP-HAZARD-LANDSLIDE-VERYHIGH
-target		:hazard/{code} a :VeryHighDangerZone . 
+target		:hazard-landslide/{code} a :VeryHighDangerZone . 
 source		SELECT LandslideHazard.code
 			FROM LandslideHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
 			  AND name_de = 'Sehr hohe Gefahrenstufe (H4)'
 
 mappingId	MAP-HAZARD-LANDSLIDE-HIGH
-target		:hazard/{code} a :HighDangerZone . 
+target		:hazard-landslide/{code} a :HighDangerZone . 
 source		SELECT LandslideHazard.code
 			FROM LandslideHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
 			  AND name_de = 'Hohe Gefahrenstufe (H3)'
 
 mappingId	MAP-HAZARD-LANDSLIDE-MEDIUM
-target		:hazard/{code} a :MediumDangerZone . 
+target		:hazard-landslide/{code} a :MediumDangerZone . 
 source		SELECT LandslideHazard.code
 			FROM LandslideHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
 			  AND name_de = 'Mittlere Gefahrenstufe (H2)'
 
 mappingId	MAP-HAZARD-LANDSLIDE-LOW
-target		:hazard/{code} a :LowDangerZone . 
+target		:hazard-landslide/{code} a :LowDangerZone . 
 source		SELECT LandslideHazard.code
 			FROM LandslideHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
 			  AND name_de = 'Untersucht und nicht gefährlich'
 
 mappingId	MAP-HAZARD-AVALANCHE-VERYHIGH
-target		:hazard/{code} a :VeryHighDangerZone . 
+target		:hazard-avalanche/{code} a :VeryHighDangerZone . 
 source		SELECT AvalancheHazard.code
 			FROM AvalancheHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
 			  AND name_de = 'Sehr hohe Gefahrenstufe (H4)'
 
 mappingId	MAP-HAZARD-AVALANCHE-HIGH
-target		:hazard/{code} a :HighDangerZone . 
+target		:hazard-avalanche/{code} a :HighDangerZone . 
 source		SELECT AvalancheHazard.code
 			FROM AvalancheHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
 			  AND name_de = 'Hohe Gefahrenstufe (H3)'
 
 mappingId	MAP-HAZARD-AVALANCHE-MEDIUM
-target		:hazard/{code} a :MediumDangerZone . 
+target		:hazard-avalanche/{code} a :MediumDangerZone . 
 source		SELECT AvalancheHazard.code
 			FROM AvalancheHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
 			  AND name_de = 'Mittlere Gefahrenstufe (H2)'
 
 mappingId	MAP-HAZARD-AVALANCHE-LOW
-target		:hazard/{code} a :LowDangerZone . 
+target		:hazard-avalanche/{code} a :LowDangerZone . 
 source		SELECT AvalancheHazard.code
 			FROM AvalancheHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
 			  AND name_de = 'Untersucht und nicht gefährlich'
 
 mappingId	MAP-ISEXPOSEDTO-LINE-LANDSLIDE
-target		:infrastructure/{infra_code} :isExposedTo :hazard/{hazard_code} . 
+target		:infrastructure-line/{infra_code} :isExposedTo :hazard-landslide/{hazard_code} . 
 source		SELECT InfrastructureLine.code AS infra_code, LandslideHazard.code AS hazard_code
 			FROM InfrastructureLine, LandslideHazard
 			WHERE ST_Intersects(InfrastructureLine.geom, LandslideHazard.geom)
 
 mappingId	MAP-ISEXPOSEDTO-LINE-AVALANCHE
-target		:infrastructure/{infra_code} :isExposedTo :hazard/{hazard_code} . 
+target		:infrastructure-line/{infra_code} :isExposedTo :hazard-avalanche/{hazard_code} . 
 source		SELECT InfrastructureLine.code AS infra_code, AvalancheHazard.code AS hazard_code
 			FROM InfrastructureLine, AvalancheHazard
 			WHERE ST_Intersects(InfrastructureLine.geom, AvalancheHazard.geom)
 
 mappingId	MAP-ISEXPOSEDTO-NODE-LANDSLIDE
-target		:infrastructure/{infra_code} :isExposedTo :hazard/{hazard_code} . 
+target		:infrastructure-node/{infra_code} :isExposedTo :hazard-landslide/{hazard_code} . 
 source		SELECT InfrastructureNode.code AS infra_code, LandslideHazard.code AS hazard_code
 			FROM InfrastructureNode, LandslideHazard
 			WHERE ST_Intersects(InfrastructureNode.geom, LandslideHazard.geom)
 
 mappingId	MAP-ISEXPOSEDTO-NODE-AVALANCHE
-target		:infrastructure/{infra_code} :isExposedTo :hazard/{hazard_code} . 
+target		:infrastructure-node/{infra_code} :isExposedTo :hazard-avalanche/{hazard_code} . 
 source		SELECT InfrastructureNode.code AS infra_code, AvalancheHazard.code AS hazard_code
 			FROM InfrastructureNode, AvalancheHazard
 			WHERE ST_Intersects(InfrastructureNode.geom, AvalancheHazard.geom)
 
 mappingId	MAP-INTERSECTSWITH-LINE-MUNICIPALITY
-target		:infrastructure/{code} :intersectsWith :municipality/{istat_code} . 
+target		:infrastructure-line/{code} :intersectsWith :municipality/{istat_code} . 
 source		SELECT code, Municipality.istat_code
 			FROM InfrastructureLine, Municipality
 			WHERE ST_Intersects(InfrastructureLine.geom, Municipality.geom)
 
 mappingId	MAP-INTERSECTSWITH-NODE-MUNICIPALITY
-target		:infrastructure/{code} :intersectsWith :municipality/{istat_code} . 
+target		:infrastructure-node/{code} :intersectsWith :municipality/{istat_code} . 
 source		SELECT code, Municipality.istat_code
 			FROM InfrastructureNode, Municipality
 			WHERE ST_Intersects(InfrastructureNode.geom, Municipality.geom)
 
 mappingId	MAP-INTERSECTSWITH-LANDSLIDE-MUNICIPALITY
-target		:hazard/{code} :intersectsWith :municipality/{istat_code} . 
+target		:hazard-landslide/{code} :intersectsWith :municipality/{istat_code} . 
 source		SELECT code, Municipality.istat_code
 			FROM LandslideHazard, Municipality
 			WHERE ST_Intersects(LandslideHazard.geom, Municipality.geom)
 
 mappingId	MAP-INTERSECTSWITH-AVALANCHE-MUNICIPALITY
-target		:hazard/{code} :intersectsWith :municipality/{istat_code} . 
+target		:hazard-avalanche/{code} :intersectsWith :municipality/{istat_code} . 
 source		SELECT code, Municipality.istat_code
 			FROM AvalancheHazard, Municipality
 			WHERE ST_Intersects(AvalancheHazard.geom, Municipality.geom)
 
 mappingId	MAP-INTERSECTSWITH-LINE-NODE
-target		:infrastructure/{code1} :intersectsWith :infrastructure/{code2} . 
+target		:infrastructure-line/{code1} :intersectsWith :infrastructure-node/{code2} . 
 source		SELECT InfrastructureLine.code AS code1, InfrastructureNode.code AS code2
 			FROM InfrastructureLine, InfrastructureNode
 			WHERE ST_Intersects(InfrastructureLine.geom, InfrastructureNode.geom)
 
 mappingId	MAP-INTERSECTSWITH-LANDSLIDE-AVALANCHE
-target		:hazard/{code1} :intersectsWith :hazard/{code2} . 
+target		:hazard-landslide/{code1} :intersectsWith :hazard-avalanche/{code2} . 
 source		SELECT LandslideHazard.code AS code1, AvalancheHazard.code AS code2
 			FROM LandslideHazard, AvalancheHazard
 			WHERE ST_Intersects(LandslideHazard.geom, AvalancheHazard.geom)
 
 mappingId	MAP-INTERSECTSWITH-LINE-LINE
-target		:infrastructure/{code1} :intersectsWith :infrastructure/{code2} . 
+target		:infrastructure-line/{code1} :intersectsWith :infrastructure-line/{code2} . 
 source		SELECT T1.code AS code1, T2.code AS code2
 			FROM InfrastructureLine AS T1, InfrastructureLine AS T2
 			WHERE ST_Intersects(T1.geom, T2.geom)
 
 mappingId	MAP-INTERSECTSWITH-NODE-NODE
-target		:infrastructure/{code1} :intersectsWith :infrastructure/{code2} . 
+target		:infrastructure-node/{code1} :intersectsWith :infrastructure-node/{code2} . 
 source		SELECT T1.code AS code1, T2.code AS code2
 			FROM InfrastructureNode AS T1, InfrastructureNode AS T2
 			WHERE ST_Intersects(T1.geom, T2.geom)
 
 mappingId	MAP-INTERSECTSWITH-LANDSLIDE-LANDSLIDE
-target		:hazard/{code1} :intersectsWith :hazard/{code2} . 
+target		:hazard-landslide/{code1} :intersectsWith :hazard-landslide/{code2} . 
 source		SELECT T1.code AS code1, T2.code AS code2
 			FROM LandslideHazard AS T1, LandslideHazard AS T2
 			WHERE ST_Intersects(T1.geom, T2.geom)
 
 mappingId	MAP-INTERSECTSWITH-AVALANCHE-AVALANCHE
-target		:hazard/{code1} :intersectsWith :hazard/{code2} . 
+target		:hazard-avalanche/{code1} :intersectsWith :hazard-avalanche/{code2} . 
 source		SELECT T1.code AS code1, T2.code AS code2
 			FROM AvalancheHazard AS T1, AvalancheHazard AS T2
 			WHERE ST_Intersects(T1.geom, T2.geom)

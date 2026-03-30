@@ -5,10 +5,36 @@ The virtual knowledge graph mappings from the relational schema defined in \cref
 
 \subsubsection{IRI Generation and Base Instantiation}
 
+The Ontop virtual knowledge graph fundamentally relies on generating unique, persistent Internationalized Resource Identifiers (IRIs) for every entity in the relational database. This is achieved using URI templates defined in the target clauses of the mappings, which bind primary keys from the relational schema to the namespace of the ontology. The templates \inlinecode{:district/\{code\}}, \inlinecode{:municipality/\{istat_code\}}, \inlinecode{:infrastructure-line/\{code\}}, \inlinecode{:infrastructure-node/\{code\}}, \inlinecode{:hazard-landslide/\{code\}}, and \inlinecode{:hazard-avalanche/\{code\}} are used in the developer mappings for the districts, municipalities, infrastructure lines, infrastructure node, landslide zones, and avalanche zones respectively. This guarantee that each physical or administrative object is represented as a distinct web resource. Note that both the infrastructure line and nodes as well as hazard zones are all collected into the different IRI temples. This is not strictly necessary, because as has been discovered during data profiling, the primary key space for the two tables is disjoint. However, making them use different IRI templates make the intention clearer and could possibly be used for some optimization. By consistently reusing these templates across all the mapping declarations, the virtual knowledge graph seamlessly merges data from disparate relational queries into a unified graph, allowing properties and classifications to be appended to the same entity incrementally.
+
 
 \subsubsection{Simple Mappings}
 
 MAP-DISTRICT
+
+\begin{figure}[h!]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \textit{Source: SQL Query}
+\begin{lstlisting}[language=SQL]
+SELECT code, name_it, name_de
+FROM District
+\end{lstlisting}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \textit{Target: Triples Template}
+\begin{lstlisting}[language=Turtle]
+:district/{code} a :District ;
+  :districtCode {code}^^xsd:integer ;
+  :districtNameIt {name_it}^^xsd:string ;
+  :districtNameDe {name_de}^^xsd:string .
+\end{lstlisting}
+  \end{minipage}
+\end{figure}
+
 MAP-MUNICIPALITY
 MAP-INFRASTRUCTURE-LINE
 MAP-INFRASTRUCTURE-NODE
