@@ -15,10 +15,10 @@ The basic structural mappings directly instantiate the primary classes of the on
 The below mappings \inlinecode{MAP-DISTRICT} and \inlinecode{MAP-MUNICIPALITY} instantiate the municipality and district elements. Aside from asserting the basic class membership, they also map scalar data properties such as the ISTAT code, area, and different localized string literals. Crucially, the mapping for the municipality leverages the existing foreign key \inlinecode{distr_code} to assert the \inlinecode{:belongsTo} object property, linking the municipality directly to its parent district's IRI.
 Further, the mapping utilizes the spatial function \inlinecode{ST_AsText(geom)}  in the source SQL query to cast the PostGIS binary geometries into standard Well-Known Text strings and binds the result to the \inlinecode{:geometry} data property. The same pattern is used for all geometry carrying classes.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \vspace*{-1mm}
   \textbf{\small\inlinecode{MAP-DISTRICT}} \\
-  \begin{minipage}[t]{0.43\textwidth}
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
     \textbf{\scriptsize Source: SQL Query}
 \begin{lstlisting}[language=SQL]
@@ -27,7 +27,7 @@ FROM District
 \end{lstlisting}
   \end{minipage}
   \hfill
-  \begin{minipage}[t]{0.53\textwidth}
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
     \textbf{\scriptsize Target: Triples Template}
 \begin{lstlisting}[language=Turtle]
@@ -40,10 +40,10 @@ FROM District
   \vspace*{-4mm}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \vspace*{-1mm}
   \textbf{\small\inlinecode{MAP-MUNICIPALITY}} \\
-  \begin{minipage}[t]{0.43\textwidth}
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
     \textbf{\scriptsize Source: SQL Query}
 \begin{lstlisting}[language=SQL]
@@ -54,7 +54,7 @@ FROM Municipality
 \end{lstlisting}
   \end{minipage}
   \hfill
-  \begin{minipage}[t]{0.53\textwidth}
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
     \textbf{\scriptsize Target: Triples Template}
 \begin{lstlisting}[language=Turtle]
@@ -74,10 +74,10 @@ FROM Municipality
 
 The mapping \inlinecode{MAP-INFRASTRUCTURE-LINE} populates the \inlinecode{:InfrastructureLine} class. The structure is very similar to that of the municipality mapping, mapping the \inlinecode{:geometry} data property to the geometry and also asserting the topological \inlinecode{:infrastructureIn} property using the \inlinecode{istat_code} foreign key. Nearly the identical mapping, except for the omission of the \inlinecode{:lineLength} data property and use of \inlinecode{:IfrastructureNode} class, has also been created for the infrastructure nodes and is shown in \inlinecode{MAP-INFRASTRUCTURE-NODE}.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \vspace*{-1mm}
   \textbf{\small\inlinecode{MAP-INFRASTRUCTURE-LINE}} \\
-  \begin{minipage}[t]{0.43\textwidth}
+  \begin{minipage}[t]{0.48\textwidth}
     \centering
     \textbf{\scriptsize Source: SQL Query}
 \begin{lstlisting}[language=SQL]
@@ -87,7 +87,7 @@ FROM InfrastructureLine
 \end{lstlisting}
   \end{minipage}
   \hfill
-  \begin{minipage}[t]{0.53\textwidth}
+  \begin{minipage}[t]{0.52\textwidth}
     \centering
     \textbf{\scriptsize Target: Triples Template}
 \begin{lstlisting}[language=Turtle]
@@ -101,10 +101,10 @@ FROM InfrastructureLine
   \vspace*{-4mm}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \vspace*{-1mm}
   \textbf{\small\inlinecode{MAP-INFRASTRUCTURE-NODE}} \\
-  \begin{minipage}[t]{0.43\textwidth}
+  \begin{minipage}[t]{0.48\textwidth}
     \centering
     \textbf{\scriptsize Source: SQL Query}
 \begin{lstlisting}[language=SQL]
@@ -114,7 +114,7 @@ FROM InfrastructureNode
 \end{lstlisting}
   \end{minipage}
   \hfill
-  \begin{minipage}[t]{0.53\textwidth}
+  \begin{minipage}[t]{0.52\textwidth}
     \centering
     \textbf{\scriptsize Target: Triples Template}
 \begin{lstlisting}[language=Turtle]
@@ -129,10 +129,10 @@ FROM InfrastructureNode
 
 Finally, also the hazard zones get mappings similar to those for the infrastructure assets. \inlinecode{MAP-HAZARD-LANDSLIDE} below shows the mapping for the landslide hazard zones. Similar to the infrastructure mappings, these instantiate the core hazard zones, bind their identifier and geometries, and establish their spatial relationship to municipalities via the \inlinecode{:hazardZoneIn} object property. The mapping for the avalanche hazard zones \inlinecode{MAP-HAZARD-AVALANCHE} is nearly identical but using \inlinecode{AvalancheHazard} as the source table and \inlinecode{:LandslideZone} as the target class.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \vspace*{-1mm}
   \textbf{\small\inlinecode{MAP-HAZARD-LANDSLIDE}} \\
-  \begin{minipage}[t]{0.43\textwidth}
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
     \textbf{\scriptsize Source: SQL Query}
 \begin{lstlisting}[language=SQL]
@@ -142,7 +142,7 @@ FROM LandslideHazard
 \end{lstlisting}
   \end{minipage}
   \hfill
-  \begin{minipage}[t]{0.53\textwidth}
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
     \textbf{\scriptsize Target: Triples Template}
 \begin{lstlisting}[language=Turtle]
@@ -155,10 +155,10 @@ FROM LandslideHazard
   \vspace*{-4mm}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \vspace*{-1mm}
   \textbf{\small\inlinecode{MAP-HAZARD-AVALANCHE}} \\
-  \begin{minipage}[t]{0.43\textwidth}
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
     \textbf{\scriptsize Source: SQL Query}
 \begin{lstlisting}[language=SQL]
@@ -168,7 +168,7 @@ FROM AvalancheHazard
 \end{lstlisting}
   \end{minipage}
   \hfill
-  \begin{minipage}[t]{0.53\textwidth}
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
     \textbf{\scriptsize Target: Triples Template}
 \begin{lstlisting}[language=Turtle]
@@ -188,10 +188,10 @@ Because the elementary data analysis justified normalizing lookup tables to remo
 
 The \inlinecode{MAP-INFRASTRUCTURE-LINE-TYPE} and \inlinecode{MAP-INFRASTRUCTURE-NODE-TYPE} mappings use an inner join to retrieve the German and Italian descriptions from the normalized InfrastructureType table and insert them into the knowledge graph as \inlinecode{:typeNameDe} and \inlinecode{:typeNameIt} data properties to the existing \inlinecode{:infrastructure-line/\{code\}} and \inlinecode{:infrastructure-node/\{code\}} IRIs.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \vspace*{-1mm}
   \textbf{\small\inlinecode{MAP-INFRASTRUCTURE-LINE-TYPE}} \\
-  \begin{minipage}[t]{0.46\textwidth}
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
     \textbf{\scriptsize Source: SQL Query}
 \begin{lstlisting}[language=SQL]
@@ -202,7 +202,7 @@ SELECT InfrastructureLine.code,
 \end{lstlisting}
   \end{minipage}
   \hfill
-  \begin{minipage}[t]{0.53\textwidth}
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
     \textbf{\scriptsize Target: Triples Template}
 \begin{lstlisting}[language=Turtle]
@@ -214,10 +214,10 @@ SELECT InfrastructureLine.code,
   \vspace*{-4mm}
 \end{figure}
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \vspace*{-1mm}
   \textbf{\small\inlinecode{MAP-INFRASTRUCTURE-NODE-TYPE}} \\
-  \begin{minipage}[t]{0.46\textwidth}
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
     \textbf{\scriptsize Source: SQL Query}
 \begin{lstlisting}[language=SQL]
@@ -228,7 +228,7 @@ SELECT InfrastructureNode.code,
 \end{lstlisting}
   \end{minipage}
   \hfill
-  \begin{minipage}[t]{0.53\textwidth}
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
     \textbf{\scriptsize Target: Triples Template}
 \begin{lstlisting}[language=Turtle]
@@ -240,13 +240,62 @@ SELECT InfrastructureNode.code,
   \vspace*{-4mm}
 \end{figure}
 
-MAP-HAZARD-LANDSLIDE-DANGER
-MAP-HAZARD-LANDSLIDE-PROCESS
-MAP-HAZARD-AVALANCHE-DANGER
-MAP-HAZARD-AVALANCHE-PROCESS
+The same kind of mappings are used for mapping the hazard process and danger level names by execute similar joins against the DangerLevel and HazardProcess tables. Below these mappings for the landslide hazard, \inlinecode{MAP-HAZARD-LANDSLIDE-DANGER} and \inlinecode{MAP-HAZARD-LANDSLIDE-PROCESS}, are shown, however, the mappings for the avalanche hazard are largely the same except for the change in IRI and class. This allows the danger and process descriptions to be attached directly to the hazard zone instances, shielding the ontology consumer from the underlying relational schema's normalization.
+
+\begin{figure}[ht!]
+  \vspace*{-1mm}
+  \textbf{\small\inlinecode{MAP-HAZARD-LANDSLIDE-DANGER}} \\
+  \begin{minipage}[t]{0.50\textwidth}
+    \centering
+    \textbf{\scriptsize Source: SQL Query}
+\begin{lstlisting}[language=SQL]
+SELECT LandslideHazard.code, name_it, name_de
+  FROM LandslideHazard, DangerLevel
+  WHERE danger_code = DangerLevel.code
+\end{lstlisting}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.50\textwidth}
+    \centering
+    \textbf{\scriptsize Target: Triples Template}
+\begin{lstlisting}[language=Turtle]
+:hazard-landslide/{code}
+  :dangerNameIt {name_it}^^xsd:string ;
+  :dangerNameDe {name_de}^^xsd:string . 
+\end{lstlisting}
+  \end{minipage}
+  \vspace*{-4mm}
+\end{figure}
+
+\begin{figure}[ht!]
+  \vspace*{-1mm}
+  \textbf{\small\inlinecode{MAP-HAZARD-LANDSLIDE-PROCESS}} \\
+  \begin{minipage}[t]{0.50\textwidth}
+    \centering
+    \textbf{\scriptsize Source: SQL Query}
+\begin{lstlisting}[language=SQL]
+SELECT LandslideHazard.code, name_it, name_de
+  FROM LandslideHazard, HazardProcess
+  WHERE process_code = HazardProcess.code
+\end{lstlisting}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.50\textwidth}
+    \centering
+    \textbf{\scriptsize Target: Triples Template}
+\begin{lstlisting}[language=Turtle]
+:hazard-landslide/{code}
+  :processNameIt {name_it}^^xsd:string ;
+  :processNameDe {name_de}^^xsd:string . 
+\end{lstlisting}
+  \end{minipage}
+  \vspace*{-4mm}
+\end{figure}
 
 
 \subsubsection{Semantic Sub-classification}
+
+To align the raw data with the ontology's orthogonal classification schemes for the infrastructure assets and hazard zones, some mappings are required instantiate semantic subclasses based on specific textual values found in the relational database.
 
 MAP-INFRASTRUCTURE-LINE-ENERGY
 MAP-INFRASTRUCTURE-LINE-WATER
