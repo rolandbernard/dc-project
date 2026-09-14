@@ -47,6 +47,31 @@ services:
       PGADMIN_DISABLE_POSTFIX: "true"
       GUNICORN_ACCESS_LOGFILE: "/dev/null"
 
+  # Ontop
+  ontop:
+    image: ontop/ontop
+    environment:
+      ONTOP_ONTOLOGY_FILE: /opt/ontop/input/ontology.ttl
+      ONTOP_MAPPING_FILE: /opt/ontop/input/ontology.obda
+      ONTOP_PROPERTIES_FILE: /opt/ontop/input/ontology.properties
+      ONTOP_CORS_ALLOWED_ORIGINS: "*"
+      ONTOP_DEV_MODE: "true"
+      ONTOP_LAZY_INIT: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - ontop
+      - frontend
+    volumes:
+      - ./ontology/:/opt/ontop/input/:z
+      - ./scripts/jdbc/:/opt/ontop/jdbc/:z
+    ports:
+      - "${PORT_ONTOP:-8887}:8080"
+
+  # Frontend Application
+  # TODO
+
 volumes:
   postgres-data:
   pgadmin-data:
