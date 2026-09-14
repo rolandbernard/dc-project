@@ -13,7 +13,7 @@ The Ontop virtual knowledge graph fundamentally relies on generating unique, per
 The basic structural mappings directly instantiate the primary classes of the ontology and populate their basic data and object properties using straightforward SQL \inlinecode{SELECT} statements.
 
 The below mappings \inlinecode{MAP-DISTRICT} and \inlinecode{MAP-MUNICIPALITY} instantiate the municipality and district elements. Aside from asserting the basic class membership, they also map scalar data properties such as the ISTAT code, area, and different localized string literals. Crucially, the mapping for the municipality leverages the existing foreign key \inlinecode{distr_code} to assert the \inlinecode{:belongsTo} object property, linking the municipality directly to its parent district's IRI.
-Further, the mapping utilizes the spatial function \inlinecode{ST_AsText(geom)}  in the source SQL query to cast the PostGIS binary geometries into standard Well-Known Text strings and binds the result to the \inlinecode{:geometry} data property. The same pattern is used for all geometry carrying classes.
+Further, the mapping utilizes the spatial function \inlinecode{ST_AsText(geom)}  in the source SQL query to cast the PostGIS binary geometries into standard Well-Known Text strings and binds the result to the \inlinecode{:geometry} data property. The same pattern is used for all geometry carrying classes. Additionally, for municipalities we use the spatial function \inlinecode{ST_Area(ST_MakeValid(geom)::geography)} to compute the real world size of the represented geometry.
 
 \begin{figure}[ht!]
   \vspace*{-1mm}
@@ -48,7 +48,8 @@ FROM District
     \textbf{\scriptsize Source: SQL Query}
 \begin{lstlisting}[language=SQL]
 SELECT istat_code, zip_code, distr_code,
-       name_it, name_de, name_ld, area,
+       name_it, name_de, name_ld,
+       ST_Area(ST_MakeValid(geom)::geography) AS area
        ST_AsText(geom) AS geom
 FROM Municipality
 \end{lstlisting}
@@ -64,7 +65,7 @@ FROM Municipality
   :nameIt {name_it}^^xsd:string ;
   :nameDe {name_de}^^xsd:string ;
   :nameLd {name_ld}^^xsd:string ;
-  :area {area}^^xsd:float ;
+  :area {area}^^xsd:double ;
   :geometry {geom}^^xsd:string ;
   :belongsTo :district/{distr_code} . 
 \end{lstlisting}
@@ -72,7 +73,7 @@ FROM Municipality
   \vspace*{-4mm}
 \end{figure}
 
-The mapping \inlinecode{MAP-INFRASTRUCTURE-LINE} populates the \inlinecode{:InfrastructureLine} class. The structure is very similar to that of the municipality mapping, mapping the \inlinecode{:geometry} data property to the geometry and also asserting the topological \inlinecode{:infrastructureIn} property using the \inlinecode{istat_code} foreign key. Nearly the identical mapping, except for the omission of the \inlinecode{:lineLength} data property and use of \inlinecode{:IfrastructureNode} class, has also been created for the infrastructure nodes and is shown in \inlinecode{MAP-INFRASTRUCTURE-NODE}.
+The mapping \inlinecode{MAP-INFRASTRUCTURE-LINE} populates the \inlinecode{:InfrastructureLine} class. The structure is very similar to that of the municipality mapping, mapping the \inlinecode{:geometry} data property to the geometry and also asserting the topological \inlinecode{:infrastructureIn} property using the \inlinecode{istat_code} foreign key. Further, we also compute the length of the infrastructure line. Nearly the identical mapping, except for the omission of the \inlinecode{:lineLength} data property and use of \inlinecode{:IfrastructureNode} class, has also been created for the infrastructure nodes and is shown in \inlinecode{MAP-INFRASTRUCTURE-NODE}.
 
 \begin{figure}[ht!]
   \vspace*{-1mm}
@@ -81,7 +82,8 @@ The mapping \inlinecode{MAP-INFRASTRUCTURE-LINE} populates the \inlinecode{:Infr
     \centering
     \textbf{\scriptsize Source: SQL Query}
 \begin{lstlisting}[language=SQL]
-SELECT code, istat_code, shape_len,
+SELECT code, istat_code,
+       ST_Length(geom::geography) AS len,
        ST_AsText(geom) AS geom
 FROM InfrastructureLine
 \end{lstlisting}
@@ -94,7 +96,7 @@ FROM InfrastructureLine
 :infrastructure-line/{code} a :InfrastructureLine ;
   :infrastructureIn :municipality/{istat_code} ;
   :infrastructureCode {code}^^xsd:integer ;
-  :lineLength {shape_len}^^xsd:float ;
+  :lineLength {len}^^xsd:double ;
   :geometry {geom}^^xsd:string . 
 \end{lstlisting}
   \end{minipage}
@@ -127,7 +129,7 @@ FROM InfrastructureNode
   \vspace*{-4mm}
 \end{figure}
 
-Finally, also the hazard zones get mappings similar to those for the infrastructure assets. \inlinecode{MAP-HAZARD-LANDSLIDE} below shows the mapping for the landslide hazard zones. Similar to the infrastructure mappings, these instantiate the core hazard zones, bind their identifier and geometries, and establish their spatial relationship to municipalities via the \inlinecode{:hazardZoneIn} object property. The mapping for the avalanche hazard zones \inlinecode{MAP-HAZARD-AVALANCHE} is nearly identical but using \inlinecode{AvalancheHazard} as the source table and \inlinecode{:LandslideZone} as the target class.
+Finally, also the hazard zones get mappings similar to those for the infrastructure assets. \inlinecode{MAP-HAZARD-LANDSLIDE} below shows the mapping for the landslide hazard zones. Similar to the infrastructure mappings, these instantiate the core hazard zones, bind their identifier and geometries, and establish their spatial relationship to municipalities via the \inlinecode{:hazardZoneIn} object property. The mapping for the avalanche hazard zones \inlinecode{MAP-HAZARD-AVALANCHE} is nearly identical but using \inlinecode{AvalancheHazard} as the source table and \inlinecode{:LandslideZone} as the target class. Like with the municipalities, also here we compute the area of the covered area based on the underlying geometry.
 
 \begin{figure}[ht!]
   \vspace*{-1mm}
@@ -137,6 +139,7 @@ Finally, also the hazard zones get mappings similar to those for the infrastruct
     \textbf{\scriptsize Source: SQL Query}
 \begin{lstlisting}[language=SQL]
 SELECT code, istat_code,
+       ST_Area(ST_MakeValid(geom)::geography) AS area
        ST_AsText(geom) AS geom
 FROM LandslideHazard
 \end{lstlisting}
@@ -149,6 +152,7 @@ FROM LandslideHazard
 :hazard-landslide/{code} a :LandslideZone ;
   :hazardZoneIn :municipality/{istat_code} ;
   :hazardCode {code}^^xsd:integer ;
+  :hazardArea {area}^^xsd:double ;
   :geometry {geom}^^xsd:string . 
 \end{lstlisting}
   \end{minipage}
@@ -163,6 +167,7 @@ FROM LandslideHazard
     \textbf{\scriptsize Source: SQL Query}
 \begin{lstlisting}[language=SQL]
 SELECT code, istat_code,
+       ST_Area(ST_MakeValid(geom)::geography) AS area
        ST_AsText(geom) AS geom
 FROM AvalancheHazard
 \end{lstlisting}
@@ -175,6 +180,7 @@ FROM AvalancheHazard
 :hazard-avalanche/{code} a :AvalancheZone ;
   :hazardZoneIn :municipality/{istat_code} ;
   :hazardCode {code}^^xsd:integer ;
+  :hazardArea {area}^^xsd:double ;
   :geometry {geom}^^xsd:string . 
 \end{lstlisting}
   \end{minipage}
@@ -409,7 +415,7 @@ WHERE danger_code = DangerLevel.code
 
 The most computationally powerful aspect of the developed virtual knowledge graph is the dynamic generation of object properties using spatial database functions, eliminating the need to pre-compute and store complex topological relationships. In the ontology these are represented using the \inlinecode{:intersectsWith} object property defined between all geometric objects and its sub-property \inlinecode{:isExposedTo} which is explicitly defined between infrastructure and hazards. Note that the \inlinecode{:intersectsWith} object property has been defined as symmetric, and therefore only a single direction must be specified, with the other being inferred by the Ontop system. Given the 5 different tables, two for the infrastructure assets, two for the hazard zones, and one for the municipalities a total of 15 different mappings are necessary to capture all possible intersection relationships. These mappings utilize the PostGIS \inlinecode{ST_Intersects()} function directly within the SQL source query.
 
-First, mappings have been created to populate the \inlinecode{:isExposedTo} relation. By performing a spatial join between the geometries of infrastructure assets and hazard zones, Ontop dynamically asserts the \inlinecode{:isExposedTo} object property whenever a physical overlap occurs. This directly solves the project's primary analytical goal of finding infrastructure assets vulnerable to different hazard. Four different mappings of this type have been created, on for each combination of infrastructure and hazard kind. Bellow two of then, \inlinecode{MAP-ISEXPOSEDTO-LINE-LANDSLIDE} and \inlinecode{MAP-ISEXPOSEDTO-NODE-AVALANCHE}, are shown.
+First, mappings have been created to populate the \inlinecode{:isExposedTo} relation. By performing a spatial join between the geometries of infrastructure assets and hazard zones, Ontop dynamically asserts the \inlinecode{:isExposedTo} object property whenever a physical overlap occurs. This directly solves the project's primary analytical goal of finding infrastructure assets vulnerable to different hazard. 4 different mappings of this type have been created, on for each combination of infrastructure and hazard kind. Bellow two of then, \inlinecode{MAP-ISEXPOSEDTO-LINE-LANDSLIDE} and \inlinecode{MAP-ISEXPOSEDTO-NODE-AVALANCHE}, are shown.
 
 \begin{figure}[ht!]
   \vspace*{-1mm}
@@ -463,21 +469,109 @@ WHERE ST_Intersects(
   \vspace*{-4mm}
 \end{figure}
 
+Next, there are 4 mappings to connect the infrastructure and hazard zone entities to the municipalities using the \inlinecode{:intersectsWith} object property. While base mappings use foreign keys for \inlinecode{:infrastructureIn}, these mappings use \inlinecode{ST_Intersects()} to assert the broader \inlinecode{:intersectsWith} property based on physical boundaries, accommodating edge cases where an infrastructure line might physically cross municipal borders beyond its primary assigned one. Two representative examples of these, \inlinecode{MAP-INTERSECTSWITH-LINE-MUNICIPALITY} and \inlinecode{MAP-INTERSECTSWITH-AVALANCHE-MUNICIPALITY} are shown below.
 
+\begin{figure}[ht!]
+  \vspace*{-1mm}
+  \textbf{\small\inlinecode{MAP-INTERSECTSWITH-LINE-MUNICIPALITY}} \\
+  \begin{minipage}[t]{0.50\textwidth}
+    \centering
+    \textbf{\scriptsize Source: SQL Query}
+\begin{lstlisting}[language=SQL]
+SELECT code, Municipality.istat_code
+FROM InfrastructureLine, Municipality
+WHERE ST_Intersects(
+  InfrastructureLine.geom, Municipality.geom)
+\end{lstlisting}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.50\textwidth}
+    \centering
+    \textbf{\scriptsize Target: Triples Template}
+\begin{lstlisting}[language=Turtle]
+:infrastructure-line/{code}
+  :intersectsWith :municipality/{istat_code} .
+\end{lstlisting}
+  \end{minipage}
+  \vspace*{-4mm}
+\end{figure}
 
+\begin{figure}[ht!]
+  \vspace*{-1mm}
+  \textbf{\small\inlinecode{MAP-INTERSECTSWITH-AVALANCHE-MUNICIPALITY}} \\
+  \begin{minipage}[t]{0.50\textwidth}
+    \centering
+    \textbf{\scriptsize Source: SQL Query}
+\begin{lstlisting}[language=SQL]
+SELECT code, Municipality.istat_code
+FROM AvalancheHazard, Municipality
+WHERE ST_Intersects(
+  AvalancheHazard.geom, Municipality.geom)
+\end{lstlisting}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.50\textwidth}
+    \centering
+    \textbf{\scriptsize Target: Triples Template}
+\begin{lstlisting}[language=Turtle]
+:hazard-avalanche/{code}
+  :intersectsWith :municipality/{istat_code} . 
+\end{lstlisting}
+  \end{minipage}
+  \vspace*{-4mm}
+\end{figure}
 
+Finally, the same framework using \inlinecode{ST_Intersects()} can be naturally extended to map relationships between similar geometries such as between two infrastructure assert, two municipalities, or two hazard zones. These extended topological intersections account for the remaining 7 possible ways intersecting between the 5 tables. By joining tables against themselves or their counterparts, the virtual knowledge graph can expose the complete topological network of the physical domain natively as object properties. The mappings \inlinecode{MAP-INTERSECTSWITH-LINE-NODE} and \inlinecode{MAP-INTERSECTSWITH-MUNICIPALITY-MUNICIPALITY} are two out of the 7 mappings of this form.
 
-MAP-INTERSECTSWITH-LINE-MUNICIPALITY
-MAP-INTERSECTSWITH-NODE-MUNICIPALITY
-MAP-INTERSECTSWITH-LANDSLIDE-MUNICIPALITY
-MAP-INTERSECTSWITH-AVALANCHE-MUNICIPALITY
+\begin{figure}[ht!]
+  \vspace*{-1mm}
+  \textbf{\small\inlinecode{MAP-INTERSECTSWITH-LINE-NODE}} \\
+  \begin{minipage}[t]{0.50\textwidth}
+    \centering
+    \textbf{\scriptsize Source: SQL Query}
+\begin{lstlisting}[language=SQL]
+SELECT InfrastructureLine.code AS code1,
+       InfrastructureNode.code AS code2
+FROM InfrastructureLine, InfrastructureNode
+WHERE ST_Intersects(
+  InfrastructureLine.geom,
+  InfrastructureNode.geom)
+\end{lstlisting}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.50\textwidth}
+    \centering
+    \textbf{\scriptsize Target: Triples Template}
+\begin{lstlisting}[language=Turtle]
+:infrastructure-line/{code1}
+  :intersectsWith :infrastructure-node/{code2} . 
+\end{lstlisting}
+  \end{minipage}
+  \vspace*{-4mm}
+\end{figure}
 
-
-MAP-INTERSECTSWITH-LINE-NODE
-MAP-INTERSECTSWITH-LANDSLIDE-AVALANCHE
-MAP-INTERSECTSWITH-LINE-LINE
-MAP-INTERSECTSWITH-NODE-NODE
-MAP-INTERSECTSWITH-LANDSLIDE-LANDSLIDE
-MAP-INTERSECTSWITH-AVALANCHE-AVALANCHE
-MAP-INTERSECTSWITH-MUNICIPALITY-MUNICIPALITY
+\begin{figure}[ht!]
+  \vspace*{-1mm}
+  \textbf{\small\inlinecode{MAP-INTERSECTSWITH-MUNICIPALITY-MUNICIPALITY}} \\
+  \begin{minipage}[t]{0.50\textwidth}
+    \centering
+    \textbf{\scriptsize Source: SQL Query}
+\begin{lstlisting}[language=SQL]
+SELECT T1.istat_code AS code1,
+       T2.istat_code AS code2
+FROM Municipality AS T1, Municipality AS T2
+WHERE ST_Intersects(T1.geom, T2.geom)
+\end{lstlisting}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.50\textwidth}
+    \centering
+    \textbf{\scriptsize Target: Triples Template}
+\begin{lstlisting}[language=Turtle]
+:municipality/{code1}
+  :intersectsWith :municipality/{code2} . 
+\end{lstlisting}
+  \end{minipage}
+  \vspace*{-4mm}
+\end{figure}
 

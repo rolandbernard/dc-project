@@ -35,7 +35,7 @@ for row in df_line.itertuples():
         int(row.objectid), int(row.code),  # type: ignore
         None if math.isnan(row.istat_code)  # type: ignore
         else int(row.istat_code),  # type: ignore
-        row.shape_len, row.geom))
+        row.geom))
 
 # Generate from `df_node`.
 for row in df_node.itertuples():
@@ -70,7 +70,7 @@ for row in df_municipality.itertuples():
         int(row.distr_code), row.distr_it, row.distr_de))  # type: ignore
     municipality.append((
         int(row.istat_code), row.name_it, row.name_de, row.name_ld,  # type: ignore
-        int(row.zip_code), int(row.distr_code), row.area, row.geom))  # type: ignore
+        int(row.zip_code), int(row.distr_code), row.geom))  # type: ignore
 
 
 # Write out the SQL files for each of the relations.
@@ -107,7 +107,7 @@ with open("sql/01.district.sql", "w") as f:
 
 with open("sql/02.municipality.sql", "w") as f:
     f.write("-- This file has been automatically generated.\n")
-    f.write("INSERT INTO Municipality (istat_code, name_it, name_de, name_ld, zip_code, distr_code, area, geom)\n")
+    f.write("INSERT INTO Municipality (istat_code, name_it, name_de, name_ld, zip_code, distr_code, geom)\n")
     f.write("VALUES\n")
     write_rows(municipality, f)
     f.write(";\n")
@@ -122,7 +122,7 @@ with open("sql/03.infrastructuretype.sql", "w") as f:
 with open("sql/04.infrastructureline.sql", "w") as f:
     f.write("-- This file has been automatically generated.\n")
     f.write(
-        "INSERT INTO InfrastructureLine (code, type_code, istat_code, shape_len, geom)\n")
+        "INSERT INTO InfrastructureLine (code, type_code, istat_code, geom)\n")
     f.write("VALUES\n")
     write_rows(infra_line, f)
     f.write(";\n")

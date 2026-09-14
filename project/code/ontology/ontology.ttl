@@ -3,6 +3,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix obda: <https://w3id.org/obda/vocabulary#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @base <http://rolandb.com/ontologies/dc#> .
 
@@ -53,13 +54,6 @@
 #    Data properties
 #################################################################
 
-###  http://rolandb.com/ontologies/dc#area
-:area rdf:type owl:DatatypeProperty ,
-               owl:FunctionalProperty ;
-      rdfs:domain :Municipality ;
-      rdfs:range xsd:float .
-
-
 ###  http://rolandb.com/ontologies/dc#dangerNameDe
 :dangerNameDe rdf:type owl:DatatypeProperty ,
                        owl:FunctionalProperty ;
@@ -102,6 +96,13 @@
           rdfs:range xsd:string .
 
 
+###  http://rolandb.com/ontologies/dc#hazardArea
+:hazardArea rdf:type owl:DatatypeProperty ,
+                     owl:FunctionalProperty ;
+            rdfs:domain :HazardZone ;
+            rdfs:range xsd:double .
+
+
 ###  http://rolandb.com/ontologies/dc#hazardCode
 :hazardCode rdf:type owl:DatatypeProperty ,
                      owl:FunctionalProperty ;
@@ -127,7 +128,14 @@
 :lineLength rdf:type owl:DatatypeProperty ,
                      owl:FunctionalProperty ;
             rdfs:domain :InfrastructureLine ;
-            rdfs:range xsd:float .
+            rdfs:range xsd:double .
+
+
+###  http://rolandb.com/ontologies/dc#municipalityArea
+:municipalityArea rdf:type owl:DatatypeProperty ,
+                           owl:FunctionalProperty ;
+                  rdfs:domain :Municipality ;
+                  rdfs:range xsd:double .
 
 
 ###  http://rolandb.com/ontologies/dc#nameDe
@@ -246,6 +254,10 @@
                               owl:someValuesFrom xsd:string
                             ] ,
                             [ rdf:type owl:Restriction ;
+                              owl:onProperty :hazardArea ;
+                              owl:someValuesFrom xsd:double
+                            ] ,
+                            [ rdf:type owl:Restriction ;
                               owl:onProperty :hazardCode ;
                               owl:someValuesFrom xsd:integer
                             ] ,
@@ -286,7 +298,7 @@
                     rdfs:subClassOf :Infrastructure ,
                                     [ rdf:type owl:Restriction ;
                                       owl:onProperty :lineLength ;
-                                      owl:someValuesFrom xsd:float
+                                      owl:someValuesFrom xsd:double
                                     ] ;
                     owl:disjointWith :InfrastructureNode .
 
@@ -319,12 +331,12 @@
                                 owl:someValuesFrom :District
                               ] ,
                               [ rdf:type owl:Restriction ;
-                                owl:onProperty :area ;
-                                owl:someValuesFrom xsd:float
-                              ] ,
-                              [ rdf:type owl:Restriction ;
                                 owl:onProperty :istatCode ;
                                 owl:someValuesFrom xsd:integer
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :municipalityArea ;
+                                owl:someValuesFrom xsd:double
                               ] ,
                               [ rdf:type owl:Restriction ;
                                 owl:onProperty :nameDe ;

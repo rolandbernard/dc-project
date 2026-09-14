@@ -22,7 +22,6 @@ CREATE TABLE Municipality (
     name_ld VARCHAR(32),
     zip_code INTEGER NOT NULL,
     distr_code INTEGER NOT NULL,
-    area REAL NOT NULL,
     geom GEOMETRY NOT NULL,
     FOREIGN KEY (distr_code) REFERENCES District(code)
 );
@@ -41,7 +40,6 @@ CREATE TABLE InfrastructureLine (
     code INTEGER PRIMARY KEY,
     type_code INTEGER NOT NULL,
     istat_code INTEGER,
-    shape_len REAL NOT NULL,
     geom GEOMETRY NOT NULL,
     FOREIGN KEY (type_code) REFERENCES InfrastructureType(code),
     FOREIGN KEY (istat_code) REFERENCES Municipality(istat_code)

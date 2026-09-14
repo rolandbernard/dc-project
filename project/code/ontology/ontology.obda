@@ -4,6 +4,7 @@ owl:		http://www.w3.org/2002/07/owl#
 rdf:		http://www.w3.org/1999/02/22-rdf-syntax-ns#
 xml:		http://www.w3.org/XML/1998/namespace
 xsd:		http://www.w3.org/2001/XMLSchema#
+obda:		https://w3id.org/obda/vocabulary#
 rdfs:		http://www.w3.org/2000/01/rdf-schema#
 
 [MappingDeclaration] @collection [[
@@ -13,13 +14,13 @@ source		SELECT code, name_it, name_de
 			FROM District
 
 mappingId	MAP-MUNICIPALITY
-target		:municipality/{istat_code} a :Municipality ; :istatCode {istat_code}^^xsd:integer ; :zipCode {zip_code}^^xsd:integer ; :nameIt {name_it}^^xsd:string ; :nameDe {name_de}^^xsd:string ; :nameLd {name_ld}^^xsd:string ; :area {area}^^xsd:float ; :geometry {geom}^^xsd:string ; :belongsTo :district/{distr_code} . 
-source		SELECT istat_code, zip_code, distr_code, name_it, name_de, name_ld, area, ST_AsText(geom) AS geom
+target		:municipality/{istat_code} a :Municipality ; :istatCode {istat_code}^^xsd:integer ; :zipCode {zip_code}^^xsd:integer ; :nameIt {name_it}^^xsd:string ; :nameDe {name_de}^^xsd:string ; :nameLd {name_ld}^^xsd:string ; :municipalityArea {area}^^xsd:double ; :geometry {geom}^^xsd:string ; :belongsTo :district/{distr_code} . 
+source		SELECT istat_code, zip_code, distr_code, name_it, name_de, name_ld, ST_Area(ST_MakeValid(geom)::geography) AS area, ST_AsText(geom) AS geom
 			FROM Municipality
 
 mappingId	MAP-INFRASTRUCTURE-LINE
-target		:infrastructure-line/{code} a :InfrastructureLine ; :infrastructureIn :municipality/{istat_code} ; :infrastructureCode {code}^^xsd:integer ; :lineLength {shape_len}^^xsd:float ; :geometry {geom}^^xsd:string . 
-source		SELECT code, istat_code, shape_len, ST_AsText(geom) AS geom
+target		:infrastructure-line/{code} a :InfrastructureLine ; :infrastructureIn :municipality/{istat_code} ; :infrastructureCode {code}^^xsd:integer ; :lineLength {len}^^xsd:double ; :geometry {geom}^^xsd:string . 
+source		SELECT code, istat_code, ST_Length(geom::geography) AS len, ST_AsText(geom) AS geom
 			FROM InfrastructureLine
 
 mappingId	MAP-INFRASTRUCTURE-LINE-TYPE
@@ -44,53 +45,53 @@ target		:infrastructure-line/{code} a :EnergyInfrastructure .
 source		SELECT InfrastructureLine.code
 			FROM InfrastructureLine, InfrastructureType
 			WHERE type_code = InfrastructureType.code
-			  AND name_de IN ('Methangasleitung', 'Hochspannungsleitung', 'Mittelspannungsleitung', 'Fernwärmeleitung', 'Methangasleitung - Bannstreifen', 'Hochspannungsleitung - Bannstreifen')
+			AND name_de IN ('Methangasleitung', 'Hochspannungsleitung', 'Mittelspannungsleitung', 'Fernwärmeleitung', 'Methangasleitung - Bannstreifen', 'Hochspannungsleitung - Bannstreifen')
 
 mappingId	MAP-INFRASTRUCTURE-LINE-WATER
 target		:infrastructure-line/{code} a :WaterInfrastructure . 
 source		SELECT InfrastructureLine.code
 			FROM InfrastructureLine, InfrastructureType
 			WHERE type_code = InfrastructureType.code
-			  AND name_de IN ('Trinkwasserleitung', 'Druckrohrleitung')
+			AND name_de IN ('Trinkwasserleitung', 'Druckrohrleitung')
 
 mappingId	MAP-INFRASTRUCTURE-LINE-WASTE
 target		:infrastructure-line/{code} a :WasteInfrastructure . 
 source		SELECT InfrastructureLine.code
 			FROM InfrastructureLine, InfrastructureType
 			WHERE type_code = InfrastructureType.code
-			  AND name_de IN ('Abwasserleitung', 'Schlammleitung')
+			AND name_de IN ('Abwasserleitung', 'Schlammleitung')
 
 mappingId	MAP-INFRASTRUCTURE-NODE-COMMUNICATION
 target		:infrastructure-node/{code} a :CommunicationInfrastructure . 
 source		SELECT InfrastructureNode.code
 			FROM InfrastructureNode, InfrastructureType
 			WHERE type_code = InfrastructureType.code
-			  AND name_de IN ('Kommunikationsinfrastruktur')
+			AND name_de IN ('Kommunikationsinfrastruktur')
 
 mappingId	MAP-INFRASTRUCTURE-NODE-ENERGY
 target		:infrastructure-node/{code} a :EnergyInfrastructure . 
 source		SELECT InfrastructureNode.code
 			FROM InfrastructureNode, InfrastructureType
 			WHERE type_code = InfrastructureType.code
-			  AND name_de IN ('E-Werk', 'Umspannstation', 'Fernheizanlage')
+			AND name_de IN ('E-Werk', 'Umspannstation', 'Fernheizanlage')
 
 mappingId	MAP-INFRASTRUCTURE-NODE-WATER
 target		:infrastructure-node/{code} a :WaterInfrastructure . 
 source		SELECT InfrastructureNode.code
 			FROM InfrastructureNode, InfrastructureType
 			WHERE type_code = InfrastructureType.code
-			  AND name_de IN ('Wasserfassung', 'Reservoir', 'Pumpstation')
+			AND name_de IN ('Wasserfassung', 'Reservoir', 'Pumpstation')
 
 mappingId	MAP-INFRASTRUCTURE-NODE-WASTE
 target		:infrastructure-node/{code} a :WasteInfrastructure . 
 source		SELECT InfrastructureNode.code
 			FROM InfrastructureNode, InfrastructureType
 			WHERE type_code = InfrastructureType.code
-			  AND name_de IN ('Kläranlage', 'Müllentsorgungsanlage', 'Recyclinganlage')
+			AND name_de IN ('Kläranlage', 'Müllentsorgungsanlage', 'Recyclinganlage')
 
 mappingId	MAP-HAZARD-LANDSLIDE
-target		:hazard-landslide/{code} a :LandslideZone ; :hazardZoneIn :municipality/{istat_code} ; :hazardCode {code}^^xsd:integer ; :geometry {geom}^^xsd:string . 
-source		SELECT code, istat_code, ST_AsText(geom) AS geom
+target		:hazard-landslide/{code} a :LandslideZone ; :hazardZoneIn :municipality/{istat_code} ; :hazardCode {code}^^xsd:integer ; :hazardArea {area}^^xsd:double ; :geometry {geom}^^xsd:string . 
+source		SELECT code, istat_code, ST_Area(ST_MakeValid(geom)::geography) AS area, ST_AsText(geom) AS geom
 			FROM LandslideHazard
 
 mappingId	MAP-HAZARD-LANDSLIDE-DANGER
@@ -106,8 +107,8 @@ source		SELECT LandslideHazard.code, name_it, name_de
 			WHERE process_code = HazardProcess.code
 
 mappingId	MAP-HAZARD-AVALANCHE
-target		:hazard-avalanche/{code} a :AvalancheZone ; :hazardZoneIn :municipality/{istat_code} ; :hazardCode {code}^^xsd:integer ; :geometry {geom}^^xsd:string . 
-source		SELECT code, istat_code, ST_AsText(geom) AS geom
+target		:hazard-avalanche/{code} a :AvalancheZone ; :hazardZoneIn :municipality/{istat_code} ; :hazardCode {code}^^xsd:integer ; :hazardArea {area}^^xsd:double ; :geometry {geom}^^xsd:string . 
+source		SELECT code, istat_code, ST_Area(ST_MakeValid(geom)::geography) AS area, ST_AsText(geom) AS geom
 			FROM AvalancheHazard
 
 mappingId	MAP-HAZARD-AVALANCHE-DANGER
@@ -127,56 +128,56 @@ target		:hazard-landslide/{code} a :VeryHighDangerZone .
 source		SELECT LandslideHazard.code
 			FROM LandslideHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
-			  AND name_de = 'Sehr hohe Gefahrenstufe (H4)'
+			AND name_de = 'Sehr hohe Gefahrenstufe (H4)'
 
 mappingId	MAP-HAZARD-LANDSLIDE-HIGH
 target		:hazard-landslide/{code} a :HighDangerZone . 
 source		SELECT LandslideHazard.code
 			FROM LandslideHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
-			  AND name_de = 'Hohe Gefahrenstufe (H3)'
+			AND name_de = 'Hohe Gefahrenstufe (H3)'
 
 mappingId	MAP-HAZARD-LANDSLIDE-MEDIUM
 target		:hazard-landslide/{code} a :MediumDangerZone . 
 source		SELECT LandslideHazard.code
 			FROM LandslideHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
-			  AND name_de = 'Mittlere Gefahrenstufe (H2)'
+			AND name_de = 'Mittlere Gefahrenstufe (H2)'
 
 mappingId	MAP-HAZARD-LANDSLIDE-LOW
 target		:hazard-landslide/{code} a :LowDangerZone . 
 source		SELECT LandslideHazard.code
 			FROM LandslideHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
-			  AND name_de = 'Untersucht und nicht gefährlich'
+			AND name_de = 'Untersucht und nicht gefährlich'
 
 mappingId	MAP-HAZARD-AVALANCHE-VERYHIGH
 target		:hazard-avalanche/{code} a :VeryHighDangerZone . 
 source		SELECT AvalancheHazard.code
 			FROM AvalancheHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
-			  AND name_de = 'Sehr hohe Gefahrenstufe (H4)'
+			AND name_de = 'Sehr hohe Gefahrenstufe (H4)'
 
 mappingId	MAP-HAZARD-AVALANCHE-HIGH
 target		:hazard-avalanche/{code} a :HighDangerZone . 
 source		SELECT AvalancheHazard.code
 			FROM AvalancheHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
-			  AND name_de = 'Hohe Gefahrenstufe (H3)'
+			AND name_de = 'Hohe Gefahrenstufe (H3)'
 
 mappingId	MAP-HAZARD-AVALANCHE-MEDIUM
 target		:hazard-avalanche/{code} a :MediumDangerZone . 
 source		SELECT AvalancheHazard.code
 			FROM AvalancheHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
-			  AND name_de = 'Mittlere Gefahrenstufe (H2)'
+			AND name_de = 'Mittlere Gefahrenstufe (H2)'
 
 mappingId	MAP-HAZARD-AVALANCHE-LOW
 target		:hazard-avalanche/{code} a :LowDangerZone . 
 source		SELECT AvalancheHazard.code
 			FROM AvalancheHazard, DangerLevel
 			WHERE danger_code = DangerLevel.code
-			  AND name_de = 'Untersucht und nicht gefährlich'
+			AND name_de = 'Untersucht und nicht gefährlich'
 
 mappingId	MAP-ISEXPOSEDTO-LINE-LANDSLIDE
 target		:infrastructure-line/{infra_code} :isExposedTo :hazard-landslide/{hazard_code} . 
