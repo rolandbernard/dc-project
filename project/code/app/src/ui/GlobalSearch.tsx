@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Form, Link, useNavigate, useSearchParams } from "react-router";
-import { Search } from "lucide-react";
+import { Code } from "lucide-react";
 
 import { boldQuery, scoreQuery } from "../util";
 import { useSuggestions } from "../api";
@@ -24,20 +24,14 @@ function SearchBar(props: InnerProps) {
     const [query, setQuery] = useState(props.defaultValue);
     const suggestions = useSuggestions();
     const sortedSuggestions = useMemo(() => {
-        const small_suggestions = suggestions.filter(e =>
-            e.toLowerCase().includes(query.toLowerCase()),
-        );
-        if (small_suggestions.length >= 1000) {
-            small_suggestions.length = 1000;
-        }
         const scores = Object.fromEntries(
-            small_suggestions.map(t => [t, scoreQuery(t, query)]),
+            suggestions.map(([t]) => [t, scoreQuery(t, query)]),
         );
-        return small_suggestions
-            .sort((a, b) =>
+        return suggestions
+            .sort(([a], [b]) =>
                 scores[a]! > scores[b]! ? -1 : scores[a]! < scores[b]! ? 1 : 0,
             )
-            .slice(0, Math.min(10, small_suggestions.length));
+            .slice(0, Math.min(10, suggestions.length));
     }, [suggestions, query]);
     return (
         <div
@@ -51,11 +45,11 @@ function SearchBar(props: InnerProps) {
                 onSubmit={e => {
                     e.preventDefault();
                     const value = active && hovering ? hovering : query;
-                    for (const s of sortedSuggestions) {
+                    for (const [s, url] of sortedSuggestions) {
                         if (s.toLowerCase() === value.toLowerCase()) {
                             setQuery("");
                             setHovering([false, undefined]);
-                            navigate(`/sample/${s}`);
+                            navigate(`/query${url}`);
                             break;
                         }
                     }
@@ -65,13 +59,13 @@ function SearchBar(props: InnerProps) {
                     <div
                         className={
                             "peer w-full z-1 relative block text-border " +
-                            (query.length === 0 || suggestions.length === 0
+                            (suggestions.length === 0
                                 ? "focus-within:text-primary/75"
                                 : "")
                         }
                     >
                         <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none ">
-                            <Search className="w-5 h-5 stroke-2" />
+                            <Code className="w-5 h-5 stroke-2" />
                         </div>
                         <input
                             id="global-search"
@@ -80,11 +74,11 @@ function SearchBar(props: InnerProps) {
                             className={
                                 "block w-full ps-10.5 pe-3 border border-border/80 bg-base-300/50 outline-1! outline-transparent! outline-solid! text-content " +
                                 "rounded-2xl py-3 placeholder:text-content/65 placeholder:italic hover:bg-base-300 focus:bg-base-300 " +
-                                (query.length === 0 || suggestions.length === 0
+                                (suggestions.length === 0
                                     ? "focus-visible:border-primary/75 focus-visible:outline-primary/75!"
                                     : "focus-within:rounded-b-none")
                             }
-                            placeholder="Search for sample name..."
+                            placeholder="Select a predefined query..."
                             value={active && hovering ? hovering : query}
                             autoFocus={props.autoFocus}
                             autoComplete="off"
@@ -95,32 +89,36 @@ function SearchBar(props: InnerProps) {
                             onKeyDown={e => {
                                 if (e.key === "ArrowUp") {
                                     const idx = hovering
-                                        ? sortedSuggestions.indexOf(hovering)
+                                        ? sortedSuggestions.findIndex(
+                                              ([s]) => s == hovering,
+                                          )
                                         : -1;
                                     if (idx < 0) {
                                         setHovering([
                                             true,
                                             sortedSuggestions[
                                                 sortedSuggestions.length - 1
-                                            ],
+                                            ]![0],
                                         ]);
                                     } else if (idx === 0) {
                                         setHovering([false, undefined]);
                                     } else {
                                         setHovering([
                                             true,
-                                            sortedSuggestions[idx - 1],
+                                            sortedSuggestions[idx - 1]![0],
                                         ]);
                                     }
                                     e.preventDefault();
                                 } else if (e.key === "ArrowDown") {
                                     const idx = hovering
-                                        ? sortedSuggestions.indexOf(hovering)
+                                        ? sortedSuggestions.findIndex(
+                                              ([s]) => s == hovering,
+                                          )
                                         : -1;
                                     if (idx < 0) {
                                         setHovering([
                                             true,
-                                            sortedSuggestions[0],
+                                            sortedSuggestions[0]![0],
                                         ]);
                                     } else if (
                                         idx ===
@@ -130,7 +128,7 @@ function SearchBar(props: InnerProps) {
                                     } else {
                                         setHovering([
                                             true,
-                                            sortedSuggestions[idx + 1],
+                                            sortedSuggestions[idx + 1]![0],
                                         ]);
                                     }
                                     e.preventDefault();
@@ -141,10 +139,9 @@ function SearchBar(props: InnerProps) {
                     <div
                         className={
                             "absolute top-0 left-0 right-0 max-h-0 opacity-0 overflow-hidden rounded-2xl shadow-xl dark:shadow-2xl flex flex-col " +
-                            (query.trim().length !== 0 &&
-                            suggestions.length !== 0
-                                ? "focus-within:max-h-128 peer-focus-within:max-h-128 hover:max-h-128 active:max-h-128 " +
-                                  "focus-within:opacity-100 peer-focus-within:opacity-100 hover:opacity-100 active:opacity-100"
+                            (suggestions.length !== 0
+                                ? "peer-focus-within:max-h-128 hover:max-h-128 active:max-h-128 " +
+                                  "peer-focus-within:opacity-100 hover:opacity-100 active:opacity-100"
                                 : "")
                         }
                     >
@@ -154,32 +151,33 @@ function SearchBar(props: InnerProps) {
                         >
                             {sortedSuggestions.map(row => (
                                 <Link
-                                    key={row}
-                                    to={`/sample/${encodeURIComponent(row)}`}
+                                    key={row[0]}
+                                    title={row[0]}
+                                    to={`/query${row[1]}`}
                                     viewTransition
                                     className={
                                         "px-3 py-1.5 cursor-pointer block items-center group text-nowrap overflow-hidden text-ellipsis " +
-                                        (row === hovering
+                                        (row[0] === hovering
                                             ? "bg-content/6 dark:bg-content/10"
                                             : "")
                                     }
                                     onMouseEnter={() =>
-                                        setHovering([false, row])
+                                        setHovering([false, row[0]])
                                     }
                                     onClick={() => {
                                         setQuery("");
                                         setHovering([false, undefined]);
                                     }}
                                 >
-                                    <Search
+                                    <Code
                                         className={
                                             "inline-block w-4 h-4 text-border stroke-2 ml-px mr-3 " +
-                                            (row === hovering
+                                            (row[0] === hovering
                                                 ? "text-content/40"
                                                 : "")
                                         }
                                     />
-                                    {boldQuery(row, query, undefined, true)}
+                                    {boldQuery(row[0], query, undefined, true)}
                                 </Link>
                             ))}
                         </div>

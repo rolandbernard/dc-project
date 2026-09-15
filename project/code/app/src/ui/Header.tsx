@@ -1,9 +1,7 @@
 import { Link } from "react-router";
-import { Dices } from "lucide-react";
 
 import SearchBar from "./GlobalSearch";
 import ThemeSelector from "./ThemeSelector";
-import { useRandom } from "../api";
 
 interface Props {
     minimal?: boolean;
@@ -27,7 +25,6 @@ export default function Header(props: Props) {
             </div>
         );
     } else {
-        let random = useRandom();
         return (
             <div key="max z-1">
                 <div className="h-18" />
@@ -58,7 +55,7 @@ export default function Header(props: Props) {
                                             }}
                                             viewTransition
                                         >
-                                            EK100 AA V
+                                            Infra Risk
                                         </Link>
                                         <div
                                             className="flex-1 w-full ms-4 not-sm:ms-0 max-w-3xl flex flex-row items-center"
@@ -67,25 +64,6 @@ export default function Header(props: Props) {
                                             }}
                                         >
                                             <SearchBar />
-                                            <Link
-                                                to={`/sample/${random}`}
-                                                className={
-                                                    "text-sm flex shrink-0 grow-0 ms-4 items-center " +
-                                                    "justify-center w-10 h-10 cursor-pointer " +
-                                                    "rounded-box hover:bg-content/6 dark:hover:bg-content/10 border " +
-                                                    "border-transparent active:border-content/10" +
-                                                    (random
-                                                        ? ""
-                                                        : " loading pointer-events-none")
-                                                }
-                                                viewTransition
-                                                style={{
-                                                    viewTransitionName:
-                                                        "random",
-                                                }}
-                                            >
-                                                <Dices className="w-6 h-6" />
-                                            </Link>
                                         </div>
                                     </div>
                                 </div>
