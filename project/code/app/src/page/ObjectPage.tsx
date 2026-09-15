@@ -1,21 +1,12 @@
-import { useSearchParams } from "react-router";
+import { useParams } from "react-router";
 
 import ContentWrap from "../ui/ContentWrap";
-import { useSparqlQuery } from "../api";
 
 /**
  * This is a page for showing the metadata and contents of a single sample.
  */
-export default function QueryPage() {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const result = useSparqlQuery(`
-    PREFIX : <http://rolandb.com/ontologies/dc#>
-    SELECT ?municipality
-    WHERE {
-      ?municipality a :Municipality .
-    }
-    `);
-    console.log(result);
+export default function ObjectPage() {
+    const params = useParams();
     return (
         <ContentWrap>
             <div className="grow w-full h-full mb-10">

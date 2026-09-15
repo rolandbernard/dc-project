@@ -6,7 +6,8 @@ import { createRoot } from "react-dom/client";
 import Root from "./page/Root";
 import HomePage from "./page/HomePage";
 import ErrorPage from "./page/ErrorPage";
-import SamplePage from "./page/QueryPage";
+import QueryPage from "./page/QueryPage";
+import ObjectPage from "./page/ObjectPage";
 
 import "./styles.css";
 
@@ -16,7 +17,8 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             { index: true, element: <HomePage /> },
-            { path: "/query", element: <SamplePage /> },
+            { path: "/query", element: <QueryPage /> },
+            { path: "/object/:kind/:id", element: <ObjectPage /> },
         ],
     },
 ]);

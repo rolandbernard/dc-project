@@ -2,6 +2,44 @@ import { useEffect } from "react";
 import { useStateWithDep } from "./hooks";
 import { NruCache } from "./util";
 
+/**
+ * Interface of value bindings returned by the SPARQL endpoint.
+ */
+export interface SparqlBindingValue {
+    type: "uri" | "literal" | "bnode";
+    value: string;
+    datatype?: string;
+}
+
+/**
+ * A binding containing multiple value bindings returned by the SPARQL endpoint.
+ */
+export interface SparqlBinding {
+    [key: string]: SparqlBindingValue; // Allows for dynamic SPARQL variables
+}
+
+/**
+ * Header returned by the Ontop SPARQL endpoint.
+ */
+export interface SparqlHead {
+    vars: string[];
+}
+
+/**
+ * Results returned by the SPARQL endpoint.
+ */
+export interface SparqlResults {
+    bindings: SparqlBinding[];
+}
+
+/**
+ * Format of the complete SPARQL response that is returned by the SPARQL endpoint.
+ */
+export interface SparqlQueryResponse {
+    head: SparqlHead;
+    results: SparqlResults;
+}
+
 /** All of the possible pre-build suggestions to setup the application. */
 const allSuggestions: [string, string][] = [
     [
@@ -35,4 +73,83 @@ const allSuggestions: [string, string][] = [
  */
 export function useSuggestions() {
     return allSuggestions;
+}
+
+/**
+ * Determine the URL that the API will be available at. This is basically just
+ * to allow local development server of Vite to still work by accessing a different
+ * port for the API.
+ *
+ * @returns The URL with which to connect to the API.
+ */
+function getApiUrl() {
+    let url;
+    const params = new URLSearchParams(document.location.search);
+    if (params.has("api")) {
+        url = params.get("api")!;
+    } else {
+        if (document.location.hostname == "localhost") {
+            url = "http://localhost:8887/sparql";
+        } else {
+            url = `${document.location.protocol}//${document.location.host}/sparql`;
+        }
+    }
+    return url;
+}
+
+/**
+ * A very simple cache for the queries. This only caches exact matches in the
+ * query and only keeps the last 16 most recently used queries.
+ */
+const queryCache = new NruCache<string, SparqlQueryResponse>(16);
+
+/**
+ * React hook for performing the given SPARQL query on the Ontop endpoint and
+ * return the results once the request finishes.
+ *
+ * @param query The SPARQL query of execute or retrieve for.
+ * @returns `undefined` while loading, and a `SparqlQueryResponse` otherwise.
+ */
+export function useSparqlQuery(query: string) {
+    const [result, setResult] = useStateWithDep<
+        SparqlQueryResponse | undefined
+    >(() => queryCache.get(query), [query]);
+    useEffect(() => {
+        const result = queryCache.get(query);
+        if (!result) {
+            const controller = new AbortController();
+            fetch(getApiUrl(), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/sparql-query",
+                    Accept: "application/sparql-results+json",
+                },
+                body: query,
+                signal: controller.signal,
+            })
+                .then(async response => {
+                    if (!response.ok) {
+                        console.error("API request failed", response.status);
+                    } else {
+                        const result = await response.json();
+                        if (!controller.signal.aborted) {
+                            queryCache.set(query, result);
+                            setResult(result);
+                        }
+                    }
+                })
+                .catch(e => {
+                    if (
+                        !(e instanceof DOMException) ||
+                        e.name !== "AbortError"
+                    ) {
+                        console.error("API request failed", e);
+                    }
+                });
+            return () => controller.abort();
+        } else {
+            setResult(result);
+        }
+    }, [query, setResult]);
+    return result;
 }
