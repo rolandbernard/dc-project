@@ -172,11 +172,12 @@ export function boldQuery(
     text: string,
     query: string,
     style: string = "font-semibold underline",
-    suggestion: boolean = false,
+    suggestion: boolean = true,
 ) {
     const match = suggestion
         ? suggestionsMatch(text, query)[1]
         : multiTokenMatch(text, query);
+    console.log(text, query, match);
     if (match.length === 0) {
         return <span key="query-highlight">{text}</span>;
     } else {
@@ -242,6 +243,74 @@ export function sortNamesWithNumbers(a: string, b: string) {
             return 0;
         }
     }
+}
+
+type Comparable = number | string | Date;
+
+/**
+ * Convert key extracting functions to a comparator function that can be given
+ * to the standard library sorting routines.
+ *
+ * @param fn The key extraction functions.
+ * @param rev Whether to reverse the order.
+ * @returns A comparator function.
+ */
+export function sortedKey<T>(
+    fn: ((a: T) => Comparable)[],
+    rev = false,
+): (a: T, b: T) => number {
+    if (fn.length == 1) {
+        const f = fn[0]!;
+        return (a, b) => {
+            const [fa, fb] = [f(a), f(b)];
+            const cmp = fa < fb ? -1 : fa > fb ? 1 : 0;
+            return rev ? -cmp : cmp;
+        };
+    } else {
+        const rest = sortedKey(fn.splice(1), rev);
+        const f = fn[0]!;
+        return (a, b) => {
+            const [fa, fb] = [f(a), f(b)];
+            const cmp = fa < fb ? -1 : fa > fb ? 1 : 0;
+            if (cmp != 0) {
+                return rev ? -cmp : cmp;
+            } else {
+                return rest(a, b);
+            }
+        };
+    }
+}
+
+/**
+ * Sort the given array using multiple key extraction functions.
+ *
+ * @param array The array to sort.
+ * @param fn The key extraction functions.
+ * @param rev Sort in reverse.
+ * @returns Returns a sorted copy of the array.
+ */
+export function toSorted<T>(
+    array: T[],
+    fn: ((a: T) => Comparable)[],
+    rev?: boolean,
+): T[] {
+    return array.toSorted(sortedKey<T>(fn, rev));
+}
+
+/**
+ * Sort the given array using multiple key extraction functions.
+ *
+ * @param array The array to sort.
+ * @param fn The key extraction functions.
+ * @param rev Sort in reverse.
+ * @returns Returns `array` after it has been sorted.
+ */
+export function sort<T>(
+    array: T[],
+    fn: ((a: T) => Comparable)[],
+    rev?: boolean,
+): T[] {
+    return array.sort(sortedKey<T>(fn, rev));
 }
 
 /**

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router";
 
 /**
  * This is a hook that will execute a given function whenever some user click
@@ -85,4 +86,110 @@ export function useStateWithDep<T>(initial: () => T, dep: unknown[]) {
         setValue(initial);
     }
     return [value, setValue] as [T, (v: T) => void];
+}
+
+type ParamType = string[] | number[] | string | number;
+
+function encodeParam<T extends ParamType>(obj: T) {
+    if (obj instanceof Array) {
+        return "[" + obj.map(e => e.toString()).join(",") + "]";
+    } else {
+        return obj.toString();
+    }
+}
+
+function isNumber(str: string) {
+    for (let i = 0; i < str.length; i++) {
+        if (str.codePointAt(i)! < 48 || str.codePointAt(i)! > 57) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function decodeParam<T extends ParamType>(val: string) {
+    if (val[0] === "[") {
+        const array = val
+            .substring(1, val.length - 1)
+            .split(",")
+            .filter(e => e.length !== 0)
+            .map(e => (isNumber(e) ? parseInt(e) : e));
+        return array as T;
+    } else {
+        return (isNumber(val) ? parseInt(val) : val) as T;
+    }
+}
+
+function getUrlWithQuery(q: URLSearchParams) {
+    const href = document.location.href;
+    const hashIdx = href.indexOf("#");
+    if (hashIdx >= 0) {
+        const idx = href.indexOf("?", hashIdx);
+        if (idx >= 0) {
+            return q.size === 0
+                ? href.slice(0, idx)
+                : href.slice(0, idx + 1) + q.toString();
+        } else {
+            return q.size === 0 ? href : href + "?" + q.toString();
+        }
+    } else {
+        return q.size === 0 ? href : href + "#/?" + q.toString();
+    }
+}
+
+function getCurrentQuery() {
+    const href = document.location.href;
+    const hashIdx = href.indexOf("#");
+    if (hashIdx >= 0) {
+        const idx = href.indexOf("?", hashIdx);
+        if (idx >= 0) {
+            return new URLSearchParams(href.slice(idx));
+        } else {
+            return new URLSearchParams();
+        }
+    } else {
+        return new URLSearchParams();
+    }
+}
+
+/**
+ * This a hook that get a parameter value from the search parameters and also
+ * provides a good way to change them easily.
+ *
+ * @param name The parameter name to use.
+ * @param def The default value in case the parameter is missing.
+ * @returns
+ */
+export function useParam<T extends ParamType>(
+    name: string,
+    def: T,
+): [T, (v: T) => void] {
+    const location = useLocation();
+    const defValue = useMemo(() => encodeParam(def), [def]);
+    const [value, setInnerValue] = useState(() =>
+        decodeParam<T>(getCurrentQuery().get(name) ?? defValue),
+    );
+    useEffect(() => {
+        setInnerValue(decodeParam<T>(getCurrentQuery().get(name) ?? defValue));
+    }, [location.search, defValue, name]);
+    const setValue = useCallback(
+        (v: T) => {
+            let newValue: string | null = encodeParam(v);
+            if (newValue == defValue) {
+                newValue = null;
+            }
+            const query = getCurrentQuery();
+            if (query.get(name) != newValue) {
+                setInnerValue(v);
+                if (newValue) {
+                    query.set(name, newValue);
+                } else {
+                    query.delete(name);
+                }
+                document.location.replace(getUrlWithQuery(query));
+            }
+        },
+        [name, defValue],
+    );
+    return [value, setValue];
 }

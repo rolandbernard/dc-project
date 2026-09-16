@@ -15,7 +15,7 @@ export interface SparqlBindingValue {
  * A binding containing multiple value bindings returned by the SPARQL endpoint.
  */
 export interface SparqlBinding {
-    [key: string]: SparqlBindingValue; // Allows for dynamic SPARQL variables
+    [key: string]: SparqlBindingValue | undefined;
 }
 
 /**
@@ -38,6 +38,22 @@ export interface SparqlResults {
 export interface SparqlQueryResponse {
     head: SparqlHead;
     results: SparqlResults;
+}
+
+/**
+ * The set of query parameters for the generation of the dynamic SPARQL query
+ * that is being generated in the frontend based on user settings.
+ */
+interface QueryFilters {
+    infraTypes?: ("Line" | "Node")[];
+    domains?: ("Energy" | "Communication" | "Water" | "Waste")[];
+    hazardTypes?: ("Landslide" | "Avalanche")[];
+    dangerLevels?: ("Low" | "Medium" | "High" | "VeryHigh")[];
+    municipalities?: string[];
+    groupByMunicipality?: boolean;
+    aggregationMetric?: "count" | "sumArea" | "sumLength";
+    sortOrder?: "ASC" | "DESC";
+    limit?: number;
 }
 
 /** All of the possible pre-build suggestions to setup the application. */
@@ -152,4 +168,75 @@ export function useSparqlQuery(query: string) {
         }
     }, [query, setResult]);
     return result;
+}
+
+/**
+ * Municipality that is queried for allowing the user to select them in the
+ * municipality configuration of the query builder.
+ */
+export interface Municipality {
+    iri: string;
+    name_de: string;
+    name_it: string;
+    name_ld?: string;
+}
+
+export function useMunicipalities() {
+    const result = useSparqlQuery(`
+PREFIX : <http://rolandb.com/ontologies/dc#>
+
+SELECT ?municipality ?nameIt ?nameDe ?nameLd
+WHERE {
+    ?municipality a :Municipality ;
+        :nameIt ?nameIt ;
+        :nameDe ?nameDe .
+    OPTIONAL { ?municipality :nameLd ?nameLd . }
+}
+`);
+    return (
+        result &&
+        result.results.bindings.map(row => ({
+            iri: row.municipality!.value,
+            name_de: row.nameIt!.value,
+            name_it: row.nameDe!.value,
+            name_ld: row.nameLd?.value,
+        }))
+    );
+}
+
+/**
+ * Dynamically generate a SPARQL query that is configured based on the
+ * configuration done by the user of the application.
+ *
+ * @param config The configuration parameters to use.
+ * @returns A valid SPARQL query for the given configuration.
+ */
+export function buildDynamicSparql(config: QueryFilters) {
+    const {
+        infraTypes = ["Line", "Node"],
+        domains = [],
+        hazardTypes = ["Landslide", "Avalanche"],
+        dangerLevels = [],
+        municipalities = [],
+        groupByMunicipality = false,
+        aggregationMetric = "count",
+        sortOrder = "DESC",
+        limit = -1,
+    } = config;
+    let selectClause = "";
+    let whereConditions = [] as string[];
+    let groupByClause = "";
+    let orderByClause = "";
+    let limitClause = limit >= 0 ? `LIMIT ${limit}` : "";
+    // Assemble the final SPARQL query.
+    return `
+PREFIX : <http://rolandb.com/ontologies/dc#>
+
+SELECT ${selectClause}
+WHERE {
+    ${whereConditions.join("\n    ")}
+}
+${groupByClause}
+${orderByClause}
+${limitClause}`.trim();
 }

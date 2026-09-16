@@ -177,7 +177,7 @@ function SearchBar(props: InnerProps) {
                                                 : "")
                                         }
                                     />
-                                    {boldQuery(row[0], query, undefined, true)}
+                                    {boldQuery(row[0], query, undefined)}
                                 </Link>
                             ))}
                         </div>

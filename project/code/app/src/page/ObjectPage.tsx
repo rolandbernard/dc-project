@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import ContentWrap from "../ui/ContentWrap";
 
 /**
- * This is a page for showing the metadata and contents of a single sample.
+ * This is a page for showing the metadata and contents of a single object.
  */
 export default function ObjectPage() {
     const params = useParams();
