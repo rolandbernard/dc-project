@@ -90,15 +90,18 @@ export default function SearchSelect<V>(props: Props<V>) {
             placeholder={
                 props.selected.length === 0
                     ? props.placeholder
-                    : "Selected " +
-                      props.selected.length +
-                      " " +
-                      (props.object
-                          ? props.selected.length === 1
-                              ? props.object
-                              : (props.objects ?? props.object + "s")
-                          : "") +
-                      "."
+                    : props.selected.length <= 4 && selected !== undefined
+                      ? "Selected " +
+                        selected.map(r => props.name(r)).join(", ")
+                      : "Selected " +
+                        props.selected.length +
+                        " " +
+                        (props.object
+                            ? props.selected.length === 1
+                                ? props.object
+                                : (props.objects ?? props.object + "s")
+                            : "") +
+                        "."
             }
             placeholderItalic={props.selected.length === 0}
             className={

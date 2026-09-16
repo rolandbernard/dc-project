@@ -87,9 +87,16 @@
     0% {
         background-position-x: 0%;
     }
+
     100% {
         background-position-x: -200%;
     }
+}
+
+.disabled {
+    user-select: none;
+    pointer-events: none;
+    opacity: 0.7;
 }
 
 .loading {
@@ -99,12 +106,10 @@
 .loading::after {
     --outside: rgb(from var(--color-content) r g b / 3%);
     --inside: rgb(from var(--color-content) r g b / 0%);
-    background: linear-gradient(
-        90deg,
-        var(--outside) 30%,
-        var(--inside) 50%,
-        var(--outside) 70%
-    );
+    background: linear-gradient(90deg,
+            var(--outside) 30%,
+            var(--inside) 50%,
+            var(--outside) 70%);
     background-size: 200% 100%;
     content: "";
     position: absolute;
@@ -133,10 +138,12 @@
         background-position-x: 0%;
         opacity: 0;
     }
+
     50% {
         background-position-x: -200%;
         opacity: 1;
     }
+
     100% {
         background-position-x: -400%;
         opacity: 0;
@@ -150,12 +157,10 @@
 .highlighted::before {
     --outside: rgb(from var(--color-primary) r g b / 5%);
     --inside: rgb(from var(--color-primary) r g b / 50%);
-    background: linear-gradient(
-        90deg,
-        var(--outside) 30%,
-        var(--inside) 50%,
-        var(--outside) 70%
-    );
+    background: linear-gradient(90deg,
+            var(--outside) 30%,
+            var(--inside) 50%,
+            var(--outside) 70%);
     background-size: 200% 100%;
     content: "";
     position: absolute;

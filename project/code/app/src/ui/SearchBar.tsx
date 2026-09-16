@@ -36,9 +36,10 @@ export default function SearchBar<K>(props: Props<K>) {
             ? (props.default ?? [])
             : (results ?? [])
     ).filter(row => props.match(row, lowerQuery) > 0);
+    const limit = Math.min(props.limit ?? 10, filteredResults.length);
     const trueResults = sort(
         filteredResults,
-        lowerQuery.length === 0
+        lowerQuery.length === 0 && (results?.length ?? 0) > limit
             ? [
                   row =>
                       props.default?.some(v => v.label == row.label) ? 1 : -1,
@@ -46,7 +47,7 @@ export default function SearchBar<K>(props: Props<K>) {
               ]
             : [row => props.match(row, lowerQuery)],
         true,
-    ).slice(0, Math.min(props.limit ?? 10, filteredResults.length));
+    ).slice(0, limit);
     useClickOutside("div#search-bar-" + props.name, () => setQuery(""));
     return (
         <div

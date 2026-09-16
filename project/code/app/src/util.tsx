@@ -177,7 +177,6 @@ export function boldQuery(
     const match = suggestion
         ? suggestionsMatch(text, query)[1]
         : multiTokenMatch(text, query);
-    console.log(text, query, match);
     if (match.length === 0) {
         return <span key="query-highlight">{text}</span>;
     } else {

@@ -40,22 +40,6 @@ export interface SparqlQueryResponse {
     results: SparqlResults;
 }
 
-/**
- * The set of query parameters for the generation of the dynamic SPARQL query
- * that is being generated in the frontend based on user settings.
- */
-interface QueryFilters {
-    infraTypes?: ("Line" | "Node")[];
-    domains?: ("Energy" | "Communication" | "Water" | "Waste")[];
-    hazardTypes?: ("Landslide" | "Avalanche")[];
-    dangerLevels?: ("Low" | "Medium" | "High" | "VeryHigh")[];
-    municipalities?: string[];
-    groupByMunicipality?: boolean;
-    aggregationMetric?: "count" | "sumArea" | "sumLength";
-    sortOrder?: "ASC" | "DESC";
-    limit?: number;
-}
-
 /** All of the possible pre-build suggestions to setup the application. */
 const allSuggestions: [string, string][] = [
     [
@@ -205,6 +189,22 @@ WHERE {
 }
 
 /**
+ * The set of query parameters for the generation of the dynamic SPARQL query
+ * that is being generated in the frontend based on user settings.
+ */
+interface QueryFilters {
+    infraTypes?: ("Line" | "Node")[];
+    hazardTypes?: ("Landslide" | "Avalanche")[];
+    domains?: ("Energy" | "Communication" | "Water" | "Waste")[];
+    dangerLevels?: ("Low" | "Medium" | "High" | "VeryHigh")[];
+    municipalities?: string[];
+    groupByMunicipality?: boolean;
+    aggregationMetric?: "Count" | "Sum Area" | "Sum Length";
+    sortOrder?: "Ascending" | "Descending";
+    limit?: number;
+}
+
+/**
  * Dynamically generate a SPARQL query that is configured based on the
  * configuration done by the user of the application.
  *
@@ -214,13 +214,13 @@ WHERE {
 export function buildDynamicSparql(config: QueryFilters) {
     const {
         infraTypes = ["Line", "Node"],
-        domains = [],
         hazardTypes = ["Landslide", "Avalanche"],
+        domains = [],
         dangerLevels = [],
         municipalities = [],
         groupByMunicipality = false,
-        aggregationMetric = "count",
-        sortOrder = "DESC",
+        aggregationMetric = "Count",
+        sortOrder = "Descending",
         limit = -1,
     } = config;
     let selectClause = "";

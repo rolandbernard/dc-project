@@ -100,7 +100,11 @@ function encodeParam<T extends ParamType>(obj: T) {
 
 function isNumber(str: string) {
     for (let i = 0; i < str.length; i++) {
-        if (str.codePointAt(i)! < 48 || str.codePointAt(i)! > 57) {
+        if (
+            str.codePointAt(i)! < 48 ||
+            str.codePointAt(i)! > 57 ||
+            str.codePointAt(i) === 45
+        ) {
             return false;
         }
     }
