@@ -1,7 +1,7 @@
 import ContentWrap from "../ui/ContentWrap";
 import SearchSelect from "../ui/SearchSelect";
 
-import { useMunicipalities } from "../api";
+import { municipalityLabel, useMunicipalities } from "../api";
 import { useParam } from "../hooks";
 import { boldQuery } from "../util";
 
@@ -9,8 +9,6 @@ const INFRA_TYPES = ["Line", "Node"];
 const HAZARD_TYPES = ["Landslide", "Avalanche"];
 const DOMAINS = ["Water", "Energy", "Waste", "Communication"];
 const DANGER_LEVELS = ["Low", "Medium", "High", "VeryHigh"];
-const AGGREGATE = ["Count", "Sum Area", "Sum Length"];
-const SORT_ORDER = ["Ascending", "Descending"];
 
 interface SearchInputProps<V> {
     options: undefined | V[];
@@ -22,7 +20,7 @@ interface SearchInputProps<V> {
     objects?: string;
 }
 
-function SearchInput<V>(props: SearchInputProps<V>) {
+function SearchFilter<V>(props: SearchInputProps<V>) {
     return (
         <SearchSelect
             ident={`${props.object}-filter`}
@@ -59,10 +57,7 @@ export default function QueryPage() {
         [] as string[],
     );
     const [municipIds, setMunicipIds] = useParam("municipIds", [] as string[]);
-    const [groupBy, setGroupBy] = useParam("groupBy", 0);
-    const [aggregate, setAggregate] = useParam("aggregate", "Count");
-    const [order, setOrder] = useParam("order", "Ascending");
-    const [limit, setLimit] = useParam("limit", -1);
+    const [groupBy, setGroupBy] = useParam("groupBy", 0 as number);
     const municips = useMunicipalities();
     return (
         <ContentWrap>
@@ -71,9 +66,12 @@ export default function QueryPage() {
                     className="rounded-xl bg-base-300/40 mt-6"
                     style={{ viewTransitionName: "article" }}
                 >
-                    <div className="p-8">
-                        <span>
-                            <SearchInput
+                    <div className="p-8 flex flex-col gap-1">
+                        <div className="text-sm flex flex-col items-start justify-end pt-0.5 px-1">
+                            <div className="pe-3 text-xs whitespace-nowrap">
+                                Infrastructure Type
+                            </div>
+                            <SearchFilter
                                 options={INFRA_TYPES}
                                 selected={infraTypes}
                                 setSelected={setInfraTypes}
@@ -81,13 +79,17 @@ export default function QueryPage() {
                                 name={row => row}
                                 object="infrastructure type"
                             />
-                        </span>
-                        <span
+                        </div>
+                        <div
                             className={
-                                infraTypes.length === 0 ? "disabled" : ""
+                                "text-sm flex flex-col items-start justify-end pt-0.5 px-1" +
+                                (infraTypes.length === 0 ? "disabled" : "")
                             }
                         >
-                            <SearchInput
+                            <div className="pe-3 text-xs whitespace-nowrap">
+                                Infrastructure Domain
+                            </div>
+                            <SearchFilter
                                 options={DOMAINS}
                                 selected={domains}
                                 setSelected={setDomains}
@@ -95,9 +97,12 @@ export default function QueryPage() {
                                 name={row => row}
                                 object="domain"
                             />
-                        </span>
-                        <span>
-                            <SearchInput
+                        </div>
+                        <div className="text-sm flex flex-col items-start justify-end pt-0.5 px-1">
+                            <div className="pe-3 text-xs whitespace-nowrap">
+                                Hazard Type
+                            </div>
+                            <SearchFilter
                                 options={HAZARD_TYPES}
                                 selected={hazardTypes}
                                 setSelected={setHazardTypes}
@@ -105,13 +110,17 @@ export default function QueryPage() {
                                 name={row => row}
                                 object="hazard type"
                             />
-                        </span>
-                        <span
+                        </div>
+                        <div
                             className={
-                                hazardTypes.length === 0 ? "disabled" : ""
+                                "text-sm flex flex-col items-start justify-end pt-0.5 px-1" +
+                                (hazardTypes.length === 0 ? "disabled" : "")
                             }
                         >
-                            <SearchInput
+                            <div className="pe-3 text-xs whitespace-nowrap">
+                                Danger Level
+                            </div>
+                            <SearchFilter
                                 options={DANGER_LEVELS}
                                 selected={dangerLevels}
                                 setSelected={setDangerLevels}
@@ -119,23 +128,46 @@ export default function QueryPage() {
                                 name={row => row}
                                 object="danger level"
                             />
-                        </span>
-                        <span>
-                            <SearchInput
+                        </div>
+                        <div className="text-sm flex flex-col items-start justify-end pt-0.5 px-1">
+                            <div className="pe-3 text-xs whitespace-nowrap">
+                                Municipality
+                            </div>
+                            <SearchFilter
                                 options={municips}
                                 selected={municipIds}
                                 setSelected={setMunicipIds}
                                 id={row => row.iri}
-                                name={row =>
-                                    `${row.name_de} - ${row.name_it}` +
-                                    (row.name_ld === undefined
-                                        ? ""
-                                        : ` - ${row.name_ld}`)
-                                }
+                                name={municipalityLabel}
                                 object="municipality"
                                 objects="municipalities"
                             />
-                        </span>
+                        </div>
+                        <div className="text-sm flex flex-col items-start justify-end pt-0.5 px-1">
+                            <label
+                                htmlFor="group-by-municip"
+                                className="flex flex-row items-center cursor-pointer select-none
+                                           rounded-field hover:bg-content/10 px-2 not-xl:px-2 py-px"
+                            >
+                                <input
+                                    id="group-by-municip"
+                                    className="w-4 h-4 appearance-none border border-border bg-base-200
+                                               checked:bg-primary cursor-pointer shrink-0"
+                                    type="checkbox"
+                                    checked={groupBy !== 0}
+                                    onChange={e => {
+                                        setGroupBy(e.target.checked ? 1 : 0);
+                                    }}
+                                />
+                                <div
+                                    className="pl-2 overflow-hidden overflow-ellipsis whitespace-nowrap
+                                               py-0.5 text-content/95"
+                                    title="Group the outputs based on municipality?"
+                                >
+                                    Group by Municipality
+                                </div>
+                            </label>
+                        </div>
                     </div>
                 </article>
             </div>

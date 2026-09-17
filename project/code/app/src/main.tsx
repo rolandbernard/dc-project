@@ -18,7 +18,7 @@ const router = createBrowserRouter([
         children: [
             { index: true, element: <HomePage /> },
             { path: "/query", element: <QueryPage /> },
-            { path: "/object/:kind/:id", element: <ObjectPage /> },
+            { path: "/object/:iri", element: <ObjectPage /> },
         ],
     },
 ]);

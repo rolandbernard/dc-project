@@ -56,7 +56,7 @@ export default function SearchSelect<V>(props: Props<V>) {
                     <input
                         id={props.ident + "-" + props.id(row.value)}
                         className="w-4 h-4 appearance-none border border-border bg-base-200
-                            checked:bg-primary cursor-pointer shrink-0"
+                                   checked:bg-primary cursor-pointer shrink-0"
                         type="checkbox"
                         checked={props.selected.some(
                             r => r === props.id(row.value),

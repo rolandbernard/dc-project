@@ -63,8 +63,8 @@ export default function SearchBar<K>(props: Props<K>) {
                         "rounded-field focus-visible:border-primary " +
                         "hover:bg-content/3 dark:hover:bg-content/8 " +
                         (props.placeholderItalic !== false
-                            ? "placeholder:text-content/65 placeholder:italic "
-                            : "placeholder:text-content/80 ")
+                            ? "placeholder:text-content/80 placeholder:italic "
+                            : "placeholder:text-content/95 ")
                     }
                     placeholder={props.placeholder}
                     value={query}
@@ -77,7 +77,7 @@ export default function SearchBar<K>(props: Props<K>) {
             query.length !== 0 ? (
                 <div
                     className="absolute inset-y-full end-0 w-full hidden focus-within:block
-                        peer-focus-within:block hover:block active:block z-50"
+                               peer-focus-within:block hover:block active:block z-50"
                 >
                     <div
                         className={

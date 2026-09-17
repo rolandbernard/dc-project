@@ -158,13 +158,32 @@ export function useSparqlQuery(query: string) {
  * Municipality that is queried for allowing the user to select them in the
  * municipality configuration of the query builder.
  */
-export interface Municipality {
+export interface SimpleMunicipality {
     iri: string;
     name_de: string;
     name_it: string;
     name_ld?: string;
 }
 
+/**
+ * Convert a municipality to a human readable label of the municipalities name.
+ *
+ * @param municip
+ * @returns
+ */
+export function municipalityLabel(municip: SimpleMunicipality) {
+    return (
+        `${municip.name_de} - ${municip.name_it}` +
+        (municip.name_ld === undefined ? "" : ` - ${municip.name_ld}`)
+    );
+}
+
+/**
+ * React hook to load all of the available municipalities in the dataset using
+ * a SPARQL query to the Ontop endpoint.
+ *
+ * @returns The municipalities present in the dataset or `undefined` while leading.
+ */
 export function useMunicipalities() {
     const result = useSparqlQuery(`
 PREFIX : <http://rolandb.com/ontologies/dc#>
@@ -199,8 +218,6 @@ interface QueryFilters {
     dangerLevels?: ("Low" | "Medium" | "High" | "VeryHigh")[];
     municipalities?: string[];
     groupByMunicipality?: boolean;
-    aggregationMetric?: "Count" | "Sum Area" | "Sum Length";
-    sortOrder?: "Ascending" | "Descending";
     limit?: number;
 }
 
@@ -219,8 +236,6 @@ export function buildDynamicSparql(config: QueryFilters) {
         dangerLevels = [],
         municipalities = [],
         groupByMunicipality = false,
-        aggregationMetric = "Count",
-        sortOrder = "Descending",
         limit = -1,
     } = config;
     let selectClause = "";
@@ -239,4 +254,93 @@ WHERE {
 ${groupByClause}
 ${orderByClause}
 ${limitClause}`.trim();
+}
+
+/**
+ * Municipality information returned by the dynamic queries.
+ */
+export interface Municipality {
+    iri: string;
+    name_de: string;
+    name_it: string;
+    name_ld?: string;
+    area: number;
+    geometry: string;
+}
+
+/**
+ * Hazard information returned by the dynamic queries.
+ */
+export interface Hazard {
+    iri: string;
+    process_de: string;
+    process_it: string;
+    danger_de: string;
+    danger_it: string;
+    geometry: string;
+}
+
+/**
+ * Infrastructure information returned by the dynamic queries.
+ */
+export interface Infrastructure {
+    iri: string;
+    kind_de: string;
+    kind_it: string;
+    geometry: string;
+}
+
+/**
+ * The results of the dynamic query, reshaped to be more easily used for the
+ * purposes of the later display in the application.
+ */
+export interface QueryResult {
+    municipality: Municipality;
+    hazard?: Hazard;
+    area?: number;
+    infrastructure?: Infrastructure;
+    length?: number;
+}
+
+/**
+ * Dynamically generate a SPARQL query and execute it to get the results. Results
+ * are transformed into an instance of `QueryResult` before being returned to
+ * the caller.
+ *
+ * @param config The configuration parameters to use.
+ * @returns `undefined` while loading and the resit rows otherwise.
+ */
+export function useDynamicQuery(
+    config: QueryFilters,
+): undefined | QueryResult[] {
+    const result = useSparqlQuery(buildDynamicSparql(config));
+    return (
+        result &&
+        result.results.bindings.map(row => ({
+            municipality: {
+                iri: "",
+                name_de: "",
+                name_it: "",
+                name_ld: "",
+                area: 0,
+                geometry: "",
+            },
+            hazard: {
+                iri: "",
+                process_de: "",
+                process_it: "",
+                danger_de: "",
+                danger_it: "",
+                geometry: "",
+            },
+            area: 0,
+            infrastructure: {
+                iri: "",
+                kind_de: "",
+                kind_it: "",
+                geometry: "",
+            },
+            length: 0,
+        }))
+    );
 }
