@@ -42,25 +42,29 @@ export interface SparqlQueryResponse {
 
 /** All of the possible pre-build suggestions to setup the application. */
 const allSuggestions: [string, string][] = [
+    ["What are all of the municipalities?", ""],
+    ["What are all of the infrastructure assets?", ""],
+    ["What are all of the hazard zones?", ""],
+    ["Which infrastructure assets are exposed to hazards?", ""],
     [
         "Which water-related infrastructure nodes are located within high risk landslide zones?",
-        "?a",
+        "",
     ],
     [
         "What are the infrastructure lines that intersect with avalanche-prone areas?",
-        "?b",
+        "",
     ],
     [
         "In a given Municipality, how many electricity lines are currently situated in a hazard zone?",
-        "?c",
+        "",
     ],
     [
         "Which municipalities have the highest count of infrastructure elements exposed to natural hazards?",
-        "?d",
+        "",
     ],
     [
         "Municipalities with the largest area subject to natural hazards of high or very high danger level?",
-        "?e",
+        "",
     ],
 ];
 
@@ -211,7 +215,7 @@ WHERE {
  * The set of query parameters for the generation of the dynamic SPARQL query
  * that is being generated in the frontend based on user settings.
  */
-interface QueryFilters {
+export interface QueryFilters {
     infraTypes?: ("Line" | "Node")[];
     hazardTypes?: ("Landslide" | "Avalanche")[];
     domains?: ("Energy" | "Communication" | "Water" | "Waste")[];
@@ -238,16 +242,113 @@ export function buildDynamicSparql(config: QueryFilters) {
         groupByMunicipality = false,
         limit = -1,
     } = config;
-    let selectClause = "";
-    let whereConditions = [] as string[];
-    let groupByClause = "";
-    let orderByClause = "";
-    let limitClause = limit >= 0 ? `LIMIT ${limit}` : "";
+    const onlyMunicipality = infraTypes.length + hazardTypes.length === 0;
+    const selectClause = [
+        groupByMunicipality && !onlyMunicipality
+            ? "?municipality (SAMPLE(?nameIt) AS ?nameIt) (SAMPLE(?nameDe) AS ?nameDe) " +
+              "(SAMPLE(?nameLd) AS ?nameLd) (SAMPLE(?municipGeometry) AS ?municipGeometry)"
+            : "?municipality ?nameIt ?nameDe ?nameLd" +
+              (onlyMunicipality ? " ?municipGeometry" : ""),
+    ];
+    const whereConditions = [
+        "?municipality a :Municipality ;\n" +
+            (groupByMunicipality || onlyMunicipality
+                ? "        :geometry ?municipGeometry ; \n"
+                : "") +
+            "        :nameIt ?nameIt ;\n" +
+            "        :nameDe ?nameDe .",
+        "OPTIONAL { ?municipality :nameLd ?nameLd . }",
+    ];
+    if (municipalities.length !== 0) {
+        whereConditions.push(
+            `VALUES ?municipality {${municipalities.map(iri => `<${iri}>`).join(" ")}}`,
+        );
+    }
+    if (infraTypes.length !== 0) {
+        const postfix = infraTypes.length === 2 ? "" : infraTypes[0];
+        if (groupByMunicipality) {
+            selectClause.push(
+                "(COUNT(DISTINCT ?infrastructure) AS ?count) (SUM(?length) AS ?length)",
+            );
+            whereConditions.push(
+                `?infrastructure a :Infrastructure${postfix} ;\n` +
+                    "        :infrastructureIn ?municipality .",
+            );
+        } else {
+            selectClause.push(
+                "?infrastructure ?kindDe ?kindIt ?length ?infraGeometry",
+            );
+            whereConditions.push(
+                `?infrastructure a :Infrastructure${postfix} ;\n` +
+                    "        :infrastructureIn ?municipality ;\n" +
+                    "        :typeNameIt ?kindIt ;\n" +
+                    "        :typeNameDe ?kindDe ;\n" +
+                    "        :geometry ?infraGeometry .",
+            );
+        }
+        whereConditions.push(
+            "OPTIONAL { ?infrastructure :lineLength ?length. }",
+        );
+        if (domains.length === 1) {
+            whereConditions.push(
+                `?infrastructure a :${domains[0]}Infrastructure .`,
+            );
+        } else if (domains.length !== 0) {
+            whereConditions.push(
+                "?infrastructure a ?domain .",
+                `VALUES ?domain {${domains.map(d => `:${d}Infrastructure`).join(" ")}}`,
+            );
+        }
+    }
+    if (hazardTypes.length !== 0) {
+        const prefix = hazardTypes.length === 2 ? "Hazard" : hazardTypes[0];
+        if (infraTypes.length === 0) {
+            if (groupByMunicipality) {
+                selectClause.push(
+                    "(COUNT(DISTINCT ?hazard) AS ?count) (SUM(?area) AS ?area)",
+                );
+                whereConditions.push(
+                    `?hazard a :${prefix}Zone ;\n` +
+                        "        :hazardZoneIn ?municipality .",
+                );
+            } else {
+                selectClause.push(
+                    "?hazard ?processDe ?processIt ?dangerDe ?dangerIt ?area ?hazardGeometry",
+                );
+                whereConditions.push(
+                    `?hazard a :${prefix}Zone ;\n` +
+                        "        :hazardZoneIn ?municipality ;\n" +
+                        "        :processNameIt ?processDe ;\n" +
+                        "        :processNameDe ?processIt ;\n" +
+                        "        :dangerNameIt ?dangerDe ;\n" +
+                        "        :dangerNameDe ?dangerIt ;\n" +
+                        "        :geometry ?hazardGeometry .",
+                );
+            }
+            whereConditions.push("OPTIONAL { ?hazard :hazardArea ?area. }");
+        } else {
+            whereConditions.push(`?hazard a :${prefix}Zone .`);
+        }
+        if (dangerLevels.length === 1) {
+            whereConditions.push(`?hazard a :${dangerLevels[0]}DangerZone .`);
+        } else if (dangerLevels.length !== 0) {
+            whereConditions.push(
+                "?hazard a ?dangerLevel .",
+                `VALUES ?dangerLevel {${dangerLevels.map(d => `:${d}DangerZone`).join(" ")}}`,
+            );
+        }
+    }
+    if (infraTypes.length !== 0 && hazardTypes.length !== 0) {
+        whereConditions.push("?infrastructure :isExposedTo ?hazard .");
+    }
+    const groupByClause = groupByMunicipality ? "GROUP BY ?municipality" : "";
+    const orderByClause = "";
+    const limitClause = limit >= 0 ? `LIMIT ${limit}` : "";
     // Assemble the final SPARQL query.
     return `
 PREFIX : <http://rolandb.com/ontologies/dc#>
 
-SELECT ${selectClause}
+SELECT DISTINCT ${selectClause.join(" ")}
 WHERE {
     ${whereConditions.join("\n    ")}
 }
@@ -264,8 +365,8 @@ export interface Municipality {
     name_de: string;
     name_it: string;
     name_ld?: string;
-    area: number;
-    geometry: string;
+    area?: number;
+    geometry?: string;
 }
 
 /**
@@ -277,7 +378,7 @@ export interface Hazard {
     process_it: string;
     danger_de: string;
     danger_it: string;
-    geometry: string;
+    geometry?: string;
 }
 
 /**
@@ -287,7 +388,7 @@ export interface Infrastructure {
     iri: string;
     kind_de: string;
     kind_it: string;
-    geometry: string;
+    geometry?: string;
 }
 
 /**
@@ -300,6 +401,7 @@ export interface QueryResult {
     area?: number;
     infrastructure?: Infrastructure;
     length?: number;
+    count?: number;
 }
 
 /**
@@ -318,29 +420,30 @@ export function useDynamicQuery(
         result &&
         result.results.bindings.map(row => ({
             municipality: {
-                iri: "",
-                name_de: "",
-                name_it: "",
-                name_ld: "",
-                area: 0,
-                geometry: "",
+                iri: row.municipality!.value,
+                name_de: row.nameIt!.value,
+                name_it: row.nameDe!.value,
+                name_ld: row.nameLd?.value,
+                area: row.municipArea && parseFloat(row.municipArea.value),
+                geometry: row.municipGeometry?.value,
             },
-            hazard: {
-                iri: "",
-                process_de: "",
-                process_it: "",
-                danger_de: "",
-                danger_it: "",
-                geometry: "",
+            hazard: row.hazard && {
+                iri: row.hazard.value,
+                process_de: row.processDe!.value,
+                process_it: row.processIt!.value,
+                danger_de: row.dangerDe!.value,
+                danger_it: row.dangerIt!.value,
+                geometry: row.hazardGeometry?.value,
             },
-            area: 0,
-            infrastructure: {
-                iri: "",
-                kind_de: "",
-                kind_it: "",
-                geometry: "",
+            area: row.area && parseFloat(row.area.value),
+            infrastructure: row.infrastructure && {
+                iri: row.infrastructure.value,
+                kind_de: row.kindDe!.value,
+                kind_it: row.kindIt!.value,
+                geometry: row.infraGeometry?.value,
             },
-            length: 0,
+            length: row.length && parseFloat(row.length.value),
+            count: row.count && parseInt(row.count.value),
         }))
     );
 }

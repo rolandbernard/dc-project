@@ -1,7 +1,12 @@
 import ContentWrap from "../ui/ContentWrap";
 import SearchSelect from "../ui/SearchSelect";
 
-import { municipalityLabel, useMunicipalities } from "../api";
+import {
+    municipalityLabel,
+    useDynamicQuery,
+    useMunicipalities,
+    type QueryFilters,
+} from "../api";
 import { useParam } from "../hooks";
 import { boldQuery } from "../util";
 
@@ -59,6 +64,15 @@ export default function QueryPage() {
     const [municipIds, setMunicipIds] = useParam("municipIds", [] as string[]);
     const [groupBy, setGroupBy] = useParam("groupBy", 0 as number);
     const municips = useMunicipalities();
+    const results = useDynamicQuery({
+        infraTypes: infraTypes,
+        hazardTypes: hazardTypes,
+        domains: domains,
+        dangerLevels: dangerLevels,
+        municipalities: municipIds,
+        groupByMunicipality: !!groupBy,
+    } as QueryFilters);
+    console.log(results);
     return (
         <ContentWrap>
             <div className="grow w-full h-full mb-10">
@@ -68,7 +82,7 @@ export default function QueryPage() {
                 >
                     <div className="p-8 flex flex-col gap-1">
                         <div className="text-sm flex flex-col items-start justify-end pt-0.5 px-1">
-                            <div className="pe-3 text-xs whitespace-nowrap">
+                            <div className="pe-3 text-xs whitespace-nowrap select-none">
                                 Infrastructure Type
                             </div>
                             <SearchFilter
@@ -82,11 +96,11 @@ export default function QueryPage() {
                         </div>
                         <div
                             className={
-                                "text-sm flex flex-col items-start justify-end pt-0.5 px-1" +
+                                "text-sm flex flex-col items-start justify-end pt-0.5 px-1 " +
                                 (infraTypes.length === 0 ? "disabled" : "")
                             }
                         >
-                            <div className="pe-3 text-xs whitespace-nowrap">
+                            <div className="pe-3 text-xs whitespace-nowrap select-none">
                                 Infrastructure Domain
                             </div>
                             <SearchFilter
@@ -99,7 +113,7 @@ export default function QueryPage() {
                             />
                         </div>
                         <div className="text-sm flex flex-col items-start justify-end pt-0.5 px-1">
-                            <div className="pe-3 text-xs whitespace-nowrap">
+                            <div className="pe-3 text-xs whitespace-nowrap select-none">
                                 Hazard Type
                             </div>
                             <SearchFilter
@@ -113,11 +127,11 @@ export default function QueryPage() {
                         </div>
                         <div
                             className={
-                                "text-sm flex flex-col items-start justify-end pt-0.5 px-1" +
+                                "text-sm flex flex-col items-start justify-end pt-0.5 px-1 " +
                                 (hazardTypes.length === 0 ? "disabled" : "")
                             }
                         >
-                            <div className="pe-3 text-xs whitespace-nowrap">
+                            <div className="pe-3 text-xs whitespace-nowrap select-none">
                                 Danger Level
                             </div>
                             <SearchFilter
@@ -130,7 +144,7 @@ export default function QueryPage() {
                             />
                         </div>
                         <div className="text-sm flex flex-col items-start justify-end pt-0.5 px-1">
-                            <div className="pe-3 text-xs whitespace-nowrap">
+                            <div className="pe-3 text-xs whitespace-nowrap select-none">
                                 Municipality
                             </div>
                             <SearchFilter
