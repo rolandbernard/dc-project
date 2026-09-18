@@ -42,10 +42,10 @@ export interface SparqlQueryResponse {
 
 /** All of the possible pre-build suggestions to setup the application. */
 const allSuggestions: [string, string][] = [
-    ["What are all of the municipalities?", ""],
-    ["What are all of the infrastructure assets?", ""],
-    ["What are all of the hazard zones?", ""],
-    ["Which infrastructure assets are exposed to hazards?", ""],
+    ["What are all of the municipalities?", "#/?hazardTypes=[]&infraTypes=[]"],
+    ["What are all of the infrastructure assets?", "#/?hazardTypes=[]"],
+    ["What are all of the hazard zones?", "#/?infraTypes=[]"],
+    ["Which infrastructure assets are exposed to hazards?", "#/?dangerLevels=[Medium%2CHigh%2CVeryHigh]"],
     [
         "Which water-related infrastructure nodes are located within high risk landslide zones?",
         "",
@@ -167,6 +167,7 @@ export interface SimpleMunicipality {
     name_de: string;
     name_it: string;
     name_ld?: string;
+    geometry?: string;
 }
 
 /**
@@ -188,15 +189,15 @@ export function municipalityLabel(municip: SimpleMunicipality) {
  *
  * @returns The municipalities present in the dataset or `undefined` while leading.
  */
-export function useMunicipalities() {
+export function useMunicipalities(geometry: boolean = false) {
     const result = useSparqlQuery(`
 PREFIX : <http://rolandb.com/ontologies/dc#>
 
-SELECT ?municipality ?nameIt ?nameDe ?nameLd
+SELECT ?municipality ?nameIt ?nameDe ?nameLd ${geometry ? "?geometry" : ""}
 WHERE {
     ?municipality a :Municipality ;
         :nameIt ?nameIt ;
-        :nameDe ?nameDe .
+        :nameDe ?nameDe ${geometry ? " ; :geometry ?geometry" : ""} .
     OPTIONAL { ?municipality :nameLd ?nameLd . }
 }
 `);
@@ -204,9 +205,10 @@ WHERE {
         result &&
         result.results.bindings.map(row => ({
             iri: row.municipality!.value,
-            name_de: row.nameIt!.value,
-            name_it: row.nameDe!.value,
+            name_de: row.nameDe!.value,
+            name_it: row.nameIt!.value,
             name_ld: row.nameLd?.value,
+            geometry: row.geometry?.value,
         }))
     );
 }
@@ -245,20 +247,30 @@ export function buildDynamicSparql(config: QueryFilters) {
     const onlyMunicipality = infraTypes.length + hazardTypes.length === 0;
     const selectClause = [
         groupByMunicipality && !onlyMunicipality
-            ? "?municipality (SAMPLE(?nameIt) AS ?nameIt) (SAMPLE(?nameDe) AS ?nameDe) " +
-              "(SAMPLE(?nameLd) AS ?nameLd) (SAMPLE(?municipGeometry) AS ?municipGeometry)"
+            ? "?municipality (SAMPLE(?nameIt) AS ?nameIt) (SAMPLE(?nameDe) AS ?nameDe) (SAMPLE(?nameLd) AS ?nameLd)"
             : "?municipality ?nameIt ?nameDe ?nameLd" +
-              (onlyMunicipality ? " ?municipGeometry" : ""),
+              (onlyMunicipality
+                  ? " ?municipArea ?municipGeometry ?district ?distrNameDe ?distrNameIt"
+                  : ""),
     ];
     const whereConditions = [
         "?municipality a :Municipality ;\n" +
-            (groupByMunicipality || onlyMunicipality
-                ? "        :geometry ?municipGeometry ; \n"
+            (onlyMunicipality
+                ? "        :geometry ?municipGeometry ; \n" +
+                  "        :municipalityArea ?municipArea ; \n" +
+                  "        :belongsTo ?district ; \n"
                 : "") +
             "        :nameIt ?nameIt ;\n" +
             "        :nameDe ?nameDe .",
         "OPTIONAL { ?municipality :nameLd ?nameLd . }",
     ];
+    if (onlyMunicipality) {
+        whereConditions.push(
+            "?district a :District ;\n" +
+                "        :districtNameDe ?distrNameDe ;\n" +
+                "        :districtNameIt ?distrNameIt .",
+        );
+    }
     if (municipalities.length !== 0) {
         whereConditions.push(
             `VALUES ?municipality {${municipalities.map(iri => `<${iri}>`).join(" ")}}`,
@@ -286,9 +298,13 @@ export function buildDynamicSparql(config: QueryFilters) {
                     "        :geometry ?infraGeometry .",
             );
         }
-        whereConditions.push(
-            "OPTIONAL { ?infrastructure :lineLength ?length. }",
-        );
+        if (infraTypes.includes("Line")) {
+            whereConditions.push(
+                infraTypes.includes("Node")
+                    ? "OPTIONAL { ?infrastructure :lineLength ?length . }"
+                    : "?infrastructure :lineLength ?length .",
+            );
+        }
         if (domains.length === 1) {
             whereConditions.push(
                 `?infrastructure a :${domains[0]}Infrastructure .`,
@@ -302,6 +318,9 @@ export function buildDynamicSparql(config: QueryFilters) {
     }
     if (hazardTypes.length !== 0) {
         const prefix = hazardTypes.length === 2 ? "Hazard" : hazardTypes[0];
+        if (infraTypes.length !== 0 && groupByMunicipality) {
+            whereConditions.push("FILTER EXISTS {")
+        }
         if (infraTypes.length === 0) {
             if (groupByMunicipality) {
                 selectClause.push(
@@ -309,6 +328,7 @@ export function buildDynamicSparql(config: QueryFilters) {
                 );
                 whereConditions.push(
                     `?hazard a :${prefix}Zone ;\n` +
+                        "        :hazardArea ?area ;\n" +
                         "        :hazardZoneIn ?municipality .",
                 );
             } else {
@@ -318,14 +338,14 @@ export function buildDynamicSparql(config: QueryFilters) {
                 whereConditions.push(
                     `?hazard a :${prefix}Zone ;\n` +
                         "        :hazardZoneIn ?municipality ;\n" +
-                        "        :processNameIt ?processDe ;\n" +
-                        "        :processNameDe ?processIt ;\n" +
-                        "        :dangerNameIt ?dangerDe ;\n" +
-                        "        :dangerNameDe ?dangerIt ;\n" +
+                        "        :processNameIt ?processIt ;\n" +
+                        "        :processNameDe ?processDe ;\n" +
+                        "        :dangerNameIt ?dangerIt ;\n" +
+                        "        :dangerNameDe ?dangerDe ;\n" +
+                        "        :hazardArea ?area ;\n" +
                         "        :geometry ?hazardGeometry .",
                 );
             }
-            whereConditions.push("OPTIONAL { ?hazard :hazardArea ?area. }");
         } else {
             whereConditions.push(`?hazard a :${prefix}Zone .`);
         }
@@ -340,9 +360,16 @@ export function buildDynamicSparql(config: QueryFilters) {
     }
     if (infraTypes.length !== 0 && hazardTypes.length !== 0) {
         whereConditions.push("?infrastructure :isExposedTo ?hazard .");
+        if (groupByMunicipality) {
+            whereConditions.push("}")
+        }
     }
-    const groupByClause = groupByMunicipality ? "GROUP BY ?municipality" : "";
-    const orderByClause = "";
+    const groupByClause =
+        groupByMunicipality && !onlyMunicipality
+            ? "GROUP BY ?municipality"
+            : "";
+    const orderByClause =
+        groupByMunicipality && !onlyMunicipality ? "ORDER BY DESC(?count)" : "";
     const limitClause = limit >= 0 ? `LIMIT ${limit}` : "";
     // Assemble the final SPARQL query.
     return `
@@ -392,11 +419,21 @@ export interface Infrastructure {
 }
 
 /**
+ * District information returned by the dynamic queries.
+ */
+export interface District {
+    iri: string;
+    name_de: string;
+    name_it: string;
+}
+
+/**
  * The results of the dynamic query, reshaped to be more easily used for the
  * purposes of the later display in the application.
  */
 export interface QueryResult {
     municipality: Municipality;
+    district?: District;
     hazard?: Hazard;
     area?: number;
     infrastructure?: Infrastructure;
@@ -421,11 +458,16 @@ export function useDynamicQuery(
         result.results.bindings.map(row => ({
             municipality: {
                 iri: row.municipality!.value,
-                name_de: row.nameIt!.value,
-                name_it: row.nameDe!.value,
+                name_de: row.nameDe!.value,
+                name_it: row.nameIt!.value,
                 name_ld: row.nameLd?.value,
                 area: row.municipArea && parseFloat(row.municipArea.value),
                 geometry: row.municipGeometry?.value,
+            },
+            district: row.district && {
+                iri: row.district.value,
+                name_de: row.distrNameDe!.value,
+                name_it: row.distrNameIt!.value,
             },
             hazard: row.hazard && {
                 iri: row.hazard.value,
@@ -446,4 +488,28 @@ export function useDynamicQuery(
             count: row.count && parseInt(row.count.value),
         }))
     );
+}
+
+/**
+ * Detect the type of the given query results.
+ * @param results The results to analyze.
+ * @returns The type of results we are dealing with.
+ */
+export function detectResultType(
+    results: undefined | QueryResult[],
+): "unknown" | "municip" | "infra" | "hazard" | "group-infra" | "group-hazard" {
+    const sample = results?.[0]!;
+    if (!sample) {
+        return "unknown";
+    } else if (sample.infrastructure) {
+        return "infra";
+    } else if (sample.hazard) {
+        return "hazard";
+    } else if (sample.area) {
+        return "group-hazard";
+    } else if (sample.count) {
+        return "group-infra";
+    } else {
+        return "municip";
+    }
 }

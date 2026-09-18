@@ -12,7 +12,7 @@ export default function ObjectPage() {
             <div className="grow w-full h-full mb-10">
                 <article
                     className="rounded-xl bg-base-300/40 overflow-hidden mt-6"
-                    style={{ viewTransitionName: "article" }}
+                    style={{ viewTransitionName: "object" }}
                 >
                     Hello
                 </article>

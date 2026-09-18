@@ -9,6 +9,7 @@ import {
 } from "../api";
 import { useParam } from "../hooks";
 import { boldQuery } from "../util";
+import TableView from "../ui/TableView";
 
 const INFRA_TYPES = ["Line", "Node"];
 const HAZARD_TYPES = ["Landslide", "Avalanche"];
@@ -72,7 +73,6 @@ export default function QueryPage() {
         municipalities: municipIds,
         groupByMunicipality: !!groupBy,
     } as QueryFilters);
-    console.log(results);
     return (
         <ContentWrap>
             <div className="grow w-full h-full mb-10">
@@ -183,6 +183,7 @@ export default function QueryPage() {
                             </label>
                         </div>
                     </div>
+                    <TableView name="table" data={results} />
                 </article>
             </div>
         </ContentWrap>

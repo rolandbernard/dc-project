@@ -8,7 +8,7 @@
 
 * {
     transition-property: all;
-    transition-duration: 200ms;
+    transition-duration: 100ms;
     outline: none;
 }
 
@@ -25,7 +25,7 @@
 }
 
 ::view-transition-group(*) {
-    animation-duration: 300ms;
+    animation-duration: 100ms;
 }
 
 ::view-transition-old(*),
