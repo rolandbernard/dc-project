@@ -199,8 +199,7 @@ WHERE {
         :nameIt ?nameIt ;
         :nameDe ?nameDe ${geometry ? " ; :geometry ?geometry" : ""} .
     OPTIONAL { ?municipality :nameLd ?nameLd . }
-}
-`);
+}`);
     return (
         result &&
         result.results.bindings.map(row => ({
