@@ -70,6 +70,20 @@ export function useTheme(): [string, (v: string) => void] {
 }
 
 /**
+ * This is a hook that can be used to observe the current theme status.
+ *
+ * @returns The currently active theme value.
+ */
+export function useColorTheme(): string {
+    const [theme] = useTheme();
+    return theme === "system"
+        ? matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light"
+        : theme;
+}
+
+/**
  * This is a variation of the standard `useState` hook that additionally receives
  * an array of dependencies, and when any of them change the state will be reset
  * to it's default value.
@@ -175,7 +189,7 @@ export function useParam<T extends ParamType>(
     );
     useEffect(() => {
         setInnerValue(decodeParam<T>(getCurrentQuery().get(name) ?? defValue));
-    }, [location.search, defValue, name]);
+    }, [location.hash, defValue, name]);
     const setValue = useCallback(
         (v: T) => {
             let newValue: string | null = encodeParam(v);

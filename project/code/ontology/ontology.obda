@@ -15,12 +15,12 @@ source		SELECT code, name_it, name_de
 
 mappingId	MAP-MUNICIPALITY
 target		:municipality/{istat_code} a :Municipality ; :istatCode {istat_code}^^xsd:integer ; :zipCode {zip_code}^^xsd:integer ; :nameIt {name_it}^^xsd:string ; :nameDe {name_de}^^xsd:string ; :nameLd {name_ld}^^xsd:string ; :municipalityArea {area}^^xsd:double ; :geometry {geom}^^xsd:string ; :belongsTo :district/{distr_code} . 
-source		SELECT istat_code, zip_code, distr_code, name_it, name_de, name_ld, ST_Area(ST_MakeValid(geom)::geography) AS area, ST_AsText(geom) AS geom
+source		SELECT istat_code, zip_code, distr_code, name_it, name_de, name_ld, ST_Area(ST_MakeValid(geom)::geography) AS area, ST_AsText(geom, 5) AS geom
 			FROM Municipality
 
 mappingId	MAP-INFRASTRUCTURE-LINE
 target		:infrastructure-line/{code} a :InfrastructureLine ; :infrastructureIn :municipality/{istat_code} ; :infrastructureCode {code}^^xsd:integer ; :lineLength {len}^^xsd:double ; :geometry {geom}^^xsd:string . 
-source		SELECT code, istat_code, ST_Length(geom::geography) AS len, ST_AsText(geom) AS geom
+source		SELECT code, istat_code, ST_Length(geom::geography) AS len, ST_AsText(geom, 5) AS geom
 			FROM InfrastructureLine
 
 mappingId	MAP-INFRASTRUCTURE-LINE-TYPE
@@ -31,7 +31,7 @@ source		SELECT InfrastructureLine.code, name_it, name_de
 
 mappingId	MAP-INFRASTRUCTURE-NODE
 target		:infrastructure-node/{code} a :InfrastructureNode ; :infrastructureIn :municipality/{istat_code} ; :infrastructureCode {code}^^xsd:integer ; :geometry {geom}^^xsd:string . 
-source		SELECT code, istat_code, ST_AsText(geom) AS geom
+source		SELECT code, istat_code, ST_AsText(geom, 5) AS geom
 			FROM InfrastructureNode
 
 mappingId	MAP-INFRASTRUCTURE-NODE-TYPE
@@ -91,7 +91,7 @@ source		SELECT InfrastructureNode.code
 
 mappingId	MAP-HAZARD-LANDSLIDE
 target		:hazard-landslide/{code} a :LandslideZone ; :hazardZoneIn :municipality/{istat_code} ; :hazardCode {code}^^xsd:integer ; :hazardArea {area}^^xsd:double ; :geometry {geom}^^xsd:string . 
-source		SELECT code, istat_code, ST_Area(ST_MakeValid(geom)::geography) AS area, ST_AsText(geom) AS geom
+source		SELECT code, istat_code, ST_Area(ST_MakeValid(geom)::geography) AS area, ST_AsText(geom, 5) AS geom
 			FROM LandslideHazard
 
 mappingId	MAP-HAZARD-LANDSLIDE-DANGER
@@ -108,7 +108,7 @@ source		SELECT LandslideHazard.code, name_it, name_de
 
 mappingId	MAP-HAZARD-AVALANCHE
 target		:hazard-avalanche/{code} a :AvalancheZone ; :hazardZoneIn :municipality/{istat_code} ; :hazardCode {code}^^xsd:integer ; :hazardArea {area}^^xsd:double ; :geometry {geom}^^xsd:string . 
-source		SELECT code, istat_code, ST_Area(ST_MakeValid(geom)::geography) AS area, ST_AsText(geom) AS geom
+source		SELECT code, istat_code, ST_Area(ST_MakeValid(geom)::geography) AS area, ST_AsText(geom, 5) AS geom
 			FROM AvalancheHazard
 
 mappingId	MAP-HAZARD-AVALANCHE-DANGER

@@ -43,7 +43,7 @@ function TableRow(props: RowProps) {
                                     {props.row.infrastructure!.kind_de}
                                 </Link>
                             </div>
-                            <div className="whitespace-nowrap flex flex-row justify-end not-sm:hidden">
+                            <div className="whitespace-nowrap flex flex-row justify-end not-sm:hidden pe-2">
                                 {props.row.length
                                     ? `${Math.round(props.row.length)} m`
                                     : "NODE"}
@@ -154,14 +154,14 @@ function InnerTableView(props: InnerProps) {
             className={
                 "flex-1 min-h-0 overflow-hidden grid auto-rows-fr " +
                 (props.from + STEP < 100
-                    ? "grid-cols-[3em_1fr]"
+                    ? "grid-cols-[2.5em_1fr]"
                     : props.from + STEP < 1000
-                      ? "grid-cols-[3.5em_1fr]"
+                      ? "grid-cols-[3em_1fr]"
                       : props.from + STEP < 10000
-                        ? "grid-cols-[4em_1fr]"
+                        ? "grid-cols-[3.5em_1fr]"
                         : props.from + STEP < 100000
-                          ? "grid-cols-[4.5em_1fr]"
-                          : "grid-cols-[5em_1fr]") +
+                          ? "grid-cols-[4em_1fr]"
+                          : "grid-cols-[4.5em_1fr]") +
                 (loaded ? "" : " loading")
             }
         >
@@ -188,7 +188,7 @@ function InnerTableView(props: InnerProps) {
                                     Count
                                 </div>
                                 <div className="whitespace-nowrap flex flex-row justify-end">
-                                    Length
+                                    Σ Length
                                 </div>
                             </div>
                         ) : type === "group-hazard" ? (
@@ -197,7 +197,7 @@ function InnerTableView(props: InnerProps) {
                                     Count
                                 </div>
                                 <div className="whitespace-nowrap flex flex-row justify-end">
-                                    Area
+                                    Σ Area
                                 </div>
                             </div>
                         ) : (
@@ -209,37 +209,41 @@ function InnerTableView(props: InnerProps) {
                                     District
                                 </div>
                             </div>
-                        )}{" "}
+                        )}
                     </>
                 )}
             </div>
-            {results.map((r, i) =>
-                r ? (
-                    <>
-                        <div className="min-h-0 flex flex-row justify-end items-center text-content/60">
-                            {props.from + i + 1}
-                        </div>
-                        <TableRow row={r} />
-                    </>
-                ) : (
-                    <div
-                        key={i}
-                        className="flex justify-center items-center text-content/60 col-span-2 p-1"
-                    >
-                        {loaded
-                            ? (i === 0 || results[i - 1]) &&
-                              results.slice(i + 1).every(r => !r)
-                                ? "At the end."
-                                : ""
-                            : i ==
-                                Math.trunc(
-                                    results.length -
-                                        results.filter(r => !r).length / 2,
-                                )
-                              ? "Loading..."
-                              : ""}
-                    </div>
-                ),
+            {results.flatMap((r, i) =>
+                r
+                    ? [
+                          <div
+                              key={i * 2}
+                              className="min-h-0 flex flex-row justify-end items-center text-content/60"
+                          >
+                              {props.from + i + 1}
+                          </div>,
+                          <TableRow key={i * 2 + 1} row={r} />,
+                      ]
+                    : [
+                          <div
+                              key={i * 2}
+                              className="flex justify-center items-center text-content/60 col-span-2 p-1"
+                          >
+                              {loaded
+                                  ? (i === 0 || results[i - 1]) &&
+                                    results.slice(i + 1).every(r => !r)
+                                      ? "At the end."
+                                      : ""
+                                  : i ==
+                                      Math.trunc(
+                                          results.length -
+                                              results.filter(r => !r).length /
+                                                  2,
+                                      )
+                                    ? "Loading..."
+                                    : ""}
+                          </div>,
+                      ],
             )}
         </div>
     );
@@ -265,7 +269,7 @@ export default function TableView(props: Props) {
                 to={start + STEP}
                 onAtEnd={e => setAtEnd(e)}
             />
-            <div className="grow-0 flex flex-row items-center justify-center text-sm">
+            <div className="grow-0 flex flex-row items-center justify-center text-sm pt-1">
                 <button
                     className="flex items-center justify-center w-8 h-8 mx-1 not-disabled:cursor-pointer
                         rounded-box not-disabled:hover:bg-content/10 not-disabled:dark:hover:bg-content/15 border

@@ -59,7 +59,7 @@ export default function SearchBar<K>(props: Props<K>) {
                 <input
                     type="text"
                     className={
-                        "block w-full px-3 py-2 border-2 border-border outline-none text-sm " +
+                        "block w-full px-3 py-1.75 border-2 border-border outline-none text-sm " +
                         "rounded-field focus-visible:border-primary " +
                         "hover:bg-content/3 dark:hover:bg-content/8 " +
                         (props.placeholderItalic !== false

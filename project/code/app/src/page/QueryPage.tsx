@@ -1,7 +1,12 @@
 import ContentWrap from "../ui/ContentWrap";
 import SearchSelect from "../ui/SearchSelect";
 
+import TableView from "../ui/TableView";
+import Selector from "../ui/Selector";
+import SparqlView from "../ui/SparqlView";
+
 import {
+    buildDynamicSparql,
     municipalityLabel,
     useDynamicQuery,
     useMunicipalities,
@@ -9,7 +14,6 @@ import {
 } from "../api";
 import { useParam } from "../hooks";
 import { boldQuery } from "../util";
-import TableView from "../ui/TableView";
 
 const INFRA_TYPES = ["Line", "Node"];
 const HAZARD_TYPES = ["Landslide", "Avalanche"];
@@ -64,23 +68,25 @@ export default function QueryPage() {
     );
     const [municipIds, setMunicipIds] = useParam("municipIds", [] as string[]);
     const [groupBy, setGroupBy] = useParam("groupBy", 0 as number);
+    const [view, setView] = useParam("view", "Results" as string);
     const municips = useMunicipalities();
-    const results = useDynamicQuery({
+    const config = {
         infraTypes: infraTypes,
         hazardTypes: hazardTypes,
         domains: domains,
         dangerLevels: dangerLevels,
         municipalities: municipIds,
         groupByMunicipality: !!groupBy,
-    } as QueryFilters);
+    } as QueryFilters;
+    const results = useDynamicQuery(config);
     return (
         <ContentWrap>
             <div className="grow w-full h-full mb-10">
                 <article
-                    className="rounded-xl bg-base-300/40 mt-6"
+                    className="rounded-xl bg-base-300/40 mt-6 pb-3"
                     style={{ viewTransitionName: "article" }}
                 >
-                    <div className="p-8 flex flex-col gap-1">
+                    <div className="p-3 pb-6 flex flex-col gap-1">
                         <div className="text-sm flex flex-col items-start justify-end pt-0.5 px-1">
                             <div className="pe-3 text-xs whitespace-nowrap select-none">
                                 Infrastructure Type
@@ -182,8 +188,19 @@ export default function QueryPage() {
                                 </div>
                             </label>
                         </div>
+                        <Selector
+                            name="view-select"
+                            options={["Results", "SPARQL"]}
+                            value={view}
+                            onChange={v => setView(v)}
+                            className="text-xs px-1.5 pt-2"
+                        />
                     </div>
-                    <TableView name="table" data={results} />
+                    {view === "SPARQL" ? (
+                        <SparqlView source={buildDynamicSparql(config)} />
+                    ) : (
+                        <TableView name="table" data={results} />
+                    )}
                 </article>
             </div>
         </ContentWrap>
