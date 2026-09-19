@@ -83,7 +83,7 @@ export default function MapView(props: Props) {
     const [selColor, mainColor] = ["#ffff00", "#3b82f6"];
     return (
         <div
-            className={"h-128 w-full" + (!props.features ? " loading" : "")}
+            className={"h-128 w-full transition-none" + (!props.features ? " loading" : "")}
             onClick={e => {
                 if ((e.target as HTMLElement).tagName === "DIV") {
                     props.onFeatureSelect?.(null);

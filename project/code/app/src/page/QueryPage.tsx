@@ -1,9 +1,12 @@
+import { useMemo, useState } from "react";
+import { ArrowDownToLine, ArrowUpToLine } from "lucide-react";
+
 import ContentWrap from "../ui/ContentWrap";
 import SearchSelect from "../ui/SearchSelect";
-
 import TableView from "../ui/TableView";
 import Selector from "../ui/Selector";
 import SparqlView from "../ui/SparqlView";
+import MapView from "../ui/MapView";
 
 import {
     buildDynamicSparql,
@@ -14,8 +17,6 @@ import {
 } from "../api";
 import { useParam, useStateWithDep } from "../hooks";
 import { boldQuery } from "../util";
-import MapView from "../ui/MapView";
-import { useMemo } from "react";
 
 const INFRA_TYPES = ["Line", "Node"];
 const HAZARD_TYPES = ["Landslide", "Avalanche"];
@@ -98,6 +99,7 @@ export default function QueryPage() {
         () => null,
         [results],
     );
+    const [collapsed, setCollapsed] = useState(false);
     return (
         <ContentWrap>
             <div className="grow w-full h-full mb-10">
@@ -105,7 +107,14 @@ export default function QueryPage() {
                     className="rounded-xl bg-base-300/40 mt-6 pb-3"
                     style={{ viewTransitionName: "article" }}
                 >
-                    <div className="p-3 pb-6 flex flex-col gap-1">
+                    <div
+                        className={
+                            "p-3 pb-1 flex flex-col gap-1" +
+                            (collapsed
+                                ? " pointer-events-none opacity-0 max-h-0"
+                                : " max-h-96")
+                        }
+                    >
                         <div className="text-sm flex flex-col items-start justify-end pt-0.5 px-1">
                             <div className="pe-3 text-xs whitespace-nowrap select-none">
                                 Infrastructure Type
@@ -207,12 +216,31 @@ export default function QueryPage() {
                                 </div>
                             </label>
                         </div>
+                    </div>
+                    <div className="flex flex-row justify-self-center items-center px-5">
+                        <button
+                            className="flex items-center justify-center w-7 h-7 p-1 not-disabled:cursor-pointer
+                                       rounded-box not-disabled:hover:bg-content/10 not-disabled:dark:hover:bg-content/15 border
+                                       border-transparent active:border-content/10 disabled:text-transparent mt-2 mb-3"
+                            title={
+                                collapsed
+                                    ? "Show Configuration"
+                                    : "Hide Configuration"
+                            }
+                            onClick={_e => setCollapsed(!collapsed)}
+                        >
+                            {collapsed ? (
+                                <ArrowDownToLine />
+                            ) : (
+                                <ArrowUpToLine />
+                            )}
+                        </button>
                         <Selector
                             name="view-select"
                             options={["Results", "SPARQL"]}
                             value={view}
                             onChange={v => setView(v)}
-                            className="text-xs px-1.5 pt-2"
+                            className="text-xs ms-2 pt-2 pb-3 w-full"
                         />
                     </div>
                     {view === "SPARQL" ? (
