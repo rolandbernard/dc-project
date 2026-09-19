@@ -89,7 +89,7 @@ services:
       - frontend
     ports:
       - "${PORT_FRONTEND:-8888}:${PORT_FRONTEND:-8888}"
-    command: [ "/app/serve.sh" ]
+    command: [ "python", "/app/serve.py" ]
     environment:
       PORT: ${PORT_FRONTEND:-8888}
     healthcheck:

@@ -8,7 +8,8 @@ RUN npm run build
 FROM python:3.14.2-slim-trixie
 WORKDIR /app
 # Copy the entrypoint script.
-COPY serve.sh .
-RUN chmod a+x serve.sh
+COPY serve.py .
 # Copy build output for the web application.
 COPY --from=build-web /app/dist ./dist
+# Move working directory into dist.
+WORKDIR /app/dist
