@@ -5,7 +5,7 @@
 
 if ! python -m http.server \
     -d /app/dist \
-    ${PORT_FRONTEND:-8888}
+    ${PORT:-8888}
 then
     echo "The webserver failed."
     exit 1
