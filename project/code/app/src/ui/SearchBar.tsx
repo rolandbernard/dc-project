@@ -77,7 +77,7 @@ export default function SearchBar<K>(props: Props<K>) {
             query.length !== 0 ? (
                 <div
                     className="absolute inset-y-full end-0 w-full hidden focus-within:block
-                               peer-focus-within:block hover:block active:block z-50"
+                               peer-focus-within:block hover:block active:block z-10000"
                 >
                     <div
                         className={

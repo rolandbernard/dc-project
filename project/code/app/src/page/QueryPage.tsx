@@ -20,7 +20,7 @@ import { boldQuery } from "../util";
 
 const INFRA_TYPES = ["Line", "Node"];
 const HAZARD_TYPES = ["Landslide", "Avalanche"];
-const DOMAINS = ["Water", "Energy", "Waste", "Communication"];
+const DOMAINS = ["Water", "Energy", "Waste", "Communication", "Electricity"];
 const DANGER_LEVELS = ["Low", "Medium", "High", "VeryHigh"];
 
 interface SearchInputProps<V> {

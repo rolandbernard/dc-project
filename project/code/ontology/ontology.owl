@@ -338,6 +338,14 @@
     
 
 
+    <!-- http://rolandb.com/ontologies/dc#ElectricityInfrastructure -->
+
+    <owl:Class rdf:about="http://rolandb.com/ontologies/dc#ElectricityInfrastructure">
+        <rdfs:subClassOf rdf:resource="http://rolandb.com/ontologies/dc#EnergyInfrastructure"/>
+    </owl:Class>
+    
+
+
     <!-- http://rolandb.com/ontologies/dc#EnergyInfrastructure -->
 
     <owl:Class rdf:about="http://rolandb.com/ontologies/dc#EnergyInfrastructure">

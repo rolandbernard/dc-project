@@ -48,23 +48,19 @@ const allSuggestions: [string, string][] = [
     ["Which infrastructure assets are exposed to hazards?", "#/?dangerLevels=[Medium%2CHigh%2CVeryHigh]"],
     [
         "Which water-related infrastructure nodes are located within high risk landslide zones?",
-        "",
+        "#/?hazardTypes=[Landslide]&infraTypes=[Node]&domains=[Water]&dangerLevels=[High%2CVeryHigh]",
     ],
     [
         "What are the infrastructure lines that intersect with avalanche-prone areas?",
-        "",
+        "#/?infraTypes=[Line]&hazardTypes=[Avalanche]&dangerLevels=[Medium%2CHigh%2CVeryHigh]",
     ],
     [
         "In a given Municipality, how many electricity lines are currently situated in a hazard zone?",
-        "",
+        "#/?infraTypes=[Line]&hazardTypes=[Avalanche%2CLandslide]&domains=[Electricity]&municipIds=[http%3A%2F%2Frolandb.com%2Fontologies%2Fdc%23municipality%2F21008]&groupBy=1",
     ],
     [
         "Which municipalities have the highest count of infrastructure elements exposed to natural hazards?",
-        "",
-    ],
-    [
-        "Municipalities with the largest area subject to natural hazards of high or very high danger level?",
-        "",
+        "#/?hazardTypes=[Avalanche%2CLandslide]&groupBy=1&dangerLevels=[Medium%2CHigh%2CVeryHigh]",
     ],
 ];
 
@@ -219,7 +215,7 @@ WHERE {
 export interface QueryFilters {
     infraTypes?: ("Line" | "Node")[];
     hazardTypes?: ("Landslide" | "Avalanche")[];
-    domains?: ("Energy" | "Communication" | "Water" | "Waste")[];
+    domains?: ("Energy" | "Communication" | "Water" | "Waste" | "Electricity")[];
     dangerLevels?: ("Low" | "Medium" | "High" | "VeryHigh")[];
     municipalities?: string[];
     groupByMunicipality?: boolean;
