@@ -11,16 +11,25 @@ const STEP = 20;
 
 interface RowProps {
     row: QueryResult;
+    selected: boolean;
+    onClick?: () => void;
 }
 
 function TableRow(props: RowProps) {
     const type = detectResultType([props.row]);
     return (
-        <div className="min-h-0 grid grid-cols-[1fr_2fr] not-sm:grid-cols-2 p-1 text-content">
+        <div
+            className={
+                "min-h-0 grid grid-cols-[1fr_2fr] not-sm:grid-cols-2 p-1 text-content rounded mx-1 " +
+                (props.selected ? "bg-content/6 dark:bg-content/10 " : "") +
+                (props.onClick ? "hover:bg-content/6 dark:hover:bg-content/10 cursor-pointer" : "")
+            }
+            onClick={props.onClick}
+        >
             {type !== "unknown" && (
                 <>
                     <div
-                        className="overflow-hidden text-ellipsis whitespace-nowrap px-2"
+                        className="overflow-hidden text-ellipsis whitespace-nowrap px-1"
                         title={municipalityLabel(props.row.municipality)}
                     >
                         <Link
@@ -124,6 +133,8 @@ interface InnerProps {
     from: number;
     to: number;
     onAtEnd?: (atEnd: boolean) => void;
+    onFeatureSelect?: (feature: number | null) => void;
+    selectedId?: number | null;
 }
 
 function InnerTableView(props: InnerProps) {
@@ -222,7 +233,18 @@ function InnerTableView(props: InnerProps) {
                           >
                               {props.from + i + 1}
                           </div>,
-                          <TableRow key={i * 2 + 1} row={r} />,
+                          <TableRow
+                              key={i * 2 + 1}
+                              row={r}
+                              selected={props.selectedId === props.from + i}
+                              onClick={() =>
+                                  props.onFeatureSelect?.(
+                                      props.selectedId === props.from + i
+                                          ? null
+                                          : props.from + i,
+                                  )
+                              }
+                          />,
                       ]
                     : [
                           <div
@@ -252,13 +274,21 @@ function InnerTableView(props: InnerProps) {
 interface Props {
     name: string;
     data: undefined | QueryResult[];
+    onFeatureSelect?: (feature: number | null) => void;
+    selectedId?: number | null;
 }
 
 export default function TableView(props: Props) {
     const [rawStart, setStart] = useParam<number>(`${props.name}start`, 0);
-    const start = props.data
+    let start = props.data
         ? Math.min(rawStart, props.data?.length - 1)
         : rawStart;
+    if (props.selectedId) {
+        start = Math.max(
+            Math.min(start, props.selectedId),
+            props.selectedId - STEP + 1,
+        );
+    }
     const [pageInput, setPageInput] = useState<string | null>(null);
     const [atEnd, setAtEnd] = useState(false);
     return (
@@ -268,6 +298,8 @@ export default function TableView(props: Props) {
                 from={start}
                 to={start + STEP}
                 onAtEnd={e => setAtEnd(e)}
+                onFeatureSelect={props.onFeatureSelect}
+                selectedId={props.selectedId}
             />
             <div className="grow-0 flex flex-row items-center justify-center text-sm pt-1">
                 <button

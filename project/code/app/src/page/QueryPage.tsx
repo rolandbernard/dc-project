@@ -12,8 +12,10 @@ import {
     useMunicipalities,
     type QueryFilters,
 } from "../api";
-import { useParam } from "../hooks";
+import { useParam, useStateWithDep } from "../hooks";
 import { boldQuery } from "../util";
+import MapView from "../ui/MapView";
+import { useMemo } from "react";
 
 const INFRA_TYPES = ["Line", "Node"];
 const HAZARD_TYPES = ["Landslide", "Avalanche"];
@@ -69,7 +71,7 @@ export default function QueryPage() {
     const [municipIds, setMunicipIds] = useParam("municipIds", [] as string[]);
     const [groupBy, setGroupBy] = useParam("groupBy", 0 as number);
     const [view, setView] = useParam("view", "Results" as string);
-    const municips = useMunicipalities();
+    const municips = useMunicipalities(true);
     const config = {
         infraTypes: infraTypes,
         hazardTypes: hazardTypes,
@@ -79,6 +81,23 @@ export default function QueryPage() {
         groupByMunicipality: !!groupBy,
     } as QueryFilters;
     const results = useDynamicQuery(config);
+    const geometries = useMemo(
+        () =>
+            results?.map((e, i) => ({
+                id: i,
+                name: "",
+                wkt:
+                    e.infrastructure?.geometry ||
+                    e.hazard?.geometry ||
+                    municips?.find(m => m.iri === e.municipality.iri)!
+                        .geometry!,
+            })),
+        [results, municips],
+    );
+    const [selected, setSelected] = useStateWithDep<number | null>(
+        () => null,
+        [results],
+    );
     return (
         <ContentWrap>
             <div className="grow w-full h-full mb-10">
@@ -199,7 +218,19 @@ export default function QueryPage() {
                     {view === "SPARQL" ? (
                         <SparqlView source={buildDynamicSparql(config)} />
                     ) : (
-                        <TableView name="table" data={results} />
+                        <div>
+                            <MapView
+                                features={geometries}
+                                selectedId={selected}
+                                onFeatureSelect={setSelected}
+                            />
+                            <TableView
+                                name="table"
+                                data={results}
+                                selectedId={selected}
+                                onFeatureSelect={setSelected}
+                            />
+                        </div>
                     )}
                 </article>
             </div>
