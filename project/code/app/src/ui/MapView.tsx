@@ -93,7 +93,7 @@ export default function MapView(props: Props) {
             <MapContainer
                 center={[0, 0]}
                 zoom={10}
-                maxZoom={14}
+                maxZoom={16}
                 style={{
                     width: "100%",
                     height: "100%",

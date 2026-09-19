@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router";
 
 import ContentWrap from "../ui/ContentWrap";
 import { useSparqlQuery } from "../api";
+import MapView from "../ui/MapView";
 
 const PREFIX = "http://rolandb.com/ontologies/dc#";
 const RENAME = [
@@ -74,41 +75,59 @@ SELECT DISTINCT ?property ?value WHERE {
                                         b.property!.value.endsWith(n!),
                                     );
                                     return (
-                                        <div className="p-2 flex flex-col border border-border/50 rounded-box min-w-0 bg-base-200">
-                                            <div className="text-xs pb-1">
-                                                {rename?.[1] ??
-                                                    b.property!.value.replaceAll(
-                                                        PREFIX,
-                                                        "",
-                                                    )}
-                                            </div>
-                                            <span className="select-text">
-                                                {b.value!.type === "uri" &&
-                                                !b.property!.value.endsWith(
-                                                    "#type",
-                                                ) ? (
-                                                    <Link
-                                                        to={`/object/${encodeURIComponent(b.value!.value)}`}
-                                                        className="underline text-primary dark:hover:text-primary/90 hover:text-primary/75"
-                                                    >
-                                                        {b.value!.value.replaceAll(
+                                        <div>
+                                            <div className="p-2 flex flex-col border border-border/50 rounded-box min-w-0 bg-base-200">
+                                                <div className="text-xs pb-1">
+                                                    {rename?.[1] ??
+                                                        b.property!.value.replaceAll(
                                                             PREFIX,
                                                             "",
                                                         )}
-                                                    </Link>
-                                                ) : rename?.[2] ? (
-                                                    Math.round(
-                                                        parseFloat(
-                                                            b.value!.value,
-                                                        ),
-                                                    ) + rename[2]
-                                                ) : (
-                                                    b.value!.value.replaceAll(
-                                                        PREFIX,
-                                                        "",
-                                                    )
-                                                )}
-                                            </span>
+                                                </div>
+                                                <span className="select-text">
+                                                    {b.value!.type === "uri" &&
+                                                    !b.property!.value.endsWith(
+                                                        "#type",
+                                                    ) ? (
+                                                        <Link
+                                                            to={`/object/${encodeURIComponent(b.value!.value)}`}
+                                                            className="underline text-primary dark:hover:text-primary/90 hover:text-primary/75"
+                                                        >
+                                                            {b.value!.value.replaceAll(
+                                                                PREFIX,
+                                                                "",
+                                                            )}
+                                                        </Link>
+                                                    ) : b.property!.value.endsWith(
+                                                          "#geometry",
+                                                      ) ? (
+                                                        <div className="w-lg h-128">
+                                                            <MapView
+                                                                features={[
+                                                                    {
+                                                                        id: 0,
+                                                                        name: "",
+                                                                        wkt: b
+                                                                            .value!
+                                                                            .value,
+                                                                    },
+                                                                ]}
+                                                            />
+                                                        </div>
+                                                    ) : rename?.[2] ? (
+                                                        Math.round(
+                                                            parseFloat(
+                                                                b.value!.value,
+                                                            ),
+                                                        ) + rename[2]
+                                                    ) : (
+                                                        b.value!.value.replaceAll(
+                                                            PREFIX,
+                                                            "",
+                                                        )
+                                                    )}
+                                                </span>
+                                            </div>
                                         </div>
                                     );
                                 })}
