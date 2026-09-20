@@ -34,6 +34,7 @@ Metanome using the HyFD algorithm implementation has been used for the discovery
   \label{tab:bz_infrastructure_line_fd}
 \end{table}
 
+\paragraph{\inlinecode{bz_infrastructure_line}}
 \Cref{tab:bz_infrastructure_line_fd} shows all the minimal functional dependencies discovered by the applied algorithm in the table \inlinecode{bz_infrastructure_line}. Aside from the two columns, \inlinecode{codealt} and \inlinecode{blp}, that are always missing and the three columns, \inlinecode{ogc_fid}, \inlinecode{gml_id}, and \inlinecode{objectid}, that are unique, we can still observe additional interesting information from the other functional dependencies.
 First, it can be seen that \inlinecode{geom} functionally determines many other columns. This is quite intuitive because the geometry of two distinct infrastructure lines is likely not to be the same, unless they go along the same route. The functional dependency shows that all rows with the same geometry belong to the same municipality.
 The functional dependency from \inlinecode{shape_len} to \inlinecode{nda_text_de} and \inlinecode{nda_text_it}, as well as those between \inlinecode{nda_text_de} and \inlinecode{nda_text_it} in both directions, can be explained by the fact that these two columns are constant except for the fact that they are missing in some rare cases.
@@ -68,6 +69,7 @@ Finally, like in the case of the municipality, there are also three columns, \in
   \label{tab:bz_infrastructure_node_fd}
 \end{table}
 
+\paragraph{\inlinecode{bz_infrastructure_node}}
 The functional dependencies discovered in the \inlinecode{bz_infrastructure_node} table are shown \cref{tab:bz_infrastructure_node_fd}. Largely the picture is very similar to that seen for the table \inlinecode{bz_infrastructure_line}.
 Since this table is not missing municipality information for any row, the columns \inlinecode{nda_text_de} and \inlinecode{nda_text_it} are both also constant.
 Interestingly, in this case the geometry in \inlinecode{geom} functionally identifies all other variables except for the identifiers. This indicates two distinct infrastructure nodes can be at the same location and with the same properties.
@@ -116,6 +118,7 @@ Lastly, the functional dependencies related to municipalities and infrastructure
   \label{tab:bz_hazard_landslide_fd}
 \end{table}
 
+\paragraph{\inlinecode{bz_hazard_landslide}}
 For the table \inlinecode{bz_hazard_landslide} a very large number of 255 functional dependencies has been discovered. However, many of them are not particularly meaningfully, because they use one or more from \inlinecode{geom}, \inlinecode{x_label}, and \inlinecode{y_label}. These columns are related to the location of the hazard area, and as such are already nearly unique. This means that adding additional columns quickly indices functional dependencies. For this reason, these functional dependencies have been removed from \cref{tab:bz_hazard_landslide_fd}.
 In the remaining functional dependencies, aside from the unique or constant columns, a number of different interesting observations can be made. 
 First, like with the infrastructure tables, this table contains information about the municipalities that are made up of the columns \inlinecode{istat_code}, \inlinecode{name_i}, \inlinecode{name_d}, and \inlinecode{gem_id}. Note that all of these except \inlinecode{gem_id} could be used to identify the municipality.
@@ -157,6 +160,7 @@ A very similar situation is also present for the investigation depth, where \inl
   \label{tab:bz_hazard_avalanche_fd}
 \end{table}
 
+\paragraph{\inlinecode{bz_hazard_avalanche}}
 The functional dependencies for table \inlinecode{bz_hazard_avalanche} are show in \cref{tab:bz_hazard_avalanche_fd}. Again, because in total the algorithm fount 281 different functional dependencies, \cref{tab:bz_hazard_avalanche_fd} removes some of them that contain \inlinecode{geom}, \inlinecode{x_label}, or \inlinecode{y_label} that are largely not insightful.
 The overall structure of the functional dependencies is very similar to that for the landslide hazard zone dataset. The main difference is that because there are fewer missing values, it does not contain the misleading functional dependencies related to \inlinecode{id_process} and \inlinecode{id_gs}.
 The columns \inlinecode{status_gzp}, \inlinecode{desc_i}, \inlinecode{desc_d}, and \inlinecode{id_phen} are all constant and the columns \inlinecode{ogc_fid}, \inlinecode{gml_id}, and \inlinecode{objectid} are all individually unique in the dataset.

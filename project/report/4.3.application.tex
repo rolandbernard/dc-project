@@ -3,6 +3,8 @@
 
 The application for this project has been implemented as a custom single-page web application using Vite \cite{viteDocs}, React \cite{reactDocs} and React Router \cite{reactRouterDocs}. It offers an interactive map and results table which dynamically update based on a number of different configurations options provided to the user. To obtain the results of the queries, the application connects to the running Ontop system via its SPARQL \cite{hogan2020sparql} endpoint.
 
+\subsubsection{Main Functionalities}
+
 \begin{figure}[ht!]
     \centering
     \hfill
@@ -24,8 +26,10 @@ The application for this project has been implemented as a custom single-page we
     \label{fig:example1}
 \end{figure}
 
+\paragraph{Preconfigured Queries}
 The main SPARQL query used for with the Ontop endpoint is generated dynamically based on the configurations made by the user. A small number of queries has been predefined, each serving as the answer to a concrete question related to the chosen domain. Note that these are simply configuring the exact same options that are also made available directly to the user, and do not include any special cases. \Cref{fig:home} shows how these can be selected from the home screen of the application. When inside any other screen, the predefined queries can still be accessed easily with the search bar located in the application header.
 
+\paragraph{Manual Configuration Possibilities}
 However, it is not necessary to restrict oneself to the predefined queries. \Cref{fig:municipalities} show the set of available configurable values. The first option field allows selecting the type of infrastructure to consider, lines or nodes. The second relates to the infrastructure domain, possibly filtering based on water, energy, waste, communication, or electricity related assets. Similarly to the infrastructure, also the hazards have a configurable field for whether to include avalanches, landslides, both, or neither. For the hazard zones a fourth configuration field allows selecting the danger levels to consider in the queries. Finally, it is possible to configure only a subset of municipalities to analyze, and optionally to aggregate the result by municipality. The latter is useful for answering questions about the number of vulnerable infrastructure assert per municipality. Taken together these configuration options are sufficient to implement all four example application questions that have been formulated in \cref{into} of the report. For example, by not selecting any hazard type, the query is transformed into one that returns all infrastructure assets regardless of exposure. Similarly by not selecting any infrastructure type, the query is adapted to one that instead searches for hazard zones instead of infrastructure types. Removing all types for both infrastructure and hazard results in a query simply retrieving all municipalities, corresponding to what is shown in \cref{fig:municipalities}. As soon as the user modifies some options, a new query is generated from it and executed against the Ontop endpoint to update the user interface as soon as the results have been received. A loading animation is shown while the application awaits the reception of the results to the latest query.
 
 \begin{figure}[ht!]
@@ -49,7 +53,13 @@ However, it is not necessary to restrict oneself to the predefined queries. \Cre
     \label{fig:example2}
 \end{figure}
 
+\paragraph{Display of Query Results}
+Once a preconfigured query has been chosen, or a custom configuration has been created manually, the results of evaluating the resulting query over the dataset is shown below the configuration fields. For example, \cref{fig:avalanche} shows the results of a query that retrieves all infrastructure lines that are exposed to avalanche hazard zones with a danger level of medium or above. Note that in \cref{fig:avalanche} the configuration section of the application has been hidden using the small arrow on the top left.
+The results section contains two main parts. First, it contains a map that depict the geographic location of all infrastructure nodes found in the result. Additionally, a paginated table of all results is shown directly below the map. The table contains different information depending on the configuration of the query. In any case it contains some a column for the municipality and then also for either the infrastructure or hazard zone entity. The columns give a textual description of the entity which also serves as a link. Following these entity links in the table will open a dedicated page for that entity alone, as will be explained below.
+Note that one can select one of the geometries depicted in the map by clicking on it. Doing so will move into view and highlight the corresponding row in the table. Conversely, it is also possible to select one of the rows of the table, which will then highlight the connected geometry on the map.
 
+\paragraph{Inspection of Underlying SPARQL Queries}
+In addition to the results of the query, the application also provides the functionality of inspecting the underlying SPARQL query that has been executed against knowledge graph using Ontop. \Cref{fig:sparql} show an example of such a query being shown inside the application. The user can use the button labeled "SPARQL" in the top right of the screen to switch to this view, which shows the SPARQL query with syntax highlighting applied. Note that the query that is shown will dynamically update in case configuration options are modified.
 
 \begin{figure}[ht!]
     \centering
@@ -71,3 +81,9 @@ However, it is not necessary to restrict oneself to the predefined queries. \Cre
     \caption{Example screenshot extracted from the application showing the dedicated pages related to individual entities.}
     \label{fig:example3}
 \end{figure}
+
+\paragraph{Pages Dedicated to Individual Entities}
+While the ability to perform these queries into the exposure of infrastructure assets represents the main functionality of the application, it also provides small screens for inspecting individual entities. When the result of a query contains one of municipalities, infrastructure nodes or line, hazard zones, or districts, then this entity is accompanied by a link to a screen that give more information about it. Note that this information is also retrieved using SPARQL from the Ontop endpoint like all other data shown in the application.
+\Cref{fig:infrastructure} depicts an example of such a screen for an infrastructure line. As can be seen, in these situations the application shows information such all the classes that the entity belongs to, all the object properties including links to the target entity, as well as all data properties. The geometry data property is handled specially, by actually rendering the geometry on a small map.
+\Cref{fig:municipality} shows a similar screen but this time for a municipality. The same sort of information is shown, and the geometry is again plotted on a map.
+
