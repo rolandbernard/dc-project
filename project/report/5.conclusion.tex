@@ -1,4 +1,9 @@
 
 \section{Conclusion} \label{conclusion}
 
-TODO
+In conclusion, the project successfully implemented a complete data curation pipeline to analyze critical infrastructure exposure to natural hazards. The workflow began with the extraction and Elementary Data Analysis of five administrative and spatial datasets, utilizing the YData Profiling library alongside the Metanome data profiling platform. By performing unique column combination, functional dependency, and inclusion dependency discovery algorithms, essential metadata was extracted and used to guide the subsequent relational schema design process. This profiling led to a highly normalized database schema that eliminated source data redundancies, stripped irrelevant attributes, and enforced semantic data integrity. The resulting database was then loaded into a PostGIS database instance.
+
+Following the data preparation and schema design phase, the chosen infrastructure and hazards domain was modeled conceptually with an OWL 2 QL ontology. This ontology was represented using the graphical notation introduced in the course and implemented directly in Protégé. To connect this ontology to the underlying relational database, Virtual Knowledge Graph mappings were developed using the Ontop Plugin for Protégé. These mappings leveraged SQL joins and spatial PostGIS functions, such as \inlinecode{ST_Intersects()}, to dynamically assert topological relationships and class memberships.
+
+Finally, a custom single-page web application was developed using Vite and React, allowing users to query the Ontop SPARQL endpoint interactively. This end-to-end solution achieves the project's analytical goals by seamlessly answering queries regarding the vulnerability of critical infrastructure across different hazard zones and municipalities.
+
