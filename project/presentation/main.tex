@@ -310,41 +310,13 @@
       \sitem {\footnotesize Stable URI templates generated using table names and primary keys.} \\
       \sitem {\footnotesize e.g., \inlinecode{:infrastructure-line/\{code\}}, \inlinecode{:municipality/\{istat_code\}}.}
     \end{oitem}
-    \begin{figure}[ht!]
-      \vspace*{-1mm}
-      \textbf{\small\inlinecode{MAP-MUNICIPALITY}} \\
-      \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{\scriptsize Source: SQL Query}
-% \begin{lstlisting}[language=SQL]
-% \begin{verbatim}
-% SELECT istat_code, zip_code, distr_code,
-%        name_it, name_de, name_ld,
-%        ST_Area(ST_MakeValid(geom)::geography) AS area
-%        ST_AsText(geom) AS geom
-FROM Municipality
-% \end{verbatim}
-% \end{lstlisting}
-      \end{minipage}
-      \hfill
-      \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \textbf{\scriptsize Target: Triples Template}
-% \begin{lstlisting}[language=Turtle]
-% :municipality/{istat_code} a :Municipality ;
-%   :istatCode {istat_code}^^xsd:integer ;
-%   :zipCode {zip_code}^^xsd:integer ;
-%   :nameIt {name_it}^^xsd:string ;
-%   :nameDe {name_de}^^xsd:string ;
-%   :nameLd {name_ld}^^xsd:string ;
-%   :area {area}^^xsd:double ;
-%   :geometry {geom}^^xsd:string ;
-%   :belongsTo :district/{distr_code} . 
-% \end{lstlisting}
-      \end{minipage}
-      \vspace*{-4mm}
-    \end{figure}
   \end{items}
+  \begin{widepage}
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.875\linewidth]{figures/mappings.png}
+    \end{figure}
+  \end{widepage}
 \end{frame}
 
 \begin{frame}
@@ -367,20 +339,87 @@ FROM Municipality
 \end{frame}
 
 \begin{frame}
-\frametitle{Application Architecture}
+\frametitle{Interactive Web Application}
   \begin{items}
+    \begin{oitem}{\litem}
+      Tech Stack: \\
+      \sitem {\footnotesize Single-Page Web Application built with React, Vite, React Router, and Leaflet Maps.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      SPARQL Integration: \\
+      \sitem {Communicates directly with the Ontop Virtual Knowledge Graph endpoint.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Key Application Features: \\
+      \sitem {\footnotesize Instant answers to some preconfigured domain queries.} \\
+      \sitem {\footnotesize Dynamic query generated based on custom filter configuration.} \\
+      \sitem {\footnotesize Synchronized interactive map and paginated data table for results.} \\
+      \sitem {\footnotesize Embedded code viewer displaying the dynamically constructed SPARQL query.} \\
+      \sitem {\footnotesize Dedicated detail view for individual entities.}
+    \end{oitem}
   \end{items}
 \end{frame}
 
 \begin{frame}
 \frametitle{Live Demonstration}
   \begin{items}
+    \begin{oitem}{\litem}
+      Live Demo: {\small \url{https://dc.rolandb.com}}
+    \end{oitem}
   \end{items}
+  \begin{widepage}
+    \begin{center}
+      \begin{tikzpicture}[node distance=5mm,>=Latex]
+        \node (query) {
+          \includegraphics[width=.33\textwidth]{figures/home.png}};
+        \node (ir_system) [right=of query, yshift=-30] {
+          \includegraphics[width=.33\textwidth]{figures/avalanche.png}};
+        \node (results) [right=of ir_system, yshift=-30] {
+          \includegraphics[width=.33\textwidth]{figures/infrastructure.png}};
+        \draw[flow] (query) -- (ir_system);
+        \draw[flow] (ir_system) -- (results);
+      \end{tikzpicture}
+    \end{center}
+  \end{widepage}
 \end{frame}
 
 \begin{frame}
 \frametitle{Conclusion}
   \begin{items}
+    \begin{oitem}{\litem}
+      Successfully implemented an end-to-end pipeline: \\
+      \sitem {\footnotesize 1. Systematic profiling of 5 raw datasets using Metanome and YData.} \\
+      \sitem {\footnotesize 2. Redundancy removal and 3NF normalization in a PostGIS spatial database.} \\
+      \sitem {\footnotesize 3. Domain modeling with an OWL 2 QL ontology.} \\
+      \sitem {\footnotesize 4. On-the-fly topological reasoning using Ontop spatial VKG mappings.} \\
+      \sitem {\footnotesize 5. User-friendly React web interface for risk assessment.}
+    \end{oitem}
+    \begin{center}
+      \begin{tikzpicture}[
+          node distance=10mm,>=Latex,
+          base_node/.style={minimum height=5mm,align=center,text width=3cm,inner sep=-5mm},
+      ]
+          \node (prof) [base_node] {
+            \includegraphics[width=25mm]{figures/profile.png}
+          };
+          \node (rel) [base_node, right=of prof] {
+            \includegraphics[width=25mm]{figures/relational.png}
+          };
+          \node (ont) [base_node, right=of rel] {
+            \includegraphics[width=25mm]{figures/ontology.png}
+          };
+          \node (map) [base_node, right=of ont] {
+            \includegraphics[width=25mm]{figures/mappings2.png}
+          };
+          \node (app) [base_node, right=of map] {
+            \includegraphics[width=25mm]{figures/appliaction.png}
+          };
+          \draw[->, thick] (prof) -- (rel);
+          \draw[->, thick] (rel) -- (ont);
+          \draw[->, thick] (ont) -- (map);
+          \draw[->, thick] (map) -- (app);
+      \end{tikzpicture}
+    \end{center}
   \end{items}
 \end{frame}
 
