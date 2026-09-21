@@ -74,7 +74,7 @@
 \captionsetup[figure]{aboveskip=5pt}
 \captionsetup[subfigure]{aboveskip=3pt}
 
-\title{TODO}
+\title{Semantic Integration of Geospatial Data for \\Infrastructure Vulnerability Assessment}
 \author{Roland Bernard, 19598, \inlinecode{rolbernard@unibz.it}}
 \date{September 2026}
 
@@ -110,6 +110,7 @@
 \maketitle
 
 \begin{abstract}
+  This report details a data curation pipeline developed to assess the exposure of critical infrastructure to natural hazards, specifically landslides and avalanches, within the Bolzano region. Utilizing spatial and administrative datasets derived from the CRIMA project, the project performs extensive data profiling, including single column analysis, unique column combination, functional dependency, and inclusion dependency discovery, using the Metanome platform and YData Profiling library. The extracted metadata directly guides the design of a relational schema which is subsequently deployed in a PostGIS database. To semantically integrate this data, the project introduces an OWL 2 QL ontology representing the domain of interest. Virtual Knowledge Graph mappings are designed via the Ontop plugin for Protégé, leveraging SQL joins and spatial PostGIS functions to dynamically compute topological intersections between infrastructure elements and hazard zones. Finally, the resulting knowledge graph is exposed through a custom React-based single-page web application. By querying the Ontop SPARQL endpoint, this interface enables users to interactively analyze and identify vulnerable infrastructure assets across specific municipalities, thereby supporting evidence-based repair and maintenance planning.   
 \end{abstract}
 
 \input{1.introduction.tex}
