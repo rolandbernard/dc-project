@@ -15,6 +15,24 @@
 \usepackage[backend=bibtex,style=authoryear]{biblatex}
 \addbibresource{biblio.bib}
 
+\lstdefinelanguage{Turtle}{
+  morekeywords={@prefix, @base, PREFIX, BASE, a},
+  morecomment=[l]{\#},
+  morestring=[b]",
+  sensitive=true
+}
+
+\lstdefinelanguage{SPARQL}{
+  morekeywords={SELECT, CONSTRUCT, ASK, DESCRIBE, WHERE, PREFIX, BASE, FILTER, OPTIONAL, GRAPH, UNION, ORDER, BY, ASC, DESC, LIMIT, OFFSET, DISTINCT, REDUCED, BIND, AS, GROUP, HAVING},
+  morecomment=[l]{\#},
+  morestring=[b]",
+  morestring=[b]',
+  sensitive=false
+}
+
+\lstset{basicstyle=\setstretch{0}\small\ttfamily,breaklines=true,columns=fixed,captionpos=b,xleftmargin=0.5cm,literate={_}{\_}{1}}
+\newcommand{\inlinecode}[1]{\lstinline[basicstyle=\ttfamily]$#1$}
+
 \title{
   Semantic Integration of Geospatial Data for\
   Infrastructure Vulnerability Assessment
@@ -112,41 +130,257 @@
 \frametitle{Introduction}
   \begin{items}
     \begin{oitem}{\litem}
-      Problem: {\footnotesize Track poses of multiple people in videos across multiple views.}
+      Core Goals: \\
+      \sitem {\footnotesize Analyze exposure of critical infrastructure to natural hazards within the Bolzano region.} \\
+      \sitem {\footnotesize Identify infrastructure assets located within high-risk landslide or avalanche zones.} \\
+      \sitem {\footnotesize Data curation pipeline from data profiling to exposing the VGK through an application.}
     \end{oitem}
     \begin{oitem}{\litem}
-      Given: \\
-      \sitem {\footnotesize Multiple synchronously recorded video sequences containing multiple people.} \\
-      \sitem {\footnotesize Camera calibration parameters, including extrinsics, intrinsic and distortion.}
+      Example Application Questions: \\
+      \sitem {\footnotesize Which water nodes or electricity lines sit in high-risk hazard zones?} \\
+      \sitem {\footnotesize Which municipalities face the highest concentration of exposed critical assets?}
+    \end{oitem}
+    \begin{center}
+      \begin{tikzpicture}[
+          node distance=30mm,>=Latex,
+          base_node/.style={minimum height=5mm,align=center,text width=3cm},
+          arrow_label/.style={midway,sloped,inner sep=2pt},
+          icon_node/.style={minimum size=7mm,align=center}
+      ]
+          \node (infra) [base_node] {
+            \includegraphics[width=40mm]{figures/infra-map.png}
+          };
+          \node [below=1mm of infra, font=\scriptsize] {Infrastructure Assets};
+          \node (hazards) [base_node, right=of infra] {
+            \includegraphics[width=40mm]{figures/hazard-map.png}
+          };
+          \node [below=1mm of hazards, font=\scriptsize] {Hazard Zones};
+          \draw[-, thick] (infra.east) -- (hazards.west)
+              node[arrow_label, pos=0.65, below] {\scriptsize Integrate};
+      \end{tikzpicture}
+    \end{center}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Selected Data Sources}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Infrastructure: \\
+      \sitem {\footnotesize \inlinecode{bz_infrastructure_line} will be used as the source for lines-based infrastructure.} \\
+      \sitem {\footnotesize \inlinecode{bz_infrastructure_node} provides information about point-like infrastructure.}
     \end{oitem}
     \begin{oitem}{\litem}
-      Output: \\
-      \sitem {\footnotesize 3D coordinates of skeletal joints for each subject over time.}
+      Hazards: \\
+      \sitem {\footnotesize \inlinecode{bz_hazard_landslide} includes information about landslide-prone areas.} \\
+      \sitem {\footnotesize \inlinecode{bz_hazard_avalanche} covers areas at risk of avalanches.}
     \end{oitem}
+    \begin{oitem}{\litem}
+      Administrative: \\
+      \sitem {\footnotesize \inlinecode{bz_admin_municipality} to provide spatial context and assign risk to specific municipalities.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Data Profiling -- Elementary Data Analysis}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Data Profiling Stack: \\
+      \sitem {\footnotesize Metanome Platform for type inference and simple statistics.} \\
+      \sitem {\footnotesize YData Profiling for exploratory analysis, type distributions, and correlation matrices.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Integrated Datasets: \\
+      \sitem {\footnotesize \inlinecode{bz_infrastructure_line} (47,551 rows, 11 types, \inlinecode{MULTILINESTRING}).} \\
+      \sitem {\footnotesize \inlinecode{bz_infrastructure_node} (4,223 rows, 10 types, \inlinecode{POINT})} \\
+      \sitem {\footnotesize \inlinecode{bz_hazard_landslide} (23,737 rows, 4 danger levels, 5 process types, \inlinecode{POLYGON})} \\
+      \sitem {\footnotesize \inlinecode{bz_hazard_avalanche} (13,071 rows, 4 danger levels, 5 process types, \inlinecode{POLYGON})} \\
+      \sitem {\footnotesize \inlinecode{bz_admin_municipality} (116 rows, municipal boundaries and district data, \inlinecode{POLYGON})}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Initial Data Observations: \\
+      \sitem {\footnotesize Geometries stored in Well-Known Text format.} \\
+      \sitem {\footnotesize Presence of multiple uninformative columns, either missing or constant.} \\
+      \sitem {\footnotesize Float-formatted integer identifiers in all tables.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Data Profiling — Dependency Discovery}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Data Profiling Stack: \\
+      \sitem {\footnotesize Metanome Platform used for all dependency discover algorithms.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Unique Column Combinations: Using HyUCC algorithm. \\
+      \sitem {\footnotesize Discovered only single-column candidate keys across tables: \inlinecode{ogc_fid}, \inlinecode{gml_id}, \inlinecode{objectid}.} \\
+      \sitem {\footnotesize Selected \inlinecode{objectid} as primary key due to global uniqueness across tables.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Functional Dependencies: Using HyFD algorithm. \\
+      \sitem {\footnotesize \inlinecode{code} $\rightarrow$ \{\inlinecode{bez_d}, \inlinecode{bez_i}\} Infrastructure type names redundant in asset tables.} \\
+      \sitem {\footnotesize \inlinecode{code} $\rightarrow$ \{\inlinecode{gefahr}, \inlinecode{pericolo}\} Hazard classifications redundant.} \\
+      \sitem {\footnotesize \inlinecode{distr_code} $\rightarrow$ \{\inlinecode{distr_de}, \inlinecode{distr_it}\} District names redundant in municipal table.} \\
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Inclusion Dependencies: Using BINDER algorithm: \\
+      \sitem {\footnotesize Confirmed foreign keys \inlinecode{istat_code} are strictly included in \inlinecode{Municipality.istat_code}.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Relational Database Schema Design}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Normalization and Entity Extraction: \\
+      \sitem {\footnotesize Extracted 4 relations to avoid duplication: \\InfrastructureType, DangerLevel, HazardProcess, District} \\
+      \sitem {\footnotesize Maintained 5 core spatial relations: \\InfrastructureLine, InfrastructureNode, LandslideHazard, AvalancheHazard, Municipality}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Schema Constraints and Data Types: \\
+      \sitem {\footnotesize Primary keys enforced on \inlinecode{code} and \inlinecode{istat_code}.} \\
+      \sitem {\footnotesize Foreign keys enforced for municipality links and normalized tables.} \\
+      \sitem {\footnotesize Transformed trailing float identifiers e.g., \inlinecode{21001.0}, to standard \inlinecode{INTEGER}.} \\
+      \sitem {\footnotesize Geometries mapped to PostGIS \inlinecode{GEOMETRY} type.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Attribute Cleanup: \\
+      \sitem {\footnotesize Dropped empty and constant fields: \inlinecode{blp}, \inlinecode{codealt}, \inlinecode{status_gzp}, \inlinecode{id_phen}.} \\
+      \sitem {\footnotesize Dropped UI-only and survey fields: \inlinecode{nda_text_*}, \inlinecode{nda_link_*}, \inlinecode{x_label}, \inlinecode{y_label}, \inlinecode{bearbeitungstiefe}.} \\
+      \sitem {\footnotesize Omitted derived metrics, \inlinecode{shape_len} and \inlinecode{area}, to calculate them dynamically.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Relational Database Schema Design -- Cont.}
+  \begin{widepage}
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.7\linewidth]{figures/er-diagram.pdf}
+    \end{figure}
+  \end{widepage}
+\end{frame}
+
+\begin{frame}
+\frametitle{Domain Ontology Modeling}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Ontology Architecture: \\
+      \sitem {\footnotesize 18 classes, 5 object properties, and 20 data properties.} \\
+      \sitem {\footnotesize \inlinecode{GeometricObject} $\rightarrow$ (disjoint) \inlinecode{Infrastructure}, \inlinecode{HazardZone}, \inlinecode{Municipality}.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Specialized Subclasses: \\
+      \sitem {\footnotesize Structural (\inlinecode{Line}, \inlinecode{Node}) and Thematic (\inlinecode{Energy}, \inlinecode{Water}, \inlinecode{Waste}, \inlinecode{Communication}, \inlinecode{Electricity}).} \\
+      \sitem {\footnotesize Type (\inlinecode{LandslideZone}, \inlinecode{AvalancheZone}) and Severity (\inlinecode{VeryHigh}, \inlinecode{High}, \inlinecode{Medium}, \inlinecode{Low})}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Key Object Properties: \\
+      \sitem {\footnotesize \inlinecode{intersectsWith}: Symmetric topological overlap.} \\
+      \sitem {\footnotesize \inlinecode{isExposedTo} $\sqsubseteq$ \inlinecode{intersectsWith}: Links \inlinecode{Infrastructure} directly to \inlinecode{HazardZone}.} \\
+      \sitem {\footnotesize \inlinecode{infrastructureIn}, \inlinecode{hazardZoneIn}, \inlinecode{belongsTo}: Administrative links.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Data Properties: \\
+      \sitem {\footnotesize Encapsulate WKT geometry strings, area and length attributes, localized names, and codes.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Domain Ontology Modeling -- Cont.}
+  \begin{widepage}
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.8\linewidth]{figures/ontology.pdf}
+    \end{figure}
+  \end{widepage}
+\end{frame}
+
+\begin{frame}
+\frametitle{Virtual Knowledge Graph Mappings}
+  \begin{items}
+    \begin{oitem}{\litem}
+      IRI Design: \\
+      \sitem {\footnotesize Stable URI templates generated using table names and primary keys.} \\
+      \sitem {\footnotesize e.g., \inlinecode{:infrastructure-line/\{code\}}, \inlinecode{:municipality/\{istat_code\}}.}
+    \end{oitem}
+    \begin{figure}[ht!]
+      \vspace*{-1mm}
+      \textbf{\small\inlinecode{MAP-MUNICIPALITY}} \\
+      \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{\scriptsize Source: SQL Query}
+% \begin{lstlisting}[language=SQL]
+% \begin{verbatim}
+% SELECT istat_code, zip_code, distr_code,
+%        name_it, name_de, name_ld,
+%        ST_Area(ST_MakeValid(geom)::geography) AS area
+%        ST_AsText(geom) AS geom
+FROM Municipality
+% \end{verbatim}
+% \end{lstlisting}
+      \end{minipage}
+      \hfill
+      \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \textbf{\scriptsize Target: Triples Template}
+% \begin{lstlisting}[language=Turtle]
+% :municipality/{istat_code} a :Municipality ;
+%   :istatCode {istat_code}^^xsd:integer ;
+%   :zipCode {zip_code}^^xsd:integer ;
+%   :nameIt {name_it}^^xsd:string ;
+%   :nameDe {name_de}^^xsd:string ;
+%   :nameLd {name_ld}^^xsd:string ;
+%   :area {area}^^xsd:double ;
+%   :geometry {geom}^^xsd:string ;
+%   :belongsTo :district/{distr_code} . 
+% \end{lstlisting}
+      \end{minipage}
+      \vspace*{-4mm}
+    \end{figure}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{More Advanced VKG Mappings}
+  \begin{items}
+    \begin{oitem}{\litem}
+      Normalized Relational Joins: \\
+      \sitem {\footnotesize SQL joins to reconstruct localized data properties for normalized entities.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Semantic Sub-classification: \\
+      \sitem {SQL \inlinecode{WHERE} filter mappings to auto-classify instances into subclasses.}
+    \end{oitem}
+    \begin{oitem}{\litem}
+      Spatial Object Property Generation: \\
+      \sitem {\footnotesize Utilized PostGIS spatial functions inside SQL mapping queries.} \\
+      \sitem {\footnotesize Calculated real-world length or area metrics on the fly.}
+    \end{oitem}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Application Architecture}
+  \begin{items}
+  \end{items}
+\end{frame}
+
+\begin{frame}
+\frametitle{Live Demonstration}
+  \begin{items}
   \end{items}
 \end{frame}
 
 \begin{frame}
 \frametitle{Conclusion}
   \begin{items}
-    \begin{oitem}{\litem}
-      Summary: \\
-      \sitem {\footnotesize Implemented an EKF framework that merges multi-view observations.} \\
-      \sitem {\footnotesize Incorporated skeletal length consistency constraints.} \\
-      \sitem {\footnotesize Implemented simple learning of parameters from data.} \\
-      \sitem {\footnotesize Analyzed performance across different system configuration.}
-    \end{oitem}
-    \begin{oitem}{\litem}
-      Limitations: \\
-      \sitem {\footnotesize Still struggles significantly with occlusions.} \\
-      \sitem {\footnotesize Running 2D pose estimation remains a performance bottleneck.}
-    \end{oitem}
-    \begin{oitem}{\litem}
-      Possible Future Improvements: \\
-      \sitem {\footnotesize Add more constraints that force other known properties.}\\
-      \sitem {\footnotesize Find more stable learning methods for the Kalman filter parameters.} \\
-      \sitem {\footnotesize Use of a particle filter with occlusion aware likelihood.}
-    \end{oitem}
   \end{items}
 \end{frame}
 
